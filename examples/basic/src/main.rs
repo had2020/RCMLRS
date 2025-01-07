@@ -1,5 +1,5 @@
 use RCMLRS::*;
 
 fn main() {
-    println!("Hello, world!");
+    tensor_test();
 }
