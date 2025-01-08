@@ -14,7 +14,6 @@ mod tests {
 }
 
 // TODO documation like code on top
-use rusqlite::Connection;
 //pub struct // stores and intilizes which database your using for tensor
 
 /*
@@ -58,17 +57,7 @@ fn main() -> rusqlite::Result<()> {
 }
 */
 
-pub struct MemoryDatabase {
-    pub database: Connection,
-}
-
-impl MemoryDatabase {
-    pub fn open_create(path: &str) -> Self {
-        let conn = Connection::open(path).unwrap(); // example "my_database.db"
-        MemoryDatabase { database: conn }
-    }
-}
-
+/* DELETE BELOW COMMENTS IN NEXT VERISON */
 /*
 pub struct Shape {
     pub values: Vec<i32>,
@@ -97,3 +86,38 @@ pub fn create_tensors(shape: Shape) {
     }
 }
 */
+/* DELETE ABOVE COMMENTS IN NEXT VERISON */
+
+use rusqlite::Connection;
+
+pub struct MemoryDatabase {
+    pub database: Connection,
+    pub current_layers: i128,
+}
+
+impl MemoryDatabase {
+    pub fn open_create(path: &str) -> Self {
+        let conn = Connection::open(path).unwrap(); // example "my_database.db"
+        MemoryDatabase {
+            database: conn,
+            current_layers: 0,
+        }
+    }
+}
+
+pub struct Shape {
+    pub x: i128,
+    pub y: i128,
+}
+
+pub fn create_tensors(memory: &mut MemoryDatabase, shape: Shape) {
+    memory.current_layers += 1;
+
+    let test = memory.current_layers;
+    println!("{test}");
+    for row in 0..shape.x {
+        for column in 0..shape.y {
+            println!(":T:")
+        }
+    }
+}
