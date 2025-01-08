@@ -111,22 +111,19 @@ pub struct Shape {
 }
 
 fn save_layer(/*conn: Connection, layer: i128*/ memory: &mut MemoryDatabase) {
-    // Attempt to connect to the database file
-    let conn = Connection::open("my_database.db").unwrap();
+    let layer = memory.current_layers;
 
-    // If "my_database.db" does not exist, it will be created automatically.
-    println!("Database connected or created successfully!");
-
-    // Optional: You can create a table as well if it doesn't exist
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS users (
+    memory
+        .conn
+        .execute(
+            "CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
             age INTEGER
         )",
-        [],
-    )
-    .unwrap();
+            [],
+        )
+        .unwrap();
 
     println!("Table ensured to exist!");
 }
