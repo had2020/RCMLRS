@@ -91,7 +91,7 @@ pub fn create_tensors(shape: Shape) {
 use rusqlite::Connection;
 
 pub struct MemoryDatabase {
-    pub database: Connection,
+    pub conn: Connection,
     pub current_layers: i128,
 }
 
@@ -99,7 +99,7 @@ impl MemoryDatabase {
     pub fn open_create(path: &str) -> Self {
         let conn = Connection::open(path).unwrap(); // example "my_database.db"
         MemoryDatabase {
-            database: conn,
+            conn: conn,
             current_layers: 0,
         }
     }
@@ -110,14 +110,39 @@ pub struct Shape {
     pub y: i128,
 }
 
+fn save_layer(/*conn: Connection, layer: i128*/ memory: &mut MemoryDatabase) {
+    // Attempt to connect to the database file
+    let conn = Connection::open("my_database.db").unwrap();
+
+    // If "my_database.db" does not exist, it will be created automatically.
+    println!("Database connected or created successfully!");
+
+    // Optional: You can create a table as well if it doesn't exist
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            age INTEGER
+        )",
+        [],
+    )
+    .unwrap();
+
+    println!("Table ensured to exist!");
+}
+
 pub fn create_tensors(memory: &mut MemoryDatabase, shape: Shape) {
     memory.current_layers += 1;
 
-    let test = memory.current_layers;
-    println!("{test}");
+    //let conn_static: Connection = memory.conn.clone();
+    //let layer = memory.current_layers;
+
+    //save_layer(conn_static, layer);
+    save_layer(memory);
+
     for row in 0..shape.x {
         for column in 0..shape.y {
-            println!(":T:")
+            println!(":T:");
         }
     }
 }
