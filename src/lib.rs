@@ -21,20 +21,20 @@ pub struct Shape {
 }
 
 pub struct Memory {
-    pub path: String,
+    pub file_name: String,
     pub current_layer: usize,
 }
 
 impl Memory {
-    pub fn new(path: String) -> Self {
+    pub fn new(filename: &str) -> Self {
         Memory {
-            path: path,
+            file_name: filename.to_string(),
             current_layer: 0,
         }
     }
     pub fn save_tensor(&mut self, shape: Shape) -> Result<(), std::io::Error> {
-        let file_path = format!("{}.layer_{}.txt", self.path, self.current_layer); // More descriptive file names
-        fs::write(file_path, "shape_string")?; // Use ? for error propagation
+        let file_path = format!("{}.layer_{}.txt", self.file_name, self.current_layer);
+        fs::write(file_path, "shape_string")?;
         self.current_layer += 1;
         Ok(())
     }
@@ -47,3 +47,10 @@ pub fn save_tensor(memory: &mut Memory, shape: Shape) {
     //memory.current_layer
 }
 */
+
+#[macro_export]
+macro_rules! init_memory {
+    ($name:expr) => {
+        println!("{$name}")
+    };
+}

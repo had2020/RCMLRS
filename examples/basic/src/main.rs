@@ -1,3 +1,5 @@
 use RCMLRS::*;
 
-fn main() {}
+fn main() {
+    let memory = Memory::new("test");
+}
