@@ -110,22 +110,36 @@ pub struct Shape {
     pub y: i128,
 }
 
+/*
+pub struct Tensor2D {
+    pub
+}
+*/
+
+/*
+"CREATE TABLE IF NOT EXISTS {layer} (
+{value1} REAL,
+{value2} REAL,
+{value3} REAL
+WHERE
+)",
+*/
+
 fn save_layer(/*conn: Connection, layer: i128*/ memory: &mut MemoryDatabase) {
     let layer = memory.current_layers;
 
     memory
         .conn
         .execute(
-            "CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            age INTEGER
+            "CREATE TABLE IF NOT EXISTS {layer} (
+            start REAL,
+            middle REAL,
+            end REAL
+            WHERE
         )",
             [],
         )
         .unwrap();
-
-    println!("Table ensured to exist!");
 }
 
 pub fn create_tensors(memory: &mut MemoryDatabase, shape: Shape) {
