@@ -68,10 +68,21 @@ pub fn save_tensor(memory: &mut Memory, shape: Shape) {
 */
 
 pub fn save_tensor(memory: &mut Memory, shape: Shape) {
+    match fs::create_dir("") {
+        Ok(_) => println!("Memory dir created"),
+        Err(e) => {
+            if e.kind() == std::io::ErrorKind::NotFound {
+                println!("Using old Memory dir");
+            } else {
+                println!("An error occurred: {}", e);
+            }
+        }
+    }
+
     let file_path = format!("/{}/{}_layer.txt", memory.dir_name, memory.current_layer);
-    //let file_path = "{memory.dir_name}/{memory.current_layer}_layer.txt"
-    //fs::write(file_path, "shape_string").unwrap();
-    println!("{file_path}"); // TODO create file to avoid no file err
+    //let file_path = "{memory.dir_name}/{memory.current_layer}_layer.txt";
+    std::fs::write(file_path, "shape_string").unwrap();
+    //println!("{file_path}"); // TODO create file to avoid no file err
     memory.current_layer += 1;
 }
 
