@@ -103,5 +103,14 @@ macro_rules! init_memory {
     };
 }
 
+use serde::Deserialize;
 use serde::Serialize;
-use serde_json;
+use serde_json; // store model in json TODO
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Matrix {
+    pub name: String,
+    pub rows: usize,
+    pub cols: usize,
+    pub data: Vec<Vec<f64>>, // Use f64 for floating-point numbers
+}
