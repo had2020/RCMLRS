@@ -1,4 +1,4 @@
-use RCMLRS::*;
+use rcmlrs::*;
 
 fn main() {
     let mut memory = Memory::new("test");

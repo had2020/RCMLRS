@@ -12,7 +12,7 @@ mod tests {
         assert_eq!(result, 4);
     }
 }
-use std::fs;
+use std::fs::{self};
 
 // TODO documation like code on top
 pub struct Shape {
@@ -67,21 +67,31 @@ pub fn save_tensor(memory: &mut Memory, shape: Shape) {
 }
 */
 
+pub struct Tensor {
+    pub id: usize,
+    pub shape: Shape,
+}
+
+pub fn load_tensor(file_path: String) {
+    //file_contents = std::fs::read(file_path);
+}
+
 pub fn save_tensor(memory: &mut Memory, shape: Shape) {
-    match fs::create_dir("") {
-        Ok(_) => println!("Memory dir created"),
+    let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
+
+    //let infomation_to_write()
+
+    match std::fs::write(file_path, "shape_string") {
+        Ok(_) => println!("write"),
         Err(e) => {
             if e.kind() == std::io::ErrorKind::NotFound {
-                println!("Using old Memory dir");
+                println!("Not found");
             } else {
                 println!("An error occurred: {}", e);
             }
         }
     }
-
-    let file_path = format!("/{}/{}_layer.txt", memory.dir_name, memory.current_layer);
-    //let file_path = "{memory.dir_name}/{memory.current_layer}_layer.txt";
-    std::fs::write(file_path, "shape_string").unwrap();
+    //.expect("Failed to write file. Check the file path and permissions.");
     //println!("{file_path}"); // TODO create file to avoid no file err
     memory.current_layer += 1;
 }
@@ -92,3 +102,6 @@ macro_rules! init_memory {
         println!("{$name}")
     };
 }
+
+use serde::Serialize;
+use serde_json;
