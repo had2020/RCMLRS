@@ -15,6 +15,21 @@ mod tests {
 use std::fs::{self};
 
 // TODO documation like code on top
+
+#[macro_export]
+macro_rules! init_memory {
+    ($name:expr) => {
+        println!("{$name}")
+    };
+}
+
+pub struct Matrix {
+    pub name: String,
+    pub rows: usize,
+    pub cols: usize,
+    pub data: Vec<Vec<f64>>,
+}
+
 pub struct Shape {
     pub x: usize,
     pub y: usize,
@@ -76,6 +91,15 @@ pub fn load_tensor(file_path: String) {
     //file_contents = std::fs::read(file_path);
 }
 
+pub fn matrix_to_string(matrix: Matrix) {
+    for row in matrix.data {
+        println!(">");
+        for cols in row {
+            println!("X");
+        }
+    }
+}
+
 pub fn save_tensor(memory: &mut Memory, shape: Shape) {
     let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
 
@@ -94,38 +118,4 @@ pub fn save_tensor(memory: &mut Memory, shape: Shape) {
     //.expect("Failed to write file. Check the file path and permissions.");
     //println!("{file_path}"); // TODO create file to avoid no file err
     memory.current_layer += 1;
-}
-
-#[macro_export]
-macro_rules! init_memory {
-    ($name:expr) => {
-        println!("{$name}")
-    };
-}
-
-pub struct Matrix {
-    pub name: String,
-    pub rows: usize,
-    pub cols: usize,
-    pub data: Vec<Vec<f64>>,
-}
-
-use bincode::{Deserialize, Serialize};
-use serde::{Deserialize, Serialize};
-use std::fs::File;
-
-#[derive(Serialize, Deserialize)]
-struct ModelWeights {
-    layer1_weights: Vec<f32>,
-    layer2_weights: Vec<f32>,
-}
-
-fn save_model(weights: &ModelWeights, path: &str) {
-    let file = File::create(path).unwrap();
-    bincode::serialize_into(file, weights).unwrap();
-}
-
-fn load_model(path: &str) -> ModelWeights {
-    let file = File::open(path).unwrap();
-    bincode::deserialize_from(file).unwrap()
 }

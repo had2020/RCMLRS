@@ -17,4 +17,6 @@ fn main() {
         cols: matrix_data[0].len(),
         data: matrix_data,
     };
+
+    matrix_to_string(matrix);
 }

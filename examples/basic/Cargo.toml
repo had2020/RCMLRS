@@ -5,4 +5,3 @@ edition = "2021"
 
 [dependencies]
 rcmlrs = { path = "../../" } # replace with package name in outside usage
-serde_json = "1.0.135"
