@@ -17,18 +17,4 @@ fn main() {
         cols: matrix_data[0].len(),
         data: matrix_data,
     };
-
-    use serde::*;
-    use serde_json;
-
-    let file = File::create("matrix.json")?;
-    let writer = BufWriter::new(file); // Use a buffered writer for efficiency
-    serde_json::to_writer_pretty(writer, &matrix)?; // pretty print the json output
-
-    // Deserialize from JSON
-    let file = File::open("matrix.json")?;
-    let reader = BufReader::new(file);
-    let loaded_matrix: Matrix = serde_json::from_reader(reader)?;
-
-    println!("Loaded matrix: {:?}", loaded_matrix);
 }

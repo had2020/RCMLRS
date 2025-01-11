@@ -103,14 +103,29 @@ macro_rules! init_memory {
     };
 }
 
-use serde::Deserialize;
-use serde::Serialize;
-use serde_json; // store model in json TODO
-
-#[derive(Serialize, Deserialize, Debug)]
 pub struct Matrix {
     pub name: String,
     pub rows: usize,
     pub cols: usize,
-    pub data: Vec<Vec<f64>>, // Use f64 for floating-point numbers
+    pub data: Vec<Vec<f64>>,
+}
+
+use bincode::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
+use std::fs::File;
+
+#[derive(Serialize, Deserialize)]
+struct ModelWeights {
+    layer1_weights: Vec<f32>,
+    layer2_weights: Vec<f32>,
+}
+
+fn save_model(weights: &ModelWeights, path: &str) {
+    let file = File::create(path).unwrap();
+    bincode::serialize_into(file, weights).unwrap();
+}
+
+fn load_model(path: &str) -> ModelWeights {
+    let file = File::open(path).unwrap();
+    bincode::deserialize_from(file).unwrap()
 }
