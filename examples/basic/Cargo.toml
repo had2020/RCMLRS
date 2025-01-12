@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-RCMLRS = { path = "../../"} # replace with package name in outside usage
+rcmlrs = { path = "../../" } # replace with package name in outside usage

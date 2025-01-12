@@ -12,134 +12,123 @@ mod tests {
         assert_eq!(result, 4);
     }
 }
+use std::{
+    fmt::format,
+    fs::{self},
+};
 
 // TODO documation like code on top
-//pub struct // stores and intilizes which database your using for tensor
 
-/*
-pub fn tensor_test() {
-    let mut test = vec![1, 3, 4];
-    test.push(1);
-    println!("{test:?}");
+#[macro_export]
+macro_rules! init_memory {
+    ($name:expr) => {
+        println!("{$name}")
+    };
 }
-*/
 
-/*
-pub fn open_create_memory_database(path: &str) -> Connection {
-    let conn = Connection::open(path).unwrap();
-    conn
+pub struct Matrix {
+    pub name: String,
+    pub rows: usize,
+    pub cols: usize,
+    pub data: Vec<Vec<f64>>,
 }
-*/
 
-/*
-use rusqlite::Connection;
+pub struct Memory {
+    pub dir_name: String,
+    pub current_layer: usize,
+}
 
-fn main() -> rusqlite::Result<()> {
-    // Attempt to connect to the database file
-    let conn = Connection::open("my_database.db")?;
-
-    // If "my_database.db" does not exist, it will be created automatically.
-    println!("Database connected or created successfully!");
-
-    // Optional: You can create a table as well if it doesn't exist
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            age INTEGER
-        )",
-        [],
-    )?;
-
-    println!("Table ensured to exist!");
-
+pub fn dir_exists(path: &str) -> std::io::Result<()> {
+    match fs::metadata(path) {
+        Ok(_) => println!("File exists! ✅"),
+        Err(e) => {
+            if e.kind() == std::io::ErrorKind::NotFound {
+                println!("File does not exist.");
+            } else {
+                println!("An error occurred: {}", e);
+            }
+        }
+    }
     Ok(())
 }
-*/
 
-/* DELETE BELOW COMMENTS IN NEXT VERISON */
-/*
-pub struct Shape {
-    pub values: Vec<i32>,
-}
+impl Memory {
+    pub fn new(dir: &str) -> Self {
+        match fs::create_dir(dir) {
+            Ok(_) => println!("Memory dir created ✅"),
+            Err(e) => {
+                if e.kind() == std::io::ErrorKind::NotFound {
+                    println!("Using existing Memory dir ✅");
+                } else {
+                    println!("An error occurred with creating Memory dir: {}", e);
+                }
+            }
+        }
 
-/*
-impl Shape {
-    fn new
-}
-*/
-
-pub fn create_tensor(shape: Shape) {
-    println!("sdjdsf");
-}
-*/
-
-/*
-pub struct Shape<'a> {
-    pub values: &'a [i32],
-}
-
-pub fn create_tensors(shape: Shape) {
-    let shape_values = shape.values;
-    for &shape_value in shape_values {
-        println!("tensor: {:?}", shape_values);
-    }
-}
-*/
-/* DELETE ABOVE COMMENTS IN NEXT VERISON */
-
-use rusqlite::Connection;
-
-pub struct MemoryDatabase {
-    pub conn: Connection,
-    pub current_layers: i128,
-}
-
-impl MemoryDatabase {
-    pub fn open_create(path: &str) -> Self {
-        let conn = Connection::open(path).unwrap(); // example "my_database.db"
-        MemoryDatabase {
-            conn: conn,
-            current_layers: 0,
+        Memory {
+            dir_name: dir.to_string(),
+            current_layer: 0,
         }
     }
 }
 
-pub struct Shape {
-    pub x: i128,
-    pub y: i128,
+/*
+pub fn save_tensor(memory: &mut Memory, shape: Shape) {
+    let file_path = memory.path.to_string() + ".txt";
+    fs::write(file_path, b"Lorem ipsum").unwrap();
+    //memory.current_layer
+}
+*/
+
+pub fn load_matrix() {
+    //file_contents = std::fs::read(file_path);
 }
 
-fn save_layer(/*conn: Connection, layer: i128*/ memory: &mut MemoryDatabase) {
-    let layer = memory.current_layers;
+pub fn matrix_print(matrix: Matrix) {
+    for row in matrix.data {
+        println!(">");
+        for cols in row {
+            let col = format!("{cols}");
+            println!("{col}");
+        }
+    }
+}
 
-    memory
-        .conn
-        .execute(
-            "CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            age INTEGER
-        )",
-            [],
-        )
+/*
+pub fn save_tensor(memory: &mut Memory, shape: Shape) {
+    let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
+
+    //let infomation_to_write()
+
+    match std::fs::write(file_path, "shape_string") {
+        Ok(_) => println!("write"),
+        Err(e) => {
+            if e.kind() == std::io::ErrorKind::NotFound {
+                println!("Not found");
+            } else {
+                println!("An error occurred: {}", e);
+            }
+        }
+    }
+    //.expect("Failed to write file. Check the file path and permissions.");
+    //println!("{file_path}"); // TODO create file to avoid no file err
+    memory.current_layer += 1;
+}
+*/
+
+use std::fs::OpenOptions;
+use std::io::Write;
+
+pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
+    let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
+
+    let infomation_to_write = "";
+
+    let mut file = OpenOptions::new()
+        .append(true) // Open in append mode
+        .create(true) // Create the file if it doesn't exist
+        .open("example.txt")
         .unwrap();
 
-    println!("Table ensured to exist!");
-}
-
-pub fn create_tensors(memory: &mut MemoryDatabase, shape: Shape) {
-    memory.current_layers += 1;
-
-    //let conn_static: Connection = memory.conn.clone();
-    //let layer = memory.current_layers;
-
-    //save_layer(conn_static, layer);
-    save_layer(memory);
-
-    for row in 0..shape.x {
-        for column in 0..shape.y {
-            println!(":T:");
-        }
-    }
+    writeln!(file, "This is a new line!").unwrap(); // Write to the end of the file
 }
