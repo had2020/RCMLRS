@@ -12,7 +12,10 @@ mod tests {
         assert_eq!(result, 4);
     }
 }
-use std::fs::{self};
+use std::{
+    fmt::format,
+    fs::{self},
+};
 
 // TODO documation like code on top
 
@@ -30,11 +33,6 @@ pub struct Matrix {
     pub data: Vec<Vec<f64>>,
 }
 
-pub struct Shape {
-    pub x: usize,
-    pub y: usize,
-}
-
 pub struct Memory {
     pub dir_name: String,
     pub current_layer: usize,
@@ -42,7 +40,7 @@ pub struct Memory {
 
 pub fn dir_exists(path: &str) -> std::io::Result<()> {
     match fs::metadata(path) {
-        Ok(_) => println!("File exists!"),
+        Ok(_) => println!("File exists! ✅"),
         Err(e) => {
             if e.kind() == std::io::ErrorKind::NotFound {
                 println!("File does not exist.");
@@ -57,12 +55,12 @@ pub fn dir_exists(path: &str) -> std::io::Result<()> {
 impl Memory {
     pub fn new(dir: &str) -> Self {
         match fs::create_dir(dir) {
-            Ok(_) => println!("Memory dir created"),
+            Ok(_) => println!("Memory dir created ✅"),
             Err(e) => {
                 if e.kind() == std::io::ErrorKind::NotFound {
-                    println!("Using old Memory dir");
+                    println!("Using existing Memory dir ✅");
                 } else {
-                    println!("An error occurred: {}", e);
+                    println!("An error occurred with creating Memory dir: {}", e);
                 }
             }
         }
@@ -91,15 +89,17 @@ pub fn load_tensor(file_path: String) {
     //file_contents = std::fs::read(file_path);
 }
 
-pub fn matrix_to_string(matrix: Matrix) {
+pub fn matrix_print(matrix: Matrix) {
     for row in matrix.data {
         println!(">");
         for cols in row {
-            println!("X");
+            let col = format!("{cols}");
+            println!("{col}");
         }
     }
 }
 
+/*
 pub fn save_tensor(memory: &mut Memory, shape: Shape) {
     let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
 
@@ -119,3 +119,19 @@ pub fn save_tensor(memory: &mut Memory, shape: Shape) {
     //println!("{file_path}"); // TODO create file to avoid no file err
     memory.current_layer += 1;
 }
+*/
+
+/*
+pub fn save_tensor(memory: &mut Memory, shape: Shape) {
+    let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
+
+    let infomation_to_write
+
+    let mut file = OpenOptions::new()
+        .append(true) // Open in append mode
+        .create(true) // Create the file if it doesn't exist
+        .open("example.txt")?;
+
+    writeln!(file, "This is a new line!")?; // Write to the end of the file
+}
+*/
