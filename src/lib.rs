@@ -80,12 +80,7 @@ pub fn save_tensor(memory: &mut Memory, shape: Shape) {
 }
 */
 
-pub struct Tensor {
-    pub id: usize,
-    pub shape: Shape,
-}
-
-pub fn load_tensor(file_path: String) {
+pub fn load_matrix() {
     //file_contents = std::fs::read(file_path);
 }
 
@@ -121,17 +116,19 @@ pub fn save_tensor(memory: &mut Memory, shape: Shape) {
 }
 */
 
-/*
-pub fn save_tensor(memory: &mut Memory, shape: Shape) {
+use std::fs::OpenOptions;
+use std::io::Write;
+
+pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
     let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
 
-    let infomation_to_write
+    let infomation_to_write = "";
 
     let mut file = OpenOptions::new()
         .append(true) // Open in append mode
         .create(true) // Create the file if it doesn't exist
-        .open("example.txt")?;
+        .open("example.txt")
+        .unwrap();
 
-    writeln!(file, "This is a new line!")?; // Write to the end of the file
+    writeln!(file, "This is a new line!").unwrap(); // Write to the end of the file
 }
-*/

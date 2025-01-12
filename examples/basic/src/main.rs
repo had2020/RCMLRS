@@ -20,4 +20,6 @@ fn main() {
 
     matrix_print(matrix);
     memory.current_layer += 1;
+
+    save_matrix(memory, matrix);
 }
