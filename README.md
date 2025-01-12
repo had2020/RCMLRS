@@ -1,4 +1,5 @@
-# RC-ML-RS
- Machine learning framework in Rust, ramlesses, clusstering compute
+# RCMLRS
+- Ramless - Cluster - Machine - Learning - Rust - Syntax
 
+Machine learning framework in Rust, ramless, cluster compute
 Very early trials of creations...
