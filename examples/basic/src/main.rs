@@ -18,8 +18,8 @@ fn main() {
         data: matrix_data,
     };
 
-    matrix_print(matrix);
+    matrix_print(matrix.clone());
     memory.current_layer += 1;
 
-    save_matrix(memory, matrix);
+    save_matrix(&mut memory, matrix);
 }

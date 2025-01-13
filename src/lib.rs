@@ -5,6 +5,7 @@ macro_rules! init_memory {
     };
 } // delete later
 
+#[derive(Clone)]
 pub struct Matrix {
     pub name: String,
     pub rows: usize,
@@ -53,18 +54,6 @@ impl Memory {
     }
 }
 
-/*
-pub fn save_tensor(memory: &mut Memory, shape: Shape) {
-    let file_path = memory.path.to_string() + ".txt";
-    fs::write(file_path, b"Lorem ipsum").unwrap();
-    //memory.current_layer
-}
-*/
-
-pub fn load_matrix() {
-    //file_contents = std::fs::read(file_path);
-}
-
 pub fn matrix_print(matrix: Matrix) {
     for row in matrix.data {
         println!(">");
@@ -75,41 +64,29 @@ pub fn matrix_print(matrix: Matrix) {
     }
 }
 
-/*
-pub fn save_tensor(memory: &mut Memory, shape: Shape) {
-    let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
-
-    //let infomation_to_write()
-
-    match std::fs::write(file_path, "shape_string") {
-        Ok(_) => println!("write"),
-        Err(e) => {
-            if e.kind() == std::io::ErrorKind::NotFound {
-                println!("Not found");
-            } else {
-                println!("An error occurred: {}", e);
-            }
-        }
-    }
-    //.expect("Failed to write file. Check the file path and permissions.");
-    //println!("{file_path}"); // TODO create file to avoid no file err
-    memory.current_layer += 1;
-}
-*/
-
 use std::fs::OpenOptions;
 use std::io::Write;
 
 pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
     let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
 
-    let infomation_to_write = "";
+    // encode matrix to a string
+    let mut infomation_to_write: &str = "";
 
+    for row in matrix.data {
+        println!(">");
+        for cols in row {
+            let col = format!("{cols}");
+            println!("{col}");
+        }
+    }
+
+    // file then write
     let mut file = OpenOptions::new()
-        .append(true) // Open in append mode
-        .create(true) // Create the file if it doesn't exist
-        .open("example.txt")
+        .append(true)
+        .create(true)
+        .open(file_path)
         .unwrap();
 
-    writeln!(file, "This is a new line!").unwrap(); // Write to the end of the file
+    writeln!(file, "{}", infomation_to_write).unwrap();
 }
