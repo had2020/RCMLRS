@@ -64,6 +64,23 @@ pub fn matrix_print(matrix: Matrix) {
     }
 }
 
+#[macro_export]
+macro_rules! matrix_into_string {
+    ($name:expr) => {
+        println!("{$name}")
+    };
+}
+
+pub fn matrix_into_string(matrix: Matrix) {
+    for row in matrix.data {
+        println!(">");
+        for cols in row {
+            let col = format!("{cols}");
+            println!("{col}");
+        }
+    }
+}
+
 use std::fs::OpenOptions;
 use std::io::Write;
 
