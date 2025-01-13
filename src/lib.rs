@@ -64,21 +64,17 @@ pub fn matrix_print(matrix: Matrix) {
     }
 }
 
-#[macro_export]
-macro_rules! matrix_into_string {
-    ($name:expr) => {
-        println!("{$name}")
-    };
-}
-
-pub fn matrix_into_string(matrix: Matrix) {
+pub fn matrix_into_string(matrix: Matrix) -> String {
+    let mut matrix_string: String = String::new();
     for row in matrix.data {
-        println!(">");
+        matrix_string.push_str("a");
         for cols in row {
             let col = format!("{cols}");
-            println!("{col}");
+            matrix_string.push_str("b");
+            matrix_string.push_str(&col);
         }
     }
+    matrix_string
 }
 
 use std::fs::OpenOptions;
@@ -88,15 +84,7 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
     let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
 
     // encode matrix to a string
-    let mut infomation_to_write: &str = "";
-
-    for row in matrix.data {
-        println!(">");
-        for cols in row {
-            let col = format!("{cols}");
-            println!("{col}");
-        }
-    }
+    let infomation_to_write = matrix_into_string(matrix);
 
     // file then write
     let mut file = OpenOptions::new()
