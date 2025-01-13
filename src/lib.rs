@@ -1,30 +1,9 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
-use std::{
-    fmt::format,
-    fs::{self},
-};
-
-// TODO documation like code on top
-
 #[macro_export]
 macro_rules! init_memory {
     ($name:expr) => {
         println!("{$name}")
     };
-}
+} // delete later
 
 pub struct Matrix {
     pub name: String,
@@ -37,6 +16,8 @@ pub struct Memory {
     pub dir_name: String,
     pub current_layer: usize,
 }
+
+use std::fs;
 
 pub fn dir_exists(path: &str) -> std::io::Result<()> {
     match fs::metadata(path) {
