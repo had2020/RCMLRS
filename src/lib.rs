@@ -102,5 +102,16 @@ pub struct Shape {
 }
 
 pub struct Tensor {
-    shape: Shape,
+    matrix: Matrix,
+    /*
+    pub fn randn<S: Into<Shape>, T: crate::FloatDType>(
+        mean: T,
+        std: T,
+        s: S,
+        device: &Device,
+    ) -> Result<Self> {
+        Self::randn_impl(mean, std, s, device, false)
+    }
+
+    */
 }
