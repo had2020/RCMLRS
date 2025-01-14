@@ -95,3 +95,12 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
 
     writeln!(file, "{}", infomation_to_write).unwrap();
 }
+
+pub struct Shape {
+    x: usize,
+    y: usize,
+}
+
+pub struct Tensor {
+    shape: Shape,
+}
