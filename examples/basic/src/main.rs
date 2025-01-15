@@ -12,7 +12,6 @@ fn main() {
     ];
 
     let matrix = Matrix {
-        name: "MyMatrix".to_string(),
         rows: matrix_data.len(),
         cols: matrix_data[0].len(),
         data: matrix_data,
@@ -22,4 +21,7 @@ fn main() {
     memory.current_layer += 1;
 
     save_matrix(&mut memory, matrix);
+
+    // New
+    let weights = Tensor::new_layer_zeros(Shape { x: 1, y: 1 });
 }

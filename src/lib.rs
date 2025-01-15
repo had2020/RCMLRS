@@ -7,7 +7,6 @@ macro_rules! init_memory {
 
 #[derive(Clone)]
 pub struct Matrix {
-    pub name: String,
     pub rows: usize,
     pub cols: usize,
     pub data: Vec<Vec<f64>>,
@@ -97,21 +96,37 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
 }
 
 pub struct Shape {
-    x: usize,
-    y: usize,
+    pub x: usize,
+    pub y: usize,
 }
 
+#[derive(Clone)]
 pub struct Tensor {
-    matrix: Matrix,
-    /*
-    pub fn randn<S: Into<Shape>, T: crate::FloatDType>(
-        mean: T,
-        std: T,
-        s: S,
-        device: &Device,
-    ) -> Result<Self> {
-        Self::randn_impl(mean, std, s, device, false)
-    }
+    //pub matrix: Matrix,
+    pub matrices: Vec<Matrix>,
+}
 
-    */
+impl Tensor {
+    //TODO more D then 2D, or less
+    //TODO random new
+    pub fn new_layer_zeros(shape: Shape) -> Self {
+        let mut matrices: Vec<Matrix> = vec![];
+
+        //TODO form accordingly
+        let matrix_data = vec![
+            vec![0.0, 0.0, 0.0],
+            vec![0.0, 0.0, 0.0],
+            vec![0.0, 0.0, 0.0],
+        ];
+
+        let matrix = Matrix {
+            rows: matrix_data.len(),
+            cols: matrix_data[0].len(),
+            data: matrix_data,
+        };
+
+        matrices.push(matrix);
+
+        Tensor { matrices: matrices } //TODO save to memory right away
+    }
 }
