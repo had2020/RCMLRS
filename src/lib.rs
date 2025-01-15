@@ -95,29 +95,43 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
     writeln!(file, "{}", infomation_to_write).unwrap();
 }
 
+#[derive(Clone)]
 pub struct Shape {
     pub x: usize,
     pub y: usize,
 }
 
+// representants single layer tensor operation needs
 #[derive(Clone)]
 pub struct Tensor {
-    //pub matrix: Matrix,
-    pub matrices: Vec<Matrix>,
+    //pub matrices: Vec<Matrix>, //TODO ram tensor
+    pub id: usize,
+    pub shape: Shape,
 }
 
 impl Tensor {
     //TODO more D then 2D, or less
     //TODO random new
     pub fn new_layer_zeros(shape: Shape) -> Self {
-        let mut matrices: Vec<Matrix> = vec![];
+        //let mut matrices: Vec<Matrix> = vec![]; // TODO with ram tensor
+        //matrices.push(matrix);
 
-        //TODO form accordingly
+        /* // non-automatic example
         let matrix_data = vec![
             vec![0.0, 0.0, 0.0],
             vec![0.0, 0.0, 0.0],
             vec![0.0, 0.0, 0.0],
         ];
+        */
+
+        let mut matrix_data: Vec<Vec<f64>> = vec![];
+        for row in 0..=shape.y {
+            let mut col: Vec<f64> = ;
+            for point in 0..=shape.x {
+                col.push(0.0);
+            }
+            matrix_data.push(col);
+        }
 
         let matrix = Matrix {
             rows: matrix_data.len(),
@@ -125,8 +139,9 @@ impl Tensor {
             data: matrix_data,
         };
 
-        matrices.push(matrix);
-
-        Tensor { matrices: matrices } //TODO save to memory right away
+        Tensor {
+            id: 1,
+            shape: shape,
+        }
     }
 }
