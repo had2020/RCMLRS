@@ -112,7 +112,7 @@ pub struct Tensor {
 impl Tensor {
     //TODO more D then 2D, or less
     //TODO random new
-    pub fn new_layer_zeros(shape: Shape) -> Self {
+    pub fn new_layer_zeros(memory: &mut Memory, shape: Shape, layer_length: usize) -> Self {
         //let mut matrices: Vec<Matrix> = vec![]; // TODO with ram tensor
         //matrices.push(matrix);
 
@@ -123,13 +123,10 @@ impl Tensor {
             vec![0.0, 0.0, 0.0],
         ];
         */
-
+        // incap inside for loop for layer_length
         let mut matrix_data: Vec<Vec<f64>> = vec![];
-        for row in 0..=shape.y {
-            let mut col: Vec<f64> = ;
-            for point in 0..=shape.x {
-                col.push(0.0);
-            }
+        for row in 0..shape.y {
+            let col: Vec<f64> = vec![0.0; shape.x as usize + 1];
             matrix_data.push(col);
         }
 
@@ -139,8 +136,24 @@ impl Tensor {
             data: matrix_data,
         };
 
+        let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
+
+        // encode matrix to a string
+        let infomation_to_write = matrix_into_string(matrix);
+
+        // file then write
+        let mut file = OpenOptions::new()
+            .append(true)
+            .create(true)
+            .open(file_path)
+            .unwrap();
+
+        writeln!(file, "{}", infomation_to_write).unwrap();
+
+        memory.current_layer = memory.current_layer + 1;
+
         Tensor {
-            id: 1,
+            id: memory.current_layer,
             shape: shape,
         }
     }

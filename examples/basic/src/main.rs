@@ -3,6 +3,7 @@ use rcmlrs::*;
 fn main() {
     let mut memory = Memory::new("test");
 
+    /*
     ////Memory::save_tensor(&mut memory, Shape { x: 3, y: 3 });
     //save_tensor(&mut memory, Shape { x: 3, y: 3 });
     let matrix_data = vec![
@@ -21,7 +22,9 @@ fn main() {
     memory.current_layer += 1;
 
     save_matrix(&mut memory, matrix);
+    */
 
     // New
-    let weights = Tensor::new_layer_zeros(Shape { x: 1, y: 1 });
+    // Y works, X is one to much
+    let weights = Tensor::new_layer_zeros(&mut memory, Shape { x: 1, y: 2 }, 3);
 }
