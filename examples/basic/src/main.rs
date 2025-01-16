@@ -1,30 +1,15 @@
 use rcmlrs::*;
 
+/*
+fn forward(tensor: Tensor) -> Tensor {
+}
+*/
+
 fn main() {
     let mut memory = Memory::new("test");
 
-    /*
-    ////Memory::save_tensor(&mut memory, Shape { x: 3, y: 3 });
-    //save_tensor(&mut memory, Shape { x: 3, y: 3 });
-    let matrix_data = vec![
-        vec![1.5, 2.1, 3.2],
-        vec![4.0, 5.2, 6.4],
-        vec![7.6, 8.7, 9.9],
-    ];
+    let weights: Tensor = Tensor::new_layer_zeros(&mut memory, Shape { x: 1, y: 1 }, 2);
+    let bias: Tensor = Tensor::new_layer_zeros(&mut memory, Shape { x: 6, y: 2 }, 1);
 
-    let matrix = Matrix {
-        rows: matrix_data.len(),
-        cols: matrix_data[0].len(),
-        data: matrix_data,
-    };
-
-    matrix_print(matrix.clone());
-    memory.current_layer += 1;
-
-    save_matrix(&mut memory, matrix);
-    */
-
-    // New
-    // Y works, X is one to much
-    let weights = Tensor::new_layer_zeros(&mut memory, Shape { x: 1, y: 2 }, 3);
+    print_tensor(&memory, weights);
 }

@@ -41,7 +41,7 @@ impl Memory {
                 if e.kind() == std::io::ErrorKind::NotFound {
                     println!("Using existing Memory dir ✅");
                 } else {
-                    println!("An error occurred with creating Memory dir: {}", e);
+                    println!("Using existing Memory dir! ✅");
                 }
             }
         }
@@ -80,7 +80,10 @@ use std::fs::OpenOptions;
 use std::io::Write;
 
 pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
-    let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
+    let file_path = format!(
+        "{}/saved/{}_layer.txt",
+        memory.dir_name, memory.current_layer
+    );
 
     // encode matrix to a string
     let infomation_to_write = matrix_into_string(matrix);
@@ -95,6 +98,36 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
     writeln!(file, "{}", infomation_to_write).unwrap();
 }
 
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
+pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
+    let file_path: String;
+    if tensor.saved {
+        file_path = format!("{}/saved/{}_layer.txt", memory.dir_name, tensor.id);
+    } else {
+        file_path = format!("{}/loaded/{}_layer.txt", memory.dir_name, tensor.id);
+    }
+
+    let file = File::open(file_path)?;
+    let reader = BufReader::new(file);
+    for line in reader.lines() {
+        println!("{}", line?); // each line is a matrix
+    }
+    Ok(())
+}
+
+pub fn matrix_multiplication(memory: &Memory, id: usize) -> std::io::Result<()> {
+    let file_path = format!("{}/{}_layer.txt", memory.dir_name, id);
+
+    let file = File::open(file_path)?;
+    let reader = BufReader::new(file);
+    for line in reader.lines() {
+        println!("{}", line?); // each line is a matrix
+    }
+    Ok(())
+}
+
 #[derive(Clone)]
 pub struct Shape {
     pub x: usize,
@@ -105,6 +138,7 @@ pub struct Shape {
 #[derive(Clone)]
 pub struct Tensor {
     //pub matrices: Vec<Matrix>, //TODO ram tensor
+    pub saved: bool,
     pub id: usize,
     pub shape: Shape,
 }
@@ -123,38 +157,57 @@ impl Tensor {
             vec![0.0, 0.0, 0.0],
         ];
         */
-        // incap inside for loop for layer_length
-        let mut matrix_data: Vec<Vec<f64>> = vec![];
-        for row in 0..shape.y {
-            let col: Vec<f64> = vec![0.0; shape.x as usize + 1];
-            matrix_data.push(col);
-        }
-
-        let matrix = Matrix {
-            rows: matrix_data.len(),
-            cols: matrix_data[0].len(),
-            data: matrix_data,
-        };
-
-        let file_path = format!("{}/{}_layer.txt", memory.dir_name, memory.current_layer);
-
-        // encode matrix to a string
-        let infomation_to_write = matrix_into_string(matrix);
-
-        // file then write
-        let mut file = OpenOptions::new()
-            .append(true)
-            .create(true)
-            .open(file_path)
-            .unwrap();
-
-        writeln!(file, "{}", infomation_to_write).unwrap();
 
         memory.current_layer = memory.current_layer + 1;
+
+        // incap inside for loop for layer_length?
+        for layer in 0..layer_length {
+            let mut matrix_data: Vec<Vec<f64>> = vec![];
+            for row in 0..shape.y {
+                let col: Vec<f64> = vec![1.1; shape.x as usize + 1];
+                matrix_data.push(col);
+            }
+
+            let matrix = Matrix {
+                rows: matrix_data.len(),
+                cols: matrix_data[0].len(),
+                data: matrix_data,
+            };
+
+            let save_path: String = format!("{}/saved", memory.dir_name);
+            match fs::create_dir(save_path) {
+                Ok(_) => (),
+                Err(e) => {
+                    if e.kind() == std::io::ErrorKind::NotFound {
+                        ();
+                    } else {
+                        ();
+                    }
+                }
+            }
+
+            let file_path = format!(
+                "{}/saved/{}_layer.txt",
+                memory.dir_name, memory.current_layer
+            );
+
+            // encode matrix to a string
+            let infomation_to_write = matrix_into_string(matrix);
+
+            // file then write
+            let mut file = OpenOptions::new()
+                .append(true)
+                .create(true)
+                .open(file_path)
+                .unwrap();
+
+            writeln!(file, "{}", infomation_to_write).unwrap();
+        }
 
         Tensor {
             id: memory.current_layer,
             shape: shape,
+            saved: true,
         }
     }
 }
