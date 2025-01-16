@@ -117,15 +117,33 @@ pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
     Ok(())
 }
 
+// TODO single operations / and or scaler
 pub fn matrix_multiplication(memory: &Memory, id: usize) -> std::io::Result<()> {
-    let file_path = format!("{}/{}_layer.txt", memory.dir_name, id);
+    let file_path = format!("{}/save/{}_layer.txt", memory.dir_name, id);
 
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
     for line in reader.lines() {
-        println!("{}", line?); // each line is a matrix
+        println!("{}", line?);
     }
     Ok(())
+}
+
+pub fn clear_all_memory(memory: &Memory) {
+    let file_path = format!("{}/saved", memory.dir_name);
+    fs::remove_dir_all(file_path).unwrap();
+    let file_path = format!("{}/loaded", memory.dir_name);
+    fs::remove_dir_all(file_path).unwrap();
+}
+
+pub fn clear_save(memory: &Memory) {
+    let file_path = format!("{}/saved", memory.dir_name);
+    fs::remove_dir_all(file_path).unwrap();
+}
+
+pub fn clear_load(memory: &Memory) {
+    let file_path = format!("{}/loaded", memory.dir_name);
+    fs::remove_dir_all(file_path).unwrap();
 }
 
 #[derive(Clone)]
