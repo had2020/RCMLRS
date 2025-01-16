@@ -101,6 +101,7 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+/// Warning will load each whole line into memory in one block!
 pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
     let file_path: String;
     if tensor.saved {
@@ -117,15 +118,54 @@ pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
     Ok(())
 }
 
-// TODO single operations / and or scaler
-pub fn matrix_multiplication(memory: &Memory, id: usize) -> std::io::Result<()> {
-    let file_path = format!("{}/save/{}_layer.txt", memory.dir_name, id);
+use std::io::Read;
 
+// TODO single operations / and or scaler
+pub fn matrix_multiplication(
+    memory: &Memory,
+    tensor_1: Tensor,
+    tensor_2: Tensor,
+) -> std::io::Result<()> {
+    let file_path = format!("{}/save/{}_layer.txt", &memory.dir_name, tensor_1.id);
+    let file = File::open(file_path)?;
+    let mut reader = BufReader::new(file);
+    let mut buffer = [0; 1];
+
+    loop {
+        let bytes_read = reader.read(&mut buffer)?;
+
+        if bytes_read == 0 {
+            // end of file
+            break;
+        }
+
+        // process character byte
+        let character = buffer[0] as char;
+        print!("{}", character); // TODO
+
+        // handling UTF-8
+        if !character.is_ascii() {
+            let mut remaining_bytes = Vec::new();
+            let num_remaining_bytes = character.len_utf8() - 1;
+            for _ in 0..num_remaining_bytes {
+                let mut next_byte_buffer = [0; 1];
+                reader.read(&mut next_byte_buffer)?;
+                remaining_bytes.push(next_byte_buffer[0]);
+            }
+            let mut all_bytes = buffer.to_vec();
+            all_bytes.extend(&remaining_bytes);
+            let s = String::from_utf8(all_bytes).unwrap();
+            print!("{}", s);
+        }
+    }
+
+    /*
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
     for line in reader.lines() {
         println!("{}", line?);
     }
+    */
     Ok(())
 }
 
@@ -178,11 +218,13 @@ impl Tensor {
 
         memory.current_layer = memory.current_layer + 1;
 
+        let zero_value: f64 = 0.0;
+
         // incap inside for loop for layer_length?
         for layer in 0..layer_length {
             let mut matrix_data: Vec<Vec<f64>> = vec![];
             for row in 0..shape.y {
-                let col: Vec<f64> = vec![1.1; shape.x as usize + 1];
+                let col: Vec<f64> = vec![zero_value; shape.x as usize + 1];
                 matrix_data.push(col);
             }
 
