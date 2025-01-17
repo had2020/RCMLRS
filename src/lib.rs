@@ -70,9 +70,17 @@ pub fn matrix_into_string(matrix: Matrix) -> String {
         for cols in row {
             let col = format!("{cols}");
             matrix_string.push_str("b");
+            /*
+            if col.len() != 3 {
+                matrix_string.push_str(&col);
+            } else {
+                matrix_string.push_str(&col);
+            }
+            */
             matrix_string.push_str(&col);
         }
     }
+    //matrix_string.push_str("c");
     matrix_string
 }
 
@@ -99,6 +107,7 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
 }
 
 use std::fs::File;
+use std::io::Read;
 use std::io::{BufRead, BufReader};
 
 /// Warning will load each whole line into memory in one block!
@@ -118,55 +127,26 @@ pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
     Ok(())
 }
 
-use std::io::Read;
-
 // TODO single operations / and or scaler
-pub fn matrix_multiplication(
-    memory: &Memory,
-    tensor_1: Tensor,
-    tensor_2: Tensor,
-) -> std::io::Result<()> {
-    let file_path = format!("{}/save/{}_layer.txt", &memory.dir_name, tensor_1.id);
-    let file = File::open(file_path)?;
-    let mut reader = BufReader::new(file);
-    let mut buffer = [0; 1];
+/// Multiples a whole layer, by another, each layer stands as a Tensor.
+pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor) {
+    if tensor_1.shape.x == tensor_2.shape.x && tensor_1.shape.y == tensor_2.shape.y {
+        let read_file_path = format!("{}/saved/{}_layer.txt", &memory.dir_name, tensor_1.id);
+        let file = File::open(read_file_path).unwrap();
+        let mut reader = BufReader::new(file);
+        let mut buffer = [0; 1];
 
-    loop {
-        let bytes_read = reader.read(&mut buffer)?;
-
-        if bytes_read == 0 {
-            // end of file
-            break;
-        }
-
-        // process character byte
-        let character = buffer[0] as char;
-        print!("{}", character); // TODO
-
-        // handling UTF-8
-        if !character.is_ascii() {
-            let mut remaining_bytes = Vec::new();
-            let num_remaining_bytes = character.len_utf8() - 1;
-            for _ in 0..num_remaining_bytes {
-                let mut next_byte_buffer = [0; 1];
-                reader.read(&mut next_byte_buffer)?;
-                remaining_bytes.push(next_byte_buffer[0]);
+        while reader.read(&mut buffer).unwrap() > 0 {
+            // needs to compare with each number
+            let char = buffer[0] as char;
+            if char == '\n' {
+                println!("new line");
             }
-            let mut all_bytes = buffer.to_vec();
-            all_bytes.extend(&remaining_bytes);
-            let s = String::from_utf8(all_bytes).unwrap();
-            print!("{}", s);
+            println!("{}", char);
         }
+    } else {
+        eprintln!("Tensors Multipled of Differing Shapes! 🙅");
     }
-
-    /*
-    let file = File::open(file_path)?;
-    let reader = BufReader::new(file);
-    for line in reader.lines() {
-        println!("{}", line?);
-    }
-    */
-    Ok(())
 }
 
 pub fn clear_all_memory(memory: &Memory) {
