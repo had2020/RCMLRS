@@ -125,6 +125,61 @@ pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
     Ok(())
 }
 
+pub fn find_point_matrix(tensor_file_path: String, stop_shape_counting_at: Shape) -> f64 {
+    let file = File::open(tensor_file_path).unwrap();
+    let mut reader = BufReader::new(file);
+    let mut buffer = [0; 1];
+
+    // loop counter items
+    let mut shape_counter = Shape { x: 0, y: 0 };
+    let mut index_f64_value: f64 = 0.0;
+    let mut index_string_value: String = "".to_string();
+
+    while reader.read(&mut buffer).unwrap() > 0 {
+        // needs to compare with each number
+        let char = buffer[0] as char;
+        // store temp operations in .temp
+        println!("{}", char); // only for debug
+
+        let mut new_line: bool = false;
+
+        match char {
+            'a' => {
+                // new row
+                shape_counter.x += 1;
+                index_string_value = "".to_string(); //TODO write to temp or loaded
+                index_f64_value = 0.0;
+            }
+            'b' => {
+                // new column
+                shape_counter.y += 1;
+                // share if the right index
+                if stop_shape_counting_at.x == shape_counter.x
+                    && stop_shape_counting_at.y == shape_counter.y
+                {
+                    break;
+                }
+                index_string_value = "".to_string(); // TODO multiply and temp
+
+                index_f64_value = 0.0;
+            }
+            '\n' => {
+                // another whole matrix
+                println!("new line");
+                new_line = true;
+                break; // should not happen TODO new line counter for more than one
+            }
+            _ => {
+                index_string_value.push_str(&char.to_string());
+                if index_string_value.len() > 0 && !new_line {
+                    index_f64_value = index_string_value.parse().unwrap();
+                }
+            }
+        }
+    }
+    index_f64_value
+}
+
 // TODO single operations / and or scaler
 /// Multiples a whole layer, by another, each layer stands as a Tensor.
 pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor) {
@@ -134,6 +189,7 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
         let mut reader = BufReader::new(file);
         let mut buffer = [0; 1];
 
+        // loop counter items
         let mut shape_counter = Shape { x: 0, y: 0 };
         let mut index_f64_value: f64 = 0.0;
         let mut index_string_value: String = "".to_string();
@@ -157,6 +213,7 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                     // new column
                     shape_counter.y += 1;
                     index_string_value = "".to_string(); // TODO multiply and temp
+
                     index_f64_value = 0.0;
                 }
                 '\n' => {
@@ -172,12 +229,12 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                     }
                 }
             }
-            // TODO find char for the same index in the other matrix's counter
-
+            // DEBUG, TODO remove!
             println!("scanned: x:{}, y:{}", shape_counter.x, shape_counter.y);
             println!("num: {}", index_string_value);
             println!("floated: {}", index_f64_value);
             println!("__");
+            // DEBUG
         }
     } else {
         eprintln!("Tensors Multipled of Differing Shapes! 🙅"); //TODO fix shape? first x and second y make new shape
