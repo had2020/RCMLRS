@@ -193,6 +193,7 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
         let mut shape_counter = Shape { x: 0, y: 0 };
         let mut index_f64_value: f64 = 0.0;
         let mut index_string_value: String = "".to_string();
+        let mut new_line_counter: usize = 0;
 
         while reader.read(&mut buffer).unwrap() > 0 {
             // needs to compare with each number
