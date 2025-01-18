@@ -66,21 +66,15 @@ pub fn matrix_print(matrix: Matrix) {
 pub fn matrix_into_string(matrix: Matrix) -> String {
     let mut matrix_string: String = String::new();
     for row in matrix.data {
+        // x, Rows
         matrix_string.push_str("a");
         for cols in row {
+            // y, Columns
             let col = format!("{cols}");
             matrix_string.push_str("b");
-            /*
-            if col.len() != 3 {
-                matrix_string.push_str(&col);
-            } else {
-                matrix_string.push_str(&col);
-            }
-            */
             matrix_string.push_str(&col);
         }
     }
-    //matrix_string.push_str("c");
     matrix_string
 }
 
@@ -136,16 +130,41 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
         let mut reader = BufReader::new(file);
         let mut buffer = [0; 1];
 
+        let mut shape_counter = Shape { x: 0, y: 0 };
+        let mut in_index: bool = false;
+        let mut index_f64_value: f64 = 0.0;
+        let mut index_string_value: String = "".to_string();
+
         while reader.read(&mut buffer).unwrap() > 0 {
             // needs to compare with each number
             let char = buffer[0] as char;
             if char == '\n' {
-                println!("new line");
+                println!("new line"); // matrix multiple with next matrix
             }
-            println!("{}", char);
+            // store temp operations in .temp
+            println!("{}", char); // only for debug
+
+            match char {
+                'a' => {
+                    shape_counter.x += 1;
+                    index_string_value = "".to_string(); //TODO write to temp or loaded
+                }
+                'b' => {
+                    in_index = !in_index;
+                    index_string_value = "".to_string(); // TODO multiply and temp
+                }
+                _ => index_string_value.push_str(&char.to_string()),
+            }
+            // TODO find char for the same index in the other matrix's counter
+
+            println!("scanned: x:{}, y:{}", shape_counter.x, shape_counter.y);
+            println!("num: {}", index_string_value);
+            index_f64_value = index_string_value.parse().unwrap();
+            println!("floated: {}", index_f64_value); //TODO replace
+            println!("__");
         }
     } else {
-        eprintln!("Tensors Multipled of Differing Shapes! 🙅");
+        eprintln!("Tensors Multipled of Differing Shapes! 🙅"); //TODO fix shape? first x and second y make new shape
     }
 }
 
@@ -168,11 +187,11 @@ pub fn clear_load(memory: &Memory) {
 
 #[derive(Clone)]
 pub struct Shape {
-    pub x: usize,
-    pub y: usize,
+    pub x: usize, // Rows →
+    pub y: usize, // Columns ↓
 }
 
-// representants single layer tensor operation needs
+/// holds single layer tensor operation qualites
 #[derive(Clone)]
 pub struct Tensor {
     //pub matrices: Vec<Matrix>, //TODO ram tensor

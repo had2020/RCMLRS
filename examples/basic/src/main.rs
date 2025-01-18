@@ -8,8 +8,9 @@ fn forward(tensor: Tensor) -> Tensor {
 fn main() {
     let mut memory = Memory::new("test");
 
-    let weights: Tensor = Tensor::new_layer_zeros(&mut memory, Shape { x: 1, y: 1 }, 2);
-    let bias: Tensor = Tensor::new_layer_zeros(&mut memory, Shape { x: 1, y: 1 }, 2);
+    // TODO input layer
+    let weights: Tensor = Tensor::new_layer_zeros(&mut memory, Shape { x: 2, y: 2 }, 1);
+    let bias: Tensor = Tensor::new_layer_zeros(&mut memory, Shape { x: 2, y: 2 }, 1);
 
     /*
     println!("WEIGHTS:");
@@ -22,5 +23,8 @@ fn main() {
     clear_save(&memory);
     */
 
+    //TODO Relu
     matrix_multiplication(&memory, weights, bias);
+
+    clear_save(&memory)
 }
