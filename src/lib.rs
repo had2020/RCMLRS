@@ -66,12 +66,16 @@ pub fn matrix_print(matrix: Matrix) {
 pub fn matrix_into_string(matrix: Matrix) -> String {
     let mut matrix_string: String = String::new();
     for row in matrix.data {
-        // x, Rows
-        matrix_string.push_str("a");
+        let mut first_b: bool = true; // the 'b' after the a is not needed
+        matrix_string.push_str("a"); // x, row's length
         for cols in row {
             // y, Columns
             let col = format!("{cols}");
-            matrix_string.push_str("b");
+            if !first_b {
+                matrix_string.push_str("b");
+            } else {
+                first_b = false
+            }
             matrix_string.push_str(&col);
         }
     }
@@ -147,26 +151,32 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                     // new row
                     shape_counter.x += 1;
                     index_string_value = "".to_string(); //TODO write to temp or loaded
+                    index_f64_value = 0.0;
                 }
                 'b' => {
-                    // new number
+                    // new column
+                    shape_counter.y += 1;
                     index_string_value = "".to_string(); // TODO multiply and temp
+                    index_f64_value = 0.0;
                 }
                 '\n' => {
                     // another whole matrix
                     println!("new line");
                     new_line = true;
+                    break; // for debugging
                 }
-                _ => index_string_value.push_str(&char.to_string()),
+                _ => {
+                    index_string_value.push_str(&char.to_string());
+                    if index_string_value.len() > 0 && !new_line {
+                        index_f64_value = index_string_value.parse().unwrap();
+                    }
+                }
             }
             // TODO find char for the same index in the other matrix's counter
 
             println!("scanned: x:{}, y:{}", shape_counter.x, shape_counter.y);
             println!("num: {}", index_string_value);
-            if index_string_value.len() > 0 && !new_line {
-                index_f64_value = index_string_value.parse().unwrap();
-                println!("floated: {}", index_f64_value); //TODO replace
-            }
+            println!("floated: {}", index_f64_value);
             println!("__");
         }
     } else {
@@ -226,13 +236,12 @@ impl Tensor {
 
         memory.current_layer = memory.current_layer + 1;
 
-        let zero_value: f64 = 2.152;
+        let zero_value: f64 = 0.0;
 
-        // incap inside for loop for layer_length?
         for layer in 0..layer_length {
             let mut matrix_data: Vec<Vec<f64>> = vec![];
             for row in 0..shape.y {
-                let col: Vec<f64> = vec![zero_value; shape.x as usize + 1];
+                let col: Vec<f64> = vec![zero_value; shape.x as usize];
                 matrix_data.push(col);
             }
 
