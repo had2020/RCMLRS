@@ -26,5 +26,5 @@ fn main() {
     //TODO Relu
     matrix_multiplication(&memory, weights, bias);
 
-    clear_save(&memory)
+    clear_save(&memory);
 }

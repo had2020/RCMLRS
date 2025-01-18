@@ -131,27 +131,31 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
         let mut buffer = [0; 1];
 
         let mut shape_counter = Shape { x: 0, y: 0 };
-        let mut in_index: bool = false;
         let mut index_f64_value: f64 = 0.0;
         let mut index_string_value: String = "".to_string();
 
         while reader.read(&mut buffer).unwrap() > 0 {
             // needs to compare with each number
             let char = buffer[0] as char;
-            if char == '\n' {
-                println!("new line"); // matrix multiple with next matrix
-            }
             // store temp operations in .temp
             println!("{}", char); // only for debug
 
+            let mut new_line: bool = false;
+
             match char {
                 'a' => {
+                    // new row
                     shape_counter.x += 1;
                     index_string_value = "".to_string(); //TODO write to temp or loaded
                 }
                 'b' => {
-                    in_index = !in_index;
+                    // new number
                     index_string_value = "".to_string(); // TODO multiply and temp
+                }
+                '\n' => {
+                    // another whole matrix
+                    println!("new line");
+                    new_line = true;
                 }
                 _ => index_string_value.push_str(&char.to_string()),
             }
@@ -159,8 +163,10 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
 
             println!("scanned: x:{}, y:{}", shape_counter.x, shape_counter.y);
             println!("num: {}", index_string_value);
-            index_f64_value = index_string_value.parse().unwrap();
-            println!("floated: {}", index_f64_value); //TODO replace
+            if index_string_value.len() > 0 && !new_line {
+                index_f64_value = index_string_value.parse().unwrap();
+                println!("floated: {}", index_f64_value); //TODO replace
+            }
             println!("__");
         }
     } else {
@@ -177,7 +183,10 @@ pub fn clear_all_memory(memory: &Memory) {
 
 pub fn clear_save(memory: &Memory) {
     let file_path = format!("{}/saved", memory.dir_name);
-    fs::remove_dir_all(file_path).unwrap();
+    match fs::remove_dir_all(file_path) {
+        Ok(_) => println!("Cleared Saved folder. ✅"),
+        Err(e) => eprintln!("Could not clear Saved folder for: {}", e),
+    }
 }
 
 pub fn clear_load(memory: &Memory) {
@@ -217,7 +226,7 @@ impl Tensor {
 
         memory.current_layer = memory.current_layer + 1;
 
-        let zero_value: f64 = 0.0;
+        let zero_value: f64 = 2.152;
 
         // incap inside for loop for layer_length?
         for layer in 0..layer_length {
