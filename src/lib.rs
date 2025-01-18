@@ -125,7 +125,11 @@ pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
     Ok(())
 }
 
-pub fn find_point_matrix(tensor_file_path: String, stop_shape_counting_at: Shape) -> f64 {
+pub fn find_point_matrix(
+    tensor_file_path: String,
+    stop_shape_counting_at: Shape,
+    stop_at_new_line: usize,
+) -> f64 {
     let file = File::open(tensor_file_path).unwrap();
     let mut reader = BufReader::new(file);
     let mut buffer = [0; 1];
@@ -214,14 +218,23 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                     // new column
                     shape_counter.y += 1;
                     index_string_value = "".to_string(); // TODO multiply and temp
-
+                    let other_file_path =
+                        format!("{}/saved/{}_layer.txt", &memory.dir_name, tensor_2.id);
+                    find_point_matrix(
+                        other_file_path,
+                        Shape {
+                            x: shape_counter.x,
+                            y: shape_counter.y,
+                        },
+                        new_line_counter,
+                    );
                     index_f64_value = 0.0;
                 }
                 '\n' => {
                     // another whole matrix
                     println!("new line");
                     new_line = true;
-                    break; // for debugging
+                    new_line_counter += 1;
                 }
                 _ => {
                     index_string_value.push_str(&char.to_string());
