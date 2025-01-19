@@ -138,14 +138,13 @@ pub fn find_point_matrix(
     let mut shape_counter = Shape { x: 0, y: 0 };
     let mut index_f64_value: f64 = 0.0;
     let mut index_string_value: String = "".to_string();
+    let mut new_line_counter: usize = 0;
 
     while reader.read(&mut buffer).unwrap() > 0 {
         // needs to compare with each number
         let char = buffer[0] as char;
         // store temp operations in .temp
         println!("{}", char); // only for debug
-
-        let mut new_line: bool = false;
 
         match char {
             'a' => {
@@ -160,6 +159,7 @@ pub fn find_point_matrix(
                 // share if the right index
                 if stop_shape_counting_at.x == shape_counter.x
                     && stop_shape_counting_at.y == shape_counter.y
+                    && new_line_counter == stop_at_new_line
                 {
                     break;
                 }
@@ -170,12 +170,11 @@ pub fn find_point_matrix(
             '\n' => {
                 // another whole matrix
                 println!("new line");
-                new_line = true;
-                break; // should not happen TODO new line counter for more than one
+                new_line_counter += 1;
             }
             _ => {
                 index_string_value.push_str(&char.to_string());
-                if index_string_value.len() > 0 && !new_line {
+                if index_string_value.len() > 0 {
                     index_f64_value = index_string_value.parse().unwrap();
                 }
             }
@@ -205,8 +204,6 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
             // store temp operations in .temp
             println!("{}", char); // only for debug
 
-            let mut new_line: bool = false;
-
             match char {
                 'a' => {
                     // new row
@@ -233,12 +230,11 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                 '\n' => {
                     // another whole matrix
                     println!("new line");
-                    new_line = true;
                     new_line_counter += 1;
                 }
                 _ => {
                     index_string_value.push_str(&char.to_string());
-                    if index_string_value.len() > 0 && !new_line {
+                    if index_string_value.len() > 0 {
                         index_f64_value = index_string_value.parse().unwrap();
                     }
                 }
@@ -307,7 +303,7 @@ impl Tensor {
 
         memory.current_layer = memory.current_layer + 1;
 
-        let zero_value: f64 = 0.0;
+        let zero_value: f64 = 0.1;
 
         for layer in 0..layer_length {
             let mut matrix_data: Vec<Vec<f64>> = vec![];
