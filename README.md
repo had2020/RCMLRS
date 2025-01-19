@@ -7,3 +7,4 @@ Very early trials of creations...
  TODO docs
  Notes
  - Must delete txt file not text inside
+ - creation does not use buf so TODO use buf

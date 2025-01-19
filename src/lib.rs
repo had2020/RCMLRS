@@ -218,6 +218,7 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                     let other_file_path =
                         format!("{}/saved/{}_layer.txt", &memory.dir_name, tensor_2.id);
                     find_point_matrix(
+                        // TODO save in load file
                         other_file_path,
                         Shape {
                             x: shape_counter.x,
