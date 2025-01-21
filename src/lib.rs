@@ -227,6 +227,9 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                         },
                         new_line_counter,
                     );
+                    // return something from find_point_matrix and use mult
+                    index_f64_value = 0.0;
+                    index_string_value = "".to_string();
                     index_f64_value = 0.0;
                 }
                 '\n' => {
