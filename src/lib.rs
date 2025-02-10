@@ -372,17 +372,23 @@ impl RamTensor {
         let mut new_matrix = Matrix {
             rows: shape.x,
             cols: shape.y,
-            data: vec![vec![0.0, 0.0, 0.0]],
+            data: vec![], // Vec<Vec<f64>>
         };
 
-        for wight in 0..layer_length {
-            for (iteration, rows) in new_matrix.data.iter().enumerate() {
-                new_matrix.data[iteration] =
+        let zero_value: f64 = 0.0;
+
+        for maxtrice in 0..layer_length {
+            // first vec
+            new_matrix.data.push(vec![]);
+
+            for row in 0..shape.x {
+                // second vec
+                for col in 0..new_matrix.cols {
+                    new_matrix.data[maxtrice][row].push(zero_value);
+                }
             }
         }
 
-        RamTensor {
-            matrix: new_matrix,
-        }
+        RamTensor { matrix: new_matrix }
     }
 }
