@@ -5,7 +5,7 @@ macro_rules! init_memory {
     };
 } // delete later
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Matrix {
     pub rows: usize,
     pub cols: usize,
@@ -363,8 +363,9 @@ impl Tensor {
 }
 
 // Ram tensor
+#[derive(Clone, Debug)]
 pub struct RamTensor {
-    matrix: Matrix,
+    pub matrix: Matrix,
 }
 
 impl RamTensor {
@@ -380,11 +381,15 @@ impl RamTensor {
         for maxtrice in 0..layer_length {
             // first vec
             new_matrix.data.push(vec![]);
+            println!("push");
 
             for row in 0..shape.x {
                 // second vec
+                //new_matrix.data[maxtrice][col] = zero_value; instead
+                new_matrix.data[maxtrice].push(0.0);
                 for col in 0..new_matrix.cols {
-                    new_matrix.data[maxtrice][row].push(zero_value);
+                    //new_matrix.data[maxtrice].push(zero_value);
+                    new_matrix.data[maxtrice][row] = zero_value;
                 }
             }
         }
