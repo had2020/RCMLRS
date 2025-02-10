@@ -2,3 +2,7 @@
 /target
 /examples/basic/target
 /examples/basic/test
+/examples/basic_ram/target
+/examples/basic_storage/target
+examples/basic_ram/.DS_Store
+examples/basic_storage/.DS_Store

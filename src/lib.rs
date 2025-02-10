@@ -107,6 +107,7 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
 use std::fs::File;
 use std::io::Read;
 use std::io::{BufRead, BufReader};
+use std::os::unix::fs::MetadataExt;
 
 /// Warning will load each whole line into memory in one block!
 pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
@@ -357,6 +358,31 @@ impl Tensor {
             id: memory.current_layer,
             shape: shape,
             saved: true,
+        }
+    }
+}
+
+// Ram tensor
+pub struct RamTensor {
+    matrix: Matrix,
+}
+
+impl RamTensor {
+    pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
+        let mut new_matrix = Matrix {
+            rows: shape.x,
+            cols: shape.y,
+            data: vec![vec![0.0, 0.0, 0.0]],
+        };
+
+        for wight in 0..layer_length {
+            for (iteration, rows) in new_matrix.data.iter().enumerate() {
+                new_matrix.data[iteration] =
+            }
+        }
+
+        RamTensor {
+            matrix: new_matrix,
         }
     }
 }
