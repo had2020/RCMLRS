@@ -378,13 +378,25 @@ impl RamTensor {
 
         let zero_value: f64 = 0.0;
 
-        for maxtrice in 0..layer_length {
-            let mut matrix_data: Vec<Vec<f64>> = vec![];
+        /*
+        for matrice in 0..layer_length {
+            let mut matrix_data: Vec<f64> = vec![];
             for row in 0..shape.y {
                 let col: Vec<f64> = vec![zero_value; shape.x as usize];
                 matrix_data.push(col);
             }
-            new_matrix.data = matrix_data;
+            new_matrix.data[maxtrice] = matrix_data;
+        }
+        */
+
+        let mut baseline_matrix: Vec<Vec<f64>> = vec![];
+
+        for row in 0..shape.x {
+            for col in 0..shape.y {}
+        }
+
+        for matrice in 0..layer_length {
+            //times baseline to set new_matrix also change struct type
         }
 
         RamTensor { matrix: new_matrix }
