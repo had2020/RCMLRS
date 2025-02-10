@@ -379,17 +379,12 @@ impl RamTensor {
         let zero_value: f64 = 0.0;
 
         for maxtrice in 0..layer_length {
-            // first vec
-            new_matrix.data.push(vec![]);
-
-            for row in 0..shape.x {
-                // second vec
-                new_matrix.data[maxtrice].push(0.0);
-                for col in 0..new_matrix.cols {
-                    //new_matrix.data[maxtrice].push(zero_value);
-                    //new_matrix.data[maxtrice][row] = zero_value;
-                }
+            let mut matrix_data: Vec<Vec<f64>> = vec![];
+            for row in 0..shape.y {
+                let col: Vec<f64> = vec![zero_value; shape.x as usize];
+                matrix_data.push(col);
             }
+            new_matrix.data = matrix_data;
         }
 
         RamTensor { matrix: new_matrix }

@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "basic"
+name = "basic_ram"
 version = "0.1.0"
 dependencies = [
  "rcmlrs",
