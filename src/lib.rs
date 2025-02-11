@@ -277,7 +277,7 @@ pub fn clear_load(memory: &Memory) {
     fs::remove_dir_all(file_path).unwrap();
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Shape {
     pub x: usize, // Rows →
     pub y: usize, // Columns ↓
@@ -365,40 +365,32 @@ impl Tensor {
 // Ram tensor
 #[derive(Clone, Debug)]
 pub struct RamTensor {
-    pub matrix: Matrix,
+    pub shape: Shape,
+    pub data: Vec<Vec<Vec<f64>>>,
 }
 
 impl RamTensor {
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
-        let mut new_matrix = Matrix {
-            rows: shape.x,
-            cols: shape.y,
-            data: vec![], // Vec<Vec<f64>>
-        };
-
         let zero_value: f64 = 0.0;
-
-        /*
-        for matrice in 0..layer_length {
-            let mut matrix_data: Vec<f64> = vec![];
-            for row in 0..shape.y {
-                let col: Vec<f64> = vec![zero_value; shape.x as usize];
-                matrix_data.push(col);
-            }
-            new_matrix.data[maxtrice] = matrix_data;
-        }
-        */
+        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
         let mut baseline_matrix: Vec<Vec<f64>> = vec![];
 
         for row in 0..shape.x {
-            for col in 0..shape.y {}
+            let mut current_row: Vec<f64> = vec![];
+            for col in 0..shape.y {
+                current_row.push(zero_value);
+            }
+            baseline_matrix.push(current_row);
         }
 
         for matrice in 0..layer_length {
-            //times baseline to set new_matrix also change struct type
+            new_data.push(baseline_matrix.clone());
         }
 
-        RamTensor { matrix: new_matrix }
+        RamTensor {
+            shape: shape,
+            data: new_data,
+        }
     }
 }
