@@ -395,6 +395,11 @@ impl RamTensor {
     }
 }
 
-pub fn ram_matrix_multiplication(RamTensor) -> RamTensor{
-
+pub fn ram_matrix_multiplication(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> RamTensor {
+    for matrix1 in First_Tensor.data {
+        for row in matrix1 {}
+        for matrix2 in &Second_Tensor.data {}
+    }
+    let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
+    weights
 }
