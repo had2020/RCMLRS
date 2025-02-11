@@ -362,7 +362,7 @@ impl Tensor {
     }
 }
 
-// Ram tensor
+// Ram tensor, TODO UPDATE STORAGE BASED
 #[derive(Clone, Debug)]
 pub struct RamTensor {
     pub shape: Shape,
@@ -393,4 +393,8 @@ impl RamTensor {
             data: new_data,
         }
     }
+}
+
+pub fn ram_matrix_multiplication(RamTensor) -> RamTensor{
+
 }
