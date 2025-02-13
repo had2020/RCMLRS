@@ -403,36 +403,27 @@ impl RamTensor {
             // rows times columns
             for (matrix_index, matrix) in self.data.iter().enumerate() {
                 new_data.push(vec![]);
-                for (row_index, row) in matrix.iter().enumerate() {
-                    let mut row_dot_product: f64 = 0.0;
-                    let mut initial_location = (0, 0);
 
-                    // will not be good, needs for for points in both
-                    for (point_index, point) in row.iter().enumerate() {
-                        let mut point_iter = 0;
+                for (row_index, row) in matrix.iter().enumerate() {
+                    new_data[matrix_index].push(vec![]);
+                    let mut row_dot_product: f64 = 0.0;
+
+                    for (points_index, point) in row.iter().enumerate() {
                         for (point_index2, point2) in row.iter().enumerate() {
                             let matching_index =
-                                another_tensor.data[matrix_index][point_index][]; // have been swapped for a test, NOTE point index should maybe be some initial NOTE was [point_index][row_index];
-                            let rcproduct = point * matching_index; // times and add by every index in col
+                                another_tensor.data[matrix_index][points_index][point_index2];
+                            let rcproduct = point * matching_index;
+                            row_dot_product += rcproduct;
                         }
-                        // new test
-                        //for col in &another_tensor.data[matrix_index] {}
-
-                        initial_location = (row_index, point_index);
-                        let matching_index =
-                            another_tensor.data[matrix_index][point_index][]; // have been swapped for a test, NOTE point index should maybe be some initial NOTE was [point_index][row_index];
-                        let rcproduct = point * matching_index; // times and add by every index in col
-                        row_dot_product += rcproduct;
                     }
-                    new_data[matrix_index][initial_location.0][initial_location.1] =
-                        row_dot_product;
-
-                    row_dot_product = 0.0; // wait this is not needed?
-                    initial_location = (0, 0);
+                    new_data[matrix_index][row_index].push(row_dot_product);
                 }
             }
-            let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
-            Ok(weights)
+            Ok(RamTensor {
+                shape: self.shape.clone(),
+                layer_length: self.layer_length,
+                data: new_data,
+            })
         } else {
             Err(String::from("Cannot multiply matrixs of differing sizes"))
         }
