@@ -402,12 +402,20 @@ impl RamTensor {
         if (self.shape.x == another_tensor.shape.x) && (self.shape.y == another_tensor.shape.y) {
             // rows times columns
             for (matrix_index, matrix) in self.data.iter().enumerate() {
+                new_data.push(vec![]);
                 for (row_index, row) in matrix.iter().enumerate() {
+                    let mut row_dot_product: f64 = 0.0;
+                    let mut initial_location = (0, 0);
                     for (point_index, point) in row.iter().enumerate() {
                         let matching_index =
                             another_tensor.data[matrix_index][point_index][row_index]; // have been swapped for a test
                         let rcproduct = point * matching_index;
+                        row_dot_product += rcproduct;
                     }
+                    new_data[matrix_index][initial_location.0][initial_location.1] =
+                        row_dot_product;
+                    row_dot_product = 0.0;
+                    initial_location = (0, 0);
                 }
             }
             let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
