@@ -366,6 +366,7 @@ impl Tensor {
 #[derive(Clone, Debug)]
 pub struct RamTensor {
     pub shape: Shape,
+    pub layer_length: usize,
     pub data: Vec<Vec<Vec<f64>>>,
 }
 
@@ -391,15 +392,23 @@ impl RamTensor {
         RamTensor {
             shape: shape,
             data: new_data,
+            layer_length: layer_length,
         }
     }
 }
 
-pub fn ram_matrix_multiplication(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> RamTensor {
-    for matrix1 in First_Tensor.data {
-        for row in matrix1 {}
-        for matrix2 in &Second_Tensor.data {}
+// ram based Matrix Multiplication
+pub fn ram_matmul(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> RamTensor {
+    if (First_Tensor.shape.x == Second_Tensor.shape.x)
+        && (First_Tensor.shape.y == Second_Tensor.shape.y)
+    {
+        for matrix1 in First_Tensor.data {
+            for row in matrix1 {}
+            for matrix2 in &Second_Tensor.data {}
+        }
+        let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
+        weights
+    } else {
+        First_Tensor
     }
-    let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
-    weights
 }
