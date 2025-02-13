@@ -407,7 +407,7 @@ impl RamTensor {
 }
 
 // ram based Matrix Multiplication
-pub fn ram_matmul(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> RamTensor {
+pub fn ram_matmul(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> Result<RamTensor, String> {
     let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
     if (First_Tensor.shape.x == Second_Tensor.shape.x)
         && (First_Tensor.shape.y == Second_Tensor.shape.y)
@@ -420,8 +420,8 @@ pub fn ram_matmul(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> RamTenso
             for matrix2 in &Second_Tensor.data {}
         }
         let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
-        weights
+        Ok(weights)
     } else {
-        First_Tensor
+        Err(String::from("Cannot multiply matrixs of differing sizes"))
     }
 }
