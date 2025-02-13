@@ -395,15 +395,28 @@ impl RamTensor {
             layer_length: layer_length,
         }
     }
+
+    pub fn matmul(&self, another_tensor: RamTensor) -> Self {
+        println!("{:?}", self);
+        RamTensor {
+            shape: another_tensor.shape,
+            data: another_tensor.data,
+            layer_length: another_tensor.layer_length,
+        }
+    }
 }
 
 // ram based Matrix Multiplication
 pub fn ram_matmul(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> RamTensor {
+    let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
     if (First_Tensor.shape.x == Second_Tensor.shape.x)
         && (First_Tensor.shape.y == Second_Tensor.shape.y)
     {
+        // rows times columns
         for matrix1 in First_Tensor.data {
-            for row in matrix1 {}
+            for row in matrix1 {
+                for index in row {}
+            }
             for matrix2 in &Second_Tensor.data {}
         }
         let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
