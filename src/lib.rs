@@ -396,17 +396,29 @@ impl RamTensor {
         }
     }
 
-    pub fn matmul(&self, another_tensor: RamTensor) -> Self {
-        println!("{:?}", self);
-        RamTensor {
-            shape: another_tensor.shape,
-            data: another_tensor.data,
-            layer_length: another_tensor.layer_length,
+    // ram based Matrix Multiplication
+    pub fn matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
+        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        if (self.shape.x == another_tensor.shape.x) && (self.shape.y == another_tensor.shape.y) {
+            // rows times columns
+            for (matrix_index, matrix) in self.data.iter().enumerate() {
+                for (row_index, row) in matrix.iter().enumerate() {
+                    for (point_index, point) in row.iter().enumerate() {
+                        let matching_index =
+                            another_tensor.data[matrix_index][point_index][row_index]; // have been swapped for a test
+                        let rcproduct = point * matching_index;
+                    }
+                }
+            }
+            let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1);
+            Ok(weights)
+        } else {
+            Err(String::from("Cannot multiply matrixs of differing sizes"))
         }
     }
 }
 
-// ram based Matrix Multiplication
+// OLD ram based Matrix Multiplication TODO REMOVE
 pub fn ram_matmul(First_Tensor: RamTensor, Second_Tensor: RamTensor) -> Result<RamTensor, String> {
     let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
     if (First_Tensor.shape.x == Second_Tensor.shape.x)
