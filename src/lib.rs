@@ -406,6 +406,8 @@ impl RamTensor {
 
                 for (row_index, row) in matrix.iter().enumerate() {
                     new_data[matrix_index].push(vec![]);
+                    /* not really works
+                    new_data[matrix_index].push(vec![]);
                     let mut row_dot_product: f64 = 0.0;
 
                     for (points_index, point) in row.iter().enumerate() {
@@ -417,6 +419,14 @@ impl RamTensor {
                         }
                     }
                     new_data[matrix_index][row_index].push(row_dot_product);
+                    */
+                    for col_index in 0..self.shape.y {
+                        let mut sum = 0.0;
+                        for k in 0..self.shape.y {
+                            sum += self.data[matrix_index][row_index][k]
+                                * another_tensor.data[matrix_index][k][col_index];
+                        }
+                    }
                 }
             }
             Ok(RamTensor {
