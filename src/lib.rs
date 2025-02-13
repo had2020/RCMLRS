@@ -407,13 +407,20 @@ impl RamTensor {
                     let mut row_dot_product: f64 = 0.0;
                     let mut initial_location = (0, 0);
 
+                    // will not be good, needs for for points in both
                     for (point_index, point) in row.iter().enumerate() {
+                        let mut point_iter = 0;
+                        for (point_index2, point2) in row.iter().enumerate() {
+                            let matching_index =
+                                another_tensor.data[matrix_index][point_index][]; // have been swapped for a test, NOTE point index should maybe be some initial NOTE was [point_index][row_index];
+                            let rcproduct = point * matching_index; // times and add by every index in col
+                        }
                         // new test
                         //for col in &another_tensor.data[matrix_index] {}
 
                         initial_location = (row_index, point_index);
                         let matching_index =
-                            another_tensor.data[matrix_index][point_index][row_index]; // have been swapped for a test
+                            another_tensor.data[matrix_index][point_index][]; // have been swapped for a test, NOTE point index should maybe be some initial NOTE was [point_index][row_index];
                         let rcproduct = point * matching_index; // times and add by every index in col
                         row_dot_product += rcproduct;
                     }
