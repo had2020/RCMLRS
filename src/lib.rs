@@ -1,4 +1,7 @@
-#[macro_export]
+// RCMLRS
+// By: Hadrian Lazic
+
+#[macro_export] // TODO delete
 macro_rules! init_memory {
     ($name:expr) => {
         println!("{$name}")
@@ -423,7 +426,9 @@ impl RamTensor {
         }
     }
 
-    //simplest activation for non-linearity
+    //activation functions for non-linearity
+
+    ///ReLU
     pub fn relu(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
@@ -448,10 +453,36 @@ impl RamTensor {
             data: new_data,
         }
     }
+
+    ///Leaky ReLU
+    pub fn lrelu(&self, negative_slope: f64) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+
+        for (matrix_index, matrix) in self.data.iter().enumerate() {
+            new_data.push(vec![]);
+
+            for (row_index, row) in matrix.iter().enumerate() {
+                new_data[matrix_index].push(vec![]);
+                for x in row {
+                    if x > &0.0 {
+                        new_data[matrix_index][row_index].push(x.clone());
+                    } else {
+                        new_data[matrix_index][row_index].push(negative_slope * 0.0);
+                    }
+                }
+            }
+        }
+
+        RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
 }
 
-// Custom activation function, for each element/float in matrix
-// operations must be done to x get and set a variable named "x"
+/// Custom activation function, for each element/float in matrix
+/// operations must be done to x get and set a variable named "x"
 #[macro_export]
 macro_rules! cus_act {
     ($ramtensor:expr, $code:expr) => {{
