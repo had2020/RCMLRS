@@ -426,4 +426,14 @@ impl RamTensor {
             Err(String::from("Cannot multiply matrixs of differing sizes"))
         }
     }
+
+    pub fn relu(&self) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+
+        RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
 }
