@@ -430,6 +430,21 @@ impl RamTensor {
     pub fn relu(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
+        for (matrix_index, matrix) in self.data.iter().enumerate() {
+            new_data.push(vec![]);
+
+            for (row_index, row) in matrix.iter().enumerate() {
+                new_data[matrix_index].push(vec![]);
+                for x in row {
+                    if x > &0.0 {
+                        new_data[matrix_index][row_index].push(x.clone());
+                    } else {
+                        new_data[matrix_index][row_index].push(0.0);
+                    }
+                }
+            }
+        }
+
         RamTensor {
             shape: self.shape.clone(),
             layer_length: self.layer_length,
