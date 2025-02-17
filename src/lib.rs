@@ -467,7 +467,7 @@ impl RamTensor {
                     if x > &0.0 {
                         new_data[matrix_index][row_index].push(x.clone());
                     } else {
-                        new_data[matrix_index][row_index].push(negative_slope * 0.0);
+                        new_data[matrix_index][row_index].push(negative_slope * x);
                     }
                 }
             }
@@ -493,6 +493,31 @@ impl RamTensor {
                 for x in row {
                     let denominater = 1.0 + (e.powf(-x.clone()));
                     new_data[matrix_index][row_index].push(1.0 / denominater);
+                }
+            }
+        }
+
+        RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
+
+    ///Tanh
+    pub fn tanh(&self) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        let e = std::f64::consts::E; // Eular's number
+
+        for (matrix_index, matrix) in self.data.iter().enumerate() {
+            new_data.push(vec![]);
+
+            for (row_index, row) in matrix.iter().enumerate() {
+                new_data[matrix_index].push(vec![]);
+                for x in row {
+                    let numerator = e.powf(x.clone()) - e.powf(-x.clone());
+                    let denominater = e.powf(x.clone()) + e.powf(-x.clone());
+                    new_data[matrix_index][row_index].push(numerator / denominater);
                 }
             }
         }

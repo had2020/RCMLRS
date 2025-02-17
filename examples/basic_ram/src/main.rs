@@ -14,9 +14,13 @@ fn main() {
 
     // Relu
     let relu_result = cus_act_res.relu();
-    println!("Relued: {:?}", relu_result.data);
+    println!("ReLU: {:?}", relu_result.data);
 
     // Sigmoid
     let sigmoid_result = relu_result.sigmoid();
-    println!("Sigmoided: {:?}", sigmoid_result.data);
+    println!("Sigmoid: {:?}", sigmoid_result.data);
+
+    // Tanh
+    let tanh_result = sigmoid_result.tanh();
+    println!("Tanh: {:?}", tanh_result.data);
 }
