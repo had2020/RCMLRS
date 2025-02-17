@@ -372,7 +372,7 @@ pub struct RamTensor {
 
 impl RamTensor {
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
-        let zero_value: f64 = -2.0;
+        let zero_value: f64 = 0.0;
         let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
         let mut baseline_matrix: Vec<Vec<f64>> = vec![];
@@ -448,9 +448,15 @@ impl RamTensor {
             data: new_data,
         }
     }
+}
 
-    // Custom activation function, for each element/float in matrix
-    pub fn cus_act(&self) -> RamTensor {
+// Custom activation function, for each element/float in matrix
+// operations must be done to x get and set a variable named "x"
+#[macro_export]
+macro_rules! cus_act {
+    ($code:expr) => {
+        println!("{$code}")
+
         let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
@@ -458,14 +464,12 @@ impl RamTensor {
 
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
-                for x in row {}
+                for x in row {
+                    let result = $code;
+                    new_data[matrix_index][row_index].push(result);
+                }
             }
         }
-
-        RamTensor {
-            shape: self.shape.clone(),
-            layer_length: self.layer_length,
-            data: new_data,
-        }
-    }
+        new_data
+    };
 }
