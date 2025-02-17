@@ -372,7 +372,7 @@ pub struct RamTensor {
 
 impl RamTensor {
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
-        let zero_value: f64 = 0.0;
+        let zero_value: f64 = -2.0;
         let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
         let mut baseline_matrix: Vec<Vec<f64>> = vec![];
@@ -403,17 +403,13 @@ impl RamTensor {
             // rows times columns
             for (matrix_index, matrix) in self.data.iter().enumerate() {
                 new_data.push(vec![]);
-
                 for (row_index, row) in matrix.iter().enumerate() {
                     new_data[matrix_index].push(vec![]);
                     for col_index in 0..self.shape.y {
-                        let mut sum = 0.0;
-
-                        for k in 0..self.shape.y {
-                            sum += self.data[matrix_index][row_index][k]
-                                * another_tensor.data[matrix_index][k][col_index];
-                        }
-                        new_data[matrix_index][row_index].push(sum);
+                        new_data[matrix_index][row_index].push(
+                            self.data[matrix_index][row_index][col_index]
+                                * another_tensor.data[matrix_index][row_index][col_index],
+                        );
                     }
                 }
             }
