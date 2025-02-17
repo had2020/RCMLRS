@@ -17,6 +17,6 @@ fn main() {
     println!("Relued: {:?}", relu_result.data);
 
     // Sigmoid
-    let sigmoid_result = Sigmoid.relu();
+    let sigmoid_result = relu_result.sigmoid();
     println!("Sigmoided: {:?}", sigmoid_result.data);
 }

@@ -491,7 +491,7 @@ impl RamTensor {
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
                 for x in row {
-                    let denominater = 1.0 + (e.powf(x.clone()));
+                    let denominater = 1.0 + (e.powf(-x.clone()));
                     new_data[matrix_index][row_index].push(1.0 / denominater);
                 }
             }
