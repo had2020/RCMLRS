@@ -427,6 +427,7 @@ impl RamTensor {
         }
     }
 
+    //simplest activation for non-linearity
     pub fn relu(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
