@@ -454,22 +454,24 @@ impl RamTensor {
 // operations must be done to x get and set a variable named "x"
 #[macro_export]
 macro_rules! cus_act {
-    ($code:expr) => {
-        println!("{$code}")
-
+    ($ramtensor:expr, $code:expr) => {
         let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
 
-        for (matrix_index, matrix) in self.data.iter().enumerate() {
+        for (matrix_index, matrix) in ramtensor.data.iter().enumerate() {
             new_data.push(vec![]);
 
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
                 for x in row {
-                    let result = $code;
+                    let result = ($code)(x);
                     new_data[matrix_index][row_index].push(result);
                 }
             }
         }
-        new_data
+        RamTensor {
+            shape: ramtensor.shape,
+            layer_length: self.layer_length,
+            data: new_data,
+        }
     };
 }
