@@ -373,6 +373,15 @@ pub struct RamTensor {
     pub data: Vec<Vec<Vec<f64>>>,
 }
 
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn example_tests() {
+        assert_eq!(bool_to_word(true), "Yes");
+        assert_eq!(bool_to_word(false), "No");
+    }
+}
+
 impl RamTensor {
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
         let zero_value: f64 = 0.0;
