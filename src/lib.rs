@@ -509,7 +509,7 @@ impl RamTensor {
     ///Sigmoid
     pub fn sigmoid(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        let e = std::f64::consts::E; // Eular's number
+        let e = std::f32::consts::E; // Eular's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);
@@ -517,8 +517,8 @@ impl RamTensor {
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
                 for x in row {
-                    let denominater = 1.0 + (e.powf(-x.clone() as f64));
-                    new_data[matrix_index][row_index].push(1.0 / denominater as f32);
+                    let denominater = 1.0 + (e.powf(-x.clone()));
+                    new_data[matrix_index][row_index].push(1.0 / denominater);
                 }
             }
         }
@@ -533,7 +533,7 @@ impl RamTensor {
     ///Tanh
     pub fn tanh(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        let e = std::f64::consts::E; // Eular's number
+        let e = std::f32::consts::E; // Eular's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);
@@ -541,10 +541,31 @@ impl RamTensor {
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
                 for x in row {
-                    let numerator = e.powf(x.clone() as f64) - e.powf(-x.clone() as f64);
-                    let denominater = e.powf(x.clone() as f64) + e.powf(-x.clone() as f64);
-                    new_data[matrix_index][row_index].push(numerator as f32 / denominater as f32);
+                    let numerator = e.powf(x.clone()) - e.powf(-x.clone());
+                    let denominater = e.powf(x.clone()) + e.powf(-x.clone());
+                    new_data[matrix_index][row_index].push(numerator / denominater);
                 }
+            }
+        }
+
+        RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
+
+    ///Softmax
+    pub fn softmax(&self) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        let e = std::f32::consts::E; // Eular's number
+
+        for (matrix_index, matrix) in self.data.iter().enumerate() {
+            new_data.push(vec![]);
+
+            for (row_index, row) in matrix.iter().enumerate() {
+                new_data[matrix_index].push(vec![]);
+                for x in row {}
             }
         }
 
