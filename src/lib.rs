@@ -370,27 +370,39 @@ impl Tensor {
 pub struct RamTensor {
     pub shape: Shape,
     pub layer_length: usize,
-    pub data: Vec<Vec<Vec<f64>>>,
+    pub data: Vec<Vec<Vec<f32>>>,
 }
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     #[test]
-    fn example_tests() {
-        assert_eq!(bool_to_word(true), "Yes");
-        assert_eq!(bool_to_word(false), "No");
+    fn ram_tensor_testing() {
+        let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
+        let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
+
+        let weights: RamTensor = cus_act!(weights, |x| x + 2.0);
+        let correct_array: [[[f32; 3]; 3]; 2] = [
+            [[2.0, 2.0, 2.0], [2.0, 2.0, 2.0], [2.0, 2.0, 2.0]],
+            [[2.0, 2.0, 2.0], [2.0, 2.0, 2.0], [2.0, 2.0, 2.0]],
+        ];
+        assert_eq!(weights.data, correct_array);
+
+        //assert_eq!(tensor.some_method_to_check_value(), "Yes");
+        let weights2: RamTensor = weights.matmul(bias).unwrap();
+        //assert_eq!(weights.matmul(bias).unwrap(),);
     }
 }
 
 impl RamTensor {
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
-        let zero_value: f64 = 0.0;
-        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        let zero_value: f32 = 0.0;
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
-        let mut baseline_matrix: Vec<Vec<f64>> = vec![];
+        let mut baseline_matrix: Vec<Vec<f32>> = vec![];
 
         for row in 0..shape.x {
-            let mut current_row: Vec<f64> = vec![];
+            let mut current_row: Vec<f32> = vec![];
             for col in 0..shape.y {
                 current_row.push(zero_value);
             }
@@ -410,7 +422,7 @@ impl RamTensor {
 
     // ram based Matrix Multiplication
     pub fn matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
-        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         if (self.shape.x == another_tensor.shape.x) && (self.shape.y == another_tensor.shape.y) {
             // rows times columns
             for (matrix_index, matrix) in self.data.iter().enumerate() {
@@ -439,7 +451,7 @@ impl RamTensor {
 
     ///ReLU
     pub fn relu(&self) -> RamTensor {
-        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);
@@ -464,8 +476,8 @@ impl RamTensor {
     }
 
     ///Leaky ReLU
-    pub fn lrelu(&self, negative_slope: f64) -> RamTensor {
-        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+    pub fn lrelu(&self, negative_slope: f32) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);
@@ -491,7 +503,7 @@ impl RamTensor {
 
     ///Sigmoid
     pub fn sigmoid(&self) -> RamTensor {
-        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         let e = std::f64::consts::E; // Eular's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
@@ -500,8 +512,8 @@ impl RamTensor {
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
                 for x in row {
-                    let denominater = 1.0 + (e.powf(-x.clone()));
-                    new_data[matrix_index][row_index].push(1.0 / denominater);
+                    let denominater = 1.0 + (e.powf(-x.clone() as f64));
+                    new_data[matrix_index][row_index].push(1.0 / denominater as f32);
                 }
             }
         }
@@ -515,7 +527,7 @@ impl RamTensor {
 
     ///Tanh
     pub fn tanh(&self) -> RamTensor {
-        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         let e = std::f64::consts::E; // Eular's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
@@ -524,9 +536,9 @@ impl RamTensor {
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
                 for x in row {
-                    let numerator = e.powf(x.clone()) - e.powf(-x.clone());
-                    let denominater = e.powf(x.clone()) + e.powf(-x.clone());
-                    new_data[matrix_index][row_index].push(numerator / denominater);
+                    let numerator = e.powf(x.clone() as f64) - e.powf(-x.clone() as f64);
+                    let denominater = e.powf(x.clone() as f64) + e.powf(-x.clone() as f64);
+                    new_data[matrix_index][row_index].push(numerator as f32 / denominater as f32);
                 }
             }
         }
@@ -544,7 +556,7 @@ impl RamTensor {
 #[macro_export]
 macro_rules! cus_act {
     ($ramtensor:expr, $code:expr) => {{
-        let mut new_data: Vec<Vec<Vec<f64>>> = vec![];
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         for (matrix_index, matrix) in $ramtensor.data.iter().enumerate() {
             new_data.push(vec![]);
