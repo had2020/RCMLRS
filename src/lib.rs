@@ -381,16 +381,20 @@ mod tests {
         let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
         let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
 
-        let weights: RamTensor = cus_act!(weights, |x| x + 2.0);
-        let correct_array: [[[f32; 3]; 3]; 2] = [
+        weights = cus_act!(weights, |x| x + 2.0);
+        bias = weights.clone();
+        let correct_array_shift2: [[[f32; 3]; 3]; 2] = [
             [[2.0, 2.0, 2.0], [2.0, 2.0, 2.0], [2.0, 2.0, 2.0]],
             [[2.0, 2.0, 2.0], [2.0, 2.0, 2.0], [2.0, 2.0, 2.0]],
         ];
-        assert_eq!(weights.data, correct_array);
+        assert_eq!(weights.data, correct_array_shift2);
 
-        //assert_eq!(tensor.some_method_to_check_value(), "Yes");
-        let weights2: RamTensor = weights.matmul(bias).unwrap();
-        //assert_eq!(weights.matmul(bias).unwrap(),);
+        weights = weights.matmul(bias).unwrap();
+        let correct_array_matmul: [[[f32; 3]; 3]; 2] = [
+            [[12.0, 12.0, 2.0], [12.0, 12.0, 12.0], [12.0, 12.0, 12.0]],
+            [[12.0, 12.0, 2.0], [12.0, 12.0, 12.0], [12.0, 12.0, 12.0]],
+        ];
+        assert_eq!(weights.data, correct_array_matmul);
     }
 }
 
