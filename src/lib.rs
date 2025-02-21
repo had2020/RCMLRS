@@ -563,17 +563,30 @@ impl RamTensor {
         let mut sum_exp: f32 = 0.0;
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
-            probabilities.push(vec![]);
             exponentials.push(vec![]);
 
             for (row_index, row) in matrix.iter().enumerate() {
-                probabilities[matrix_index].push(vec![]);
                 exponentials[matrix_index].push(vec![]);
 
                 for x in row {
                     let exp_value = e.powf(x.clone());
                     exponentials[matrix_index][row_index].push(exp_value);
                     sum_exp += exp_value;
+                }
+            }
+
+            // normalize for probabilities
+            for (matrix_index, matrix) in exponentials.iter().enumerate() {
+                probabilities.push(vec![]);
+
+                for (row_index, row) in matrix.iter().enumerate() {
+                    probabilities[matrix_index].push(vec![]);
+
+                    for x in row {
+                        let exp_value = e.powf(x.clone());
+                        probabilities[matrix_index][row_index].push(exp_value);
+                        sum_exp += exp_value;
+                    }
                 }
             }
         }
