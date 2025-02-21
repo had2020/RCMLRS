@@ -373,6 +373,7 @@ pub struct RamTensor {
     pub data: Vec<Vec<Vec<f32>>>,
 }
 
+//TODO better and more Unit Tests
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -555,7 +556,7 @@ impl RamTensor {
     }
 }
 
-/// Custom activation function, for each element/float in matrix
+/// Custom activation function for ram tensor, for each element/float in matrix
 /// operations must be done to x get and set a variable named "x"
 #[macro_export]
 macro_rules! cus_act {
