@@ -583,9 +583,7 @@ impl RamTensor {
                     probabilities[matrix_index].push(vec![]);
 
                     for x in row {
-                        let exp_value = e.powf(x.clone());
-                        probabilities[matrix_index][row_index].push(exp_value);
-                        sum_exp += exp_value;
+                        probabilities[matrix_index][row_index].push(x / sum_exp);
                     }
                 }
             }
