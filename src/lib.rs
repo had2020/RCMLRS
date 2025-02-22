@@ -618,6 +618,35 @@ impl RamTensor {
             data: new_data,
         }
     }
+
+    ///GELU
+    pub fn gelu(&self) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        let e = std::f32::consts::E; // Eular's number
+
+        for (matrix_index, matrix) in self.data.iter().enumerate() {
+            new_data.push(vec![]);
+
+            for (row_index, row) in matrix.iter().enumerate() {
+                new_data[matrix_index].push(vec![]);
+                for x in row {
+                    new_data[matrix_index][row_index].push(x * (1.0 / (1.0 + e.powf(-x.clone()))));
+                }
+            }
+        }
+
+        RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
+}
+
+/// erf, Error Function
+pub fn erf(x: f32) -> f32 {
+    let pi = std::f64::consts::PI;
+    x = 2 /
 }
 
 /// Custom activation function for ram tensor, for each element/float in matrix
