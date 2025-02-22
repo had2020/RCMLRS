@@ -487,25 +487,38 @@ impl RamTensor {
     }
 
     /// resizes tensor based on shape, and layer_length shape
-    pub fn resize_matrix(
+    pub fn resize_tensor(
         &self,
-        shape: Shape,
-        layer_length_shape: usize,
+        to_shape: Shape,
+        to_layer_length_shape: usize,
         pad_value: f32,
     ) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
-        for matrix_index in 0..layer_length_shape {
+        for matrix_index in 0..to_layer_length_shape {
             new_data.push(vec![]);
-            for col in 0..shape.y {
+            for row in 0..to_shape.x {
                 new_data[matrix_index].push(vec![]);
-                for col in 0..shape.y {}
+
+                if self.shape.x < row {
+                    for col in 0..to_shape.y {
+                        new_data[matrix_index][row].push(pad_value);
+                    }
+                } else {
+                    for col in 0..to_shape.y {
+                        if self.shape.y < col {
+                            new_data[matrix_index][row].push(pad_value);
+                        } else {
+                            new_data[matrix_index][row].push(self.data[matrix_index][row][col]);
+                        }
+                    }
+                }
             }
         }
 
         RamTensor {
-            shape: shape,
-            layer_length: layer_length_shape,
+            shape: to_shape,
+            layer_length: to_layer_length_shape,
             data: new_data,
         }
     }
