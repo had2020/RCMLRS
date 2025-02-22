@@ -4,8 +4,8 @@ fn main() {
     let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 5);
     let bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 3);
 
-    println!("Before: {:?}", weights.data);
-    let resized_bias = bias.resize_tensor(Shape { x: 3, y: 3 }, 5, 1.0);
+    println!("Before: {:?}", bias.data);
+    let resized_bias = bias.resize_tensor(Shape { x: 3, y: 3 }, 5, 3.0);
     let weights2: RamTensor = weights.matmul(resized_bias).unwrap();
     println!("After: {:?}", weights2.data);
 

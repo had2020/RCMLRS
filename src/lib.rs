@@ -506,7 +506,7 @@ impl RamTensor {
                     }
                 } else {
                     for col in 0..to_shape.y {
-                        if self.shape.y < col {
+                        if self.shape.y > col {
                             new_data[matrix_index][row].push(pad_value);
                         } else {
                             new_data[matrix_index][row].push(self.data[matrix_index][row][col]);
