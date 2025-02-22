@@ -622,7 +622,7 @@ impl RamTensor {
         }
     }
 
-    ///GELU
+    ///GELU TODO
     pub fn gelu(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         let e = std::f32::consts::E; // Eular's number
