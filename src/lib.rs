@@ -86,6 +86,7 @@ pub fn matrix_into_string(matrix: Matrix) -> String {
 }
 
 use std::fs::OpenOptions;
+use std::intrinsics::expf32;
 use std::io::Write;
 
 pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
@@ -646,7 +647,15 @@ impl RamTensor {
 /// erf, Error Function
 pub fn erf(x: f32) -> f32 {
     let pi = std::f64::consts::PI;
-    x = 2 /
+
+    let mut n = 1000.0;
+    let delta_t = x / n;
+    let mut sum = 0;
+
+    for i in n {
+        let t = i * delta_t;
+        sum += expf32(-t.pow)
+    }
 }
 
 /// Custom activation function for ram tensor, for each element/float in matrix
