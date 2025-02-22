@@ -1,8 +1,8 @@
 use rcmlrs::*;
 
 fn main() {
-    let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
-    let bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
+    let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 5); // TODO fix panic when this tensor is bigger
+    let bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 3);
 
     println!("Before: {:?}", weights.data);
     let weights2: RamTensor = weights.matmul(bias).unwrap();

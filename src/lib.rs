@@ -86,7 +86,7 @@ pub fn matrix_into_string(matrix: Matrix) -> String {
 }
 
 use std::fs::OpenOptions;
-use std::intrinsics::expf32;
+//use std::intrinsics::expf32;
 use std::io::Write;
 
 pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
@@ -367,6 +367,7 @@ impl Tensor {
 }
 
 // Ram tensor, TODO UPDATE STORAGE BASED
+// TODO transfer to storage or some type of direct storage connection.
 #[derive(Clone, Debug)]
 pub struct RamTensor {
     pub shape: Shape,
@@ -401,6 +402,7 @@ mod tests {
 }
 
 impl RamTensor {
+    //TODO random initialization
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
         let zero_value: f32 = 0.0;
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
@@ -438,7 +440,7 @@ impl RamTensor {
                     for col_index in 0..self.shape.y {
                         new_data[matrix_index][row_index].push(
                             self.data[matrix_index][row_index][col_index]
-                                * another_tensor.data[matrix_index][row_index][col_index],
+                                * another_tensor.data[matrix_index][row_index][col_index], //TODO push if no index, or some other handeling for times by smaller broken down layer
                         );
                     }
                 }
@@ -641,9 +643,12 @@ impl RamTensor {
             layer_length: self.layer_length,
             data: new_data,
         }
+        // TODO ELU or Mish
+        // AGI: AReLU,SELU,
     }
 }
 
+/*
 /// erf, Error Function
 pub fn erf(x: f32) -> f32 {
     let pi = std::f64::consts::PI;
@@ -657,6 +662,7 @@ pub fn erf(x: f32) -> f32 {
         sum += expf32(-t.pow)
     }
 }
+*/
 
 /// Custom activation function for ram tensor, for each element/float in matrix
 /// operations must be done to x get and set a variable named "x"
