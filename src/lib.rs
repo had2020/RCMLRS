@@ -372,7 +372,7 @@ impl Tensor {
 pub struct RamTensor {
     pub shape: Shape,
     pub layer_length: usize,
-    pub data: Vec<Vec<Vec<f32>>>,
+    pub data: Vec<Vec<Vec<f32>>>, // matrices, rows, cols, values
 }
 
 //TODO better and more Unit Tests
@@ -471,7 +471,7 @@ impl RamTensor {
                     for col_index in 0..self.shape.y {
                         new_data[matrix_index][row_index].push(
                             self.data[matrix_index][row_index][col_index]
-                                * another_tensor.data[matrix_index][row_index][col_index], //TODO push if no index, or some other handeling for times by smaller broken down layer
+                                * another_tensor.data[matrix_index][row_index][col_index],
                         );
                     }
                 }
@@ -483,6 +483,30 @@ impl RamTensor {
             })
         } else {
             Err(String::from("Cannot multiply matrixs of differing sizes"))
+        }
+    }
+
+    /// resizes tensor based on shape, and layer_length shape
+    pub fn resize_matrix(
+        &self,
+        shape: Shape,
+        layer_length_shape: usize,
+        pad_value: f32,
+    ) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
+        for matrix_index in 0..layer_length_shape {
+            new_data.push(vec![]);
+            for col in 0..shape.y {
+                new_data[matrix_index].push(vec![]);
+                for col in 0..shape.y {}
+            }
+        }
+
+        RamTensor {
+            shape: shape,
+            layer_length: layer_length_shape,
+            data: new_data,
         }
     }
 
