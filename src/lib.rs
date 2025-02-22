@@ -401,12 +401,40 @@ mod tests {
     }
 }
 
+use rand::prelude::*;
+
 impl RamTensor {
     //TODO random initialization
+    pub fn new_random(shape: Shape, layer_length: usize, rand_min: f32, rand_max: f32) -> Self {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
+        let mut baseline_matrix: Vec<Vec<f32>> = vec![];
+
+        let mut rng = rand::rng();
+
+        for row in 0..shape.x {
+            let mut current_row: Vec<f32> = vec![];
+            for col in 0..shape.y {
+                let value = rng.random_range(rand_min..rand_max);
+                current_row.push(value);
+            }
+            baseline_matrix.push(current_row);
+        }
+
+        for matrice in 0..layer_length {
+            new_data.push(baseline_matrix.clone());
+        }
+
+        RamTensor {
+            shape: shape,
+            data: new_data,
+            layer_length: layer_length,
+        }
+    }
+
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
         let zero_value: f32 = 0.0;
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-
         let mut baseline_matrix: Vec<Vec<f32>> = vec![];
 
         for row in 0..shape.x {
@@ -431,7 +459,10 @@ impl RamTensor {
     // ram based Matrix Multiplication
     pub fn matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        if (self.shape.x == another_tensor.shape.x) && (self.shape.y == another_tensor.shape.y) {
+        if (self.shape.x == another_tensor.shape.x)
+            && (self.shape.y == another_tensor.shape.y)
+            && (self.layer_length == another_tensor.layer_length)
+        {
             // rows times columns
             for (matrix_index, matrix) in self.data.iter().enumerate() {
                 new_data.push(vec![]);
