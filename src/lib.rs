@@ -20,6 +20,7 @@ pub struct Memory {
     pub current_layer: usize,
 }
 
+use std::f32::consts::E;
 use std::fs;
 
 pub fn dir_exists(path: &str) -> std::io::Result<()> {
@@ -401,8 +402,9 @@ mod tests {
     }
 }
 
-pub fn input_tensor(
-    input_layer_length: usize, // to break your data into smaller matrices.
+///You can use this to input mannully whole tensor data
+pub fn raw_input_tensor_matrices(
+    input_layer_length: usize, // To break your data into smaller matrices.
     input_shape: Shape,
     input_matrices: Vec<Vec<Vec<f32>>>,
 ) -> RamTensor {
@@ -416,7 +418,9 @@ pub fn input_tensor(
 use rand::prelude::*;
 
 impl RamTensor {
-    //TODO random initialization
+    /// Use to input inputs into a layer
+    pub fn insert_matrix(&self) {}
+
     pub fn new_random(shape: Shape, layer_length: usize, rand_min: f32, rand_max: f32) -> Self {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
