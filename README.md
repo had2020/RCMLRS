@@ -14,3 +14,15 @@ Keep Tensor's in Storage when not applying operations, to apply operation load i
 Ie use your're storage similar to Ram and your're Ram like a CPU reister.
 Using only storage would cause too much slowdowns, so to limit IO we can store only when not apply any operations.
 To cluster compute matrices split are into chunks and share in a cluster.
+
+This Machine Learning libary has the following activation functions, as implimations on RamTensor struct:
+
+Impl RamTensor
+
+- ReLU `max(0,x)`
+- Leaky ReLU `max(ax,x)`
+- Sigmoid `1/1+e^-x`
+- Tanh `(e^x - e^-x) / (e^x - e^-x)`
+- Softmax `
+- Swish `
+- GELU `
