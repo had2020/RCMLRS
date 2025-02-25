@@ -419,7 +419,15 @@ use rand::prelude::*;
 
 impl RamTensor {
     /// Use to input inputs into a layer
-    pub fn insert_matrix(&self) {}
+    pub fn insert_matrix(&self, layer_index: usize, new_layer: Vec<Vec<f32>>) -> Self {
+        let mut new_data = self.data.clone();
+        new_data[layer_index] = new_layer;
+        RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: new_data.clone(),
+        }
+    }
 
     pub fn new_random(shape: Shape, layer_length: usize, rand_min: f32, rand_max: f32) -> Self {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
