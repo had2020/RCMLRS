@@ -401,6 +401,18 @@ mod tests {
     }
 }
 
+pub fn input_tensor(
+    input_layer_length: usize, // to break your data into smaller matrices.
+    input_shape: Shape,
+    input_matrices: Vec<Vec<Vec<f32>>>,
+) -> RamTensor {
+    RamTensor {
+        shape: input_shape,
+        layer_length: input_layer_length,
+        data: input_matrices,
+    }
+}
+
 use rand::prelude::*;
 
 impl RamTensor {
