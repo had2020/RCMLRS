@@ -714,9 +714,10 @@ impl RamTensor {
         }
     }
 
-    ///GELU TODO
+    ///GELU (Gaussian Error Linear Unit)
     pub fn gelu(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        let frac_2_sqrt_pi = std::f32::consts::FRAC_2_SQRT_PI;
         let e = std::f32::consts::E; // Eular's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
@@ -725,7 +726,17 @@ impl RamTensor {
             for (row_index, row) in matrix.iter().enumerate() {
                 new_data[matrix_index].push(vec![]);
                 for x in row {
-                    new_data[matrix_index][row_index].push(x * (1.0 / (1.0 + e.powf(-x.clone()))));
+                    let tanh_numerator = e.powf(x.clone()) - e.powf(-x.clone());
+                    let tanh_denominater = e.powf(x.clone()) + e.powf(-x.clone());
+
+                    let tanh = tanh_numerator / tanh_denominater;
+                    let a1: f32 = 0.044715;
+
+                    let value = 0.5
+                        * x.clone()
+                        * ((1.0 + tanh) * (frac_2_sqrt_pi as f32 * (x + (a1 * x).powf(3.0))));
+
+                    new_data[matrix_index][row_index].push(value);
                 }
             }
         }
