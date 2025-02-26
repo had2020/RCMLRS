@@ -402,8 +402,7 @@ mod tests {
     }
 }
 
-//TODO update docs to changes!
-///You can use this to input mannully whole tensor data
+///You can use this to input mannully whole tensor data.
 ///Notice you will need to put zeros for blank data that is made with a shape.
 ///It is better to enter a smaller size that is all your data, or have zero handling, and resize the tensor, or insert.
 pub fn raw_input_tensor_matrices(
@@ -418,6 +417,7 @@ pub fn raw_input_tensor_matrices(
     }
 }
 
+///Prefer using raw_input_tensor_matrices, and resizing if needed.
 pub fn zeroed_input_tensor_matrices(
     input_layer_length: usize, // To break your data into smaller matrices.
     input_shape: Shape,
