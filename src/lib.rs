@@ -411,10 +411,22 @@ pub fn raw_input_tensor_matrices(
     input_shape: Shape,
     input_matrices: Vec<Vec<Vec<f32>>>,
 ) -> RamTensor {
+    RamTensor {
+        shape: input_shape,
+        layer_length: input_layer_length,
+        data: input_matrices,
+    }
+}
+
+pub fn zeroed_input_tensor_matrices(
+    input_layer_length: usize, // To break your data into smaller matrices.
+    input_shape: Shape,
+    input_matrices: Vec<Vec<Vec<f32>>>,
+) -> RamTensor {
+    let zeros: f32 = 0.0; //constant
     let mut new_input_matrices: Vec<Vec<Vec<f32>>> = vec![];
 
     if input_matrices.len() != input_layer_length {
-        let zeros: f32 = 0.0;
         let mut empty_baseline: Vec<Vec<f32>> = vec![];
 
         for row in 0..input_shape.x {
@@ -429,10 +441,23 @@ pub fn raw_input_tensor_matrices(
         }
     }
 
+    for matrix in input_matrices {
+        for (row_index, row) in matrix.iter().enumerate() {
+            new_input_matrices[row_index].push(vec![]);
+            if row.len() < input_shape.x {
+                for _ in 0..(input_shape.x - row.len()) {
+                    for _ in input_shape.y {
+                        new_input_matrices[row_index].push(vec![]);
+                    }
+                }
+            }
+        }
+    }
+
     RamTensor {
         shape: input_shape,
         layer_length: input_layer_length,
-        data: input_matrices,
+        data: new_input_matrices,
     }
 }
 
