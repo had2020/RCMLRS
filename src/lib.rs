@@ -402,12 +402,33 @@ mod tests {
     }
 }
 
+//TODO update docs to changes!
 ///You can use this to input mannully whole tensor data
+///Notice you will need to put zeros for blank data that is made with a shape.
+///It is better to enter a smaller size that is all your data, or have zero handling, and resize the tensor, or insert.
 pub fn raw_input_tensor_matrices(
     input_layer_length: usize, // To break your data into smaller matrices.
     input_shape: Shape,
     input_matrices: Vec<Vec<Vec<f32>>>,
 ) -> RamTensor {
+    let mut new_input_matrices: Vec<Vec<Vec<f32>>> = vec![];
+
+    if input_matrices.len() != input_layer_length {
+        let zeros: f32 = 0.0;
+        let mut empty_baseline: Vec<Vec<f32>> = vec![];
+
+        for row in 0..input_shape.x {
+            empty_baseline.push(vec![]);
+            for _ in 0..input_shape.y {
+                empty_baseline[row].push(zeros);
+            }
+        }
+
+        for _ in 0..(input_layer_length - input_matrices.len()) {
+            new_input_matrices.push(empty_baseline.clone());
+        }
+    }
+
     RamTensor {
         shape: input_shape,
         layer_length: input_layer_length,
