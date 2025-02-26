@@ -8,6 +8,8 @@ fn scan_image(image_name: &str) -> RamTensor {
     let mut collected_pixels = Vec![];
 
     for row in 0..50 {
+        collected_pixels.push(Vec![]);
+
         for col in 0..50 {
             let pixel: Rgb<u8> = img.get_pixel(row, col).unwrap();
             let red = pixel[0];
