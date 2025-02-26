@@ -1,8 +1,9 @@
 use image::{DynamicImage, ImageFormat, ImageReader, Pixel, Rgb};
 use rcmlrs::*;
 
-fn scan() -> Result<(), std::io::Error> {
-    let img = ImageReader::open("../Datasets/blackwhite/black.png")?.decode()?;
+fn scane(image_name: &str) -> Result<(), std::io::Error> {
+    let path = format!("../Datasets/blackwhite/{}.png", image_name);
+    let img = ImageReader::open(path)?.decode()?;
 
     let pixel: Rgb<u8> = img.get_pixel(10, 5).unwrap();
 
