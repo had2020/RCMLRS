@@ -1,19 +1,20 @@
 use image::{DynamicImage, ImageFormat, ImageReader, Pixel, Rgb};
 use rcmlrs::*;
 
-fn scane(image_name: &str) -> Result<(), std::io::Error> {
+fn scan_image(image_name: &str) -> RamTensor {
     let path = format!("../Datasets/blackwhite/{}.png", image_name);
-    let img = ImageReader::open(path)?.decode()?;
+    let img = ImageReader::open(path).unwrap().decode().unwrap();
 
-    let pixel: Rgb<u8> = img.get_pixel(10, 5).unwrap();
+    let mut collected_pixels = Vec![];
 
-    let red = pixel[0];
-    let green = pixel[1];
-    let blue = pixel[2];
-
-    println!("Pixel at (10, 5): R={}, G={}, B={}", red, green, blue);
-
-    Ok(())
+    for row in 0..50 {
+        for col in 0..50 {
+            let pixel: Rgb<u8> = img.get_pixel(row, col).unwrap();
+            let red = pixel[0];
+            let green = pixel[1];
+            let blue = pixel[2];
+        }
+    }
 }
 
 fn main() {
