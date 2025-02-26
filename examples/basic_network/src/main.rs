@@ -8,19 +8,7 @@ fn main() {
     let weights2: RamTensor = weights.matmul(bias).unwrap();
     println!("After: {:?}", weights2.data);
 
-    // activation functions
-    let cus_act_res: RamTensor = cus_act!(weights2, |x| x + 2.0); // custom example, shift by 2
-    println!("Cus_act: {:?}", cus_act_res.data);
-
     // Relu
-    let relu_result = cus_act_res.relu();
+    let relu_result = weights2.relu();
     println!("ReLU: {:?}", relu_result.data);
-
-    // Sigmoid
-    let sigmoid_result = relu_result.sigmoid();
-    println!("Sigmoid: {:?}", sigmoid_result.data);
-
-    // Tanh
-    let tanh_result = sigmoid_result.tanh();
-    println!("Tanh: {:?}", tanh_result.data);
 }
