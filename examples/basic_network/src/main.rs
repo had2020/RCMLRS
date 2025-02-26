@@ -2,7 +2,7 @@ use image::{DynamicImage, ImageFormat, ImageReader, Pixel, Rgb};
 use rcmlrs::*;
 
 fn scan() -> Result<(), std::io::Error> {
-    let img = ImageReader::open("path/to/image.png")?.decode()?;
+    let img = ImageReader::open("../Datasets/blackwhite/black.png")?.decode()?;
 
     let pixel: Rgb<u8> = img.get_pixel(10, 5).unwrap();
 
