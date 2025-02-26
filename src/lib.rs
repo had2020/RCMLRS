@@ -443,11 +443,12 @@ pub fn zeroed_input_tensor_matrices(
 
     for matrix in input_matrices {
         for (row_index, row) in matrix.iter().enumerate() {
-            new_input_matrices[row_index].push(vec![]);
-            if row.len() < input_shape.x {
+            if row.len() < input_shape.y {
+                // insert col into row
+                new_input_matrices[row_index].push(vec![]);
                 for _ in 0..(input_shape.x - row.len()) {
-                    for _ in input_shape.y {
-                        new_input_matrices[row_index].push(vec![]);
+                    for _ in 0..input_shape.y {
+                        new_input_matrices[row_index].push(vec![zeros]);
                     }
                 }
             }
