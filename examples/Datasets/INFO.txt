@@ -1,0 +1,1 @@
+This directory is used to contain any small example databases used in the example projects. Refer to any credit or explaination to the databases in the directory of the named database.

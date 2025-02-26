@@ -1,0 +1,2 @@
+This is a database used for a basic hello world like ML vison model the point is just to read a 50x50 image and decide if it is in a class 0 white or 1 black.
+Simple database for showcasing ML.
