@@ -22,7 +22,7 @@ Impl RamTensor
 - ReLU `max(0,x)`
 - Leaky ReLU `max(ax,x)`
 - Sigmoid `1/1+e^-x`
-- Tanh `(e^x - e^-x) / (e^x - e^-x)`
-- Softmax `
-- Swish `
-- GELU `
+- Tanh `(e^x - e^-x) / (e^x + e^-x)`
+- Softmax `exp(z_i) / Σ_j exp(z_j)`
+- Swish `x * (1.0 / (1.0 + e^-x))`
+- GELU `0.5x(1+Tanh(2/PI(x + 0.044715x^3)))`
