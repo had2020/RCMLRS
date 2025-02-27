@@ -13,11 +13,17 @@ fn scan_image(image_name: &str) -> RamTensor {
         for col in 0..50 {
             let pixel: Rgb<u8> = img.get_pixel(row, col).unwrap();
             let red = pixel[0];
-            collected_pixels.push();
             let green = pixel[1];
-
             let blue = pixel[2];
+
+            collected_pixels[row].push(Vec![red as f32, green as f32, blue as f32]);
         }
+    }
+
+    RamTensor {
+        shape: Shape { x: 50, y: 3 },
+        layer_length: 1,
+        data: collected_pixels,
     }
 }
 
