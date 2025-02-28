@@ -38,15 +38,18 @@ fn main() {
 
     let mut weights: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
     let mut hidden_layer: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
-    let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 150 }, 1);
+    let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
 
     let target: f32 = 1.0;
-    let max_epochs = 1000;
+    let max_epochs = 1;
     let stopping_threshold: f32 = 1e-10;
     let learning_rate: f32 = 0.01;
 
     for epoch in 0..max_epochs {
-        let test = weights.matmul(input.clone()).unwrap();
+        weights = weights.matmul(input.clone()).unwrap();
+        hidden_layer = hidden_layer.matmul(weights.clone()).unwrap();
+        let output = hidden_layer.sigmoid();
+        println!("{:?}", output);
         // TODO gradient descent
     }
 
