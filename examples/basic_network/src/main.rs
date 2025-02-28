@@ -10,9 +10,10 @@ fn scan_image(image_name: &str) -> RamTensor {
         .into_rgb8();
 
     let mut collected_pixels: Vec<Vec<Vec<f32>>> = vec![];
+    collected_pixels.push(vec![]); // first matrix
 
     for row in 0..50 {
-        collected_pixels.push(vec![]);
+        collected_pixels[0].push(vec![]);
 
         for col in 0..50 {
             let pixel = img.get_pixel(row, col); //Rgb<u8>
@@ -20,7 +21,7 @@ fn scan_image(image_name: &str) -> RamTensor {
             let green = pixel[1];
             let blue = pixel[2];
 
-            collected_pixels[row as usize].push(vec![red as f32, green as f32, blue as f32]);
+            collected_pixels[0][row as usize].push(vec![red as f32, green as f32, blue as f32]);
         }
     }
 
@@ -43,7 +44,7 @@ fn main() {
     let learning_rate: f32 = 0.01;
 
     for epoch in 0..max_epochs {
-        weights = weights.matmul(input.clone()).unwrap();
+        let test = weights.matmul(input.clone()).unwrap();
     }
 
     /*
