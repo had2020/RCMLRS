@@ -5,7 +5,7 @@ fn scan_image(image_name: &str) -> RamTensor {
     let path = format!("../Datasets/blackwhite/{}.png", image_name);
     let img = ImageReader::open(path).unwrap().decode().unwrap();
 
-    let mut collected_pixels: vec<vec> = Vec![];
+    let mut collected_pixels: Vec = Vec![];
 
     for row in 0..50 {
         collected_pixels.push(Vec![]);
@@ -21,7 +21,7 @@ fn scan_image(image_name: &str) -> RamTensor {
     }
 
     RamTensor {
-        shape: Shape { x: 50, y: 3 },
+        shape: Shape { x: 50, y: 150 },
         layer_length: 1,
         data: collected_pixels,
     }
