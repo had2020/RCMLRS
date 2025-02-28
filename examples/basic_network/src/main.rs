@@ -33,7 +33,14 @@ fn scan_image(image_name: &str) -> RamTensor {
 
 fn main() {
     let input: RamTensor = scan_image("white");
-    println!("{:?}", input);
+
+    let mut weights: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
+    let mut bias: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
+
+    let target: f32 = 1;
+    let max_epochs = 1000;
+    let stopping_threshold: f32 = 1e-10;
+    let learning_rate: f32 = 0.01;
 
     /*
     let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2); // TODO fix panic when this tensor is bigger
