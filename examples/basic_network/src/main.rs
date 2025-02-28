@@ -37,7 +37,8 @@ fn main() {
     let input: RamTensor = scan_image("white");
 
     let mut weights: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
-    let mut bias: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
+    let mut hidden_layer: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
+    let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 1, y: 150 }, 1);
 
     let target: f32 = 1.0;
     let max_epochs = 1000;
@@ -46,6 +47,7 @@ fn main() {
 
     for epoch in 0..max_epochs {
         let test = weights.matmul(input.clone()).unwrap();
+        // TODO gradient descent
     }
 
     /*
