@@ -32,6 +32,10 @@ fn scan_image(image_name: &str) -> RamTensor {
 }
 
 fn main() {
+    let input: RamTensor = scan_image("white");
+    println!("{:?}", input);
+
+    /*
     let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2); // TODO fix panic when this tensor is bigger
     let bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
 
@@ -42,4 +46,5 @@ fn main() {
     // Relu
     let relu_result = weights2.relu();
     println!("ReLU: {:?}", relu_result.data);
+    */
 }
