@@ -9,11 +9,10 @@ fn scan_image(image_name: &str) -> RamTensor {
         .expect("Failed to decode image")
         .into_rgb8();
 
-    let mut collected_pixels: Vec<Vec<Vec<f32>>> = vec![];
-    collected_pixels.push(vec![]); // first matrix
+    let mut collected_pixels: Vec<Vec<f32>> = vec![];
 
     for row in 0..50 {
-        collected_pixels[0].push(vec![]);
+        collected_pixels.push(vec![]);
 
         for col in 0..50 {
             let pixel = img.get_pixel(row, col); //Rgb<u8>
@@ -21,14 +20,16 @@ fn scan_image(image_name: &str) -> RamTensor {
             let green = pixel[1];
             let blue = pixel[2];
 
-            collected_pixels[0][row as usize].push(vec![red as f32, green as f32, blue as f32]);
+            collected_pixels[row as usize].push(red as f32);
+            collected_pixels[row as usize].push(green as f32);
+            collected_pixels[row as usize].push(blue as f32);
         }
     }
 
     RamTensor {
         shape: Shape { x: 50, y: 150 },
         layer_length: 1,
-        data: collected_pixels,
+        data: vec![collected_pixels],
     }
 }
 
