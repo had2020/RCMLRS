@@ -464,6 +464,7 @@ pub fn zeroed_input_tensor_matrices(
 
 use rand::prelude::*;
 
+//TODO get wighted_sum and matmul
 impl RamTensor {
     /// Use to input inputs into a layer
     pub fn insert_matrix(&self, layer_index: usize, new_layer: Vec<Vec<f32>>) -> Self {
