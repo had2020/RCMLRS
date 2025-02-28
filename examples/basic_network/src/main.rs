@@ -48,9 +48,10 @@ fn main() {
     for epoch in 0..max_epochs {
         weights = weights.matmul(input.clone()).unwrap();
         hidden_layer = hidden_layer.matmul(weights.clone()).unwrap();
-        let output = hidden_layer.sigmoid();
-        println!("{:?}", output);
-
+        //let output = hidden_layer.sigmoid();
+        //println!("{:?}", output);
+        //Output=activation(dot(input, kernel)+bias)
+        // todo add matrixs
         // TODO gradient descent
     }
 
