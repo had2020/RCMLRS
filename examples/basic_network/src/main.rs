@@ -50,6 +50,7 @@ fn main() {
         hidden_layer = hidden_layer.matmul(weights.clone()).unwrap();
         let output = hidden_layer.sigmoid();
         println!("{:?}", output);
+
         // TODO gradient descent
     }
 
