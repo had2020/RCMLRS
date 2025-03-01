@@ -558,6 +558,36 @@ impl RamTensor {
         }
     }
 
+    pub fn add(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
+        if (self.shape.x == another_tensor.shape.x)
+            && (self.shape.y == another_tensor.shape.y)
+            && (self.layer_length == another_tensor.layer_length)
+        {
+            for matrix in 0..self.layer_length {
+                new_data.push(vec![]);
+                for row in 0..self.shape.x {
+                    new_data[matrix].push(vec![]);
+                    for col in 0..self.shape.y {
+                        let result: f32 =
+                            self.data[matrix][row][col] + another_tensor.data[matrix][row][col];
+
+                        new_data[matrix][row][col] = result;
+                    }
+                }
+            }
+
+            Ok(RamTensor {
+                shape: self.shape.clone(),
+                layer_length: self.layer_length,
+                data: new_data,
+            })
+        } else {
+            Err(String::from("Cannot add matrixs of differing sizes"))
+        }
+    }
+
     pub fn flatten(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
