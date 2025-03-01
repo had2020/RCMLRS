@@ -561,7 +561,14 @@ impl RamTensor {
     pub fn flatten(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
-        for matrix in self.data {}
+        for matrix in 0..self.layer_length {
+            new_data.push(vec![vec![]]);
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    new_data[matrix][0].push(self.data[matrix][row][col]);
+                }
+            }
+        }
 
         RamTensor {
             shape: Shape {
@@ -569,7 +576,7 @@ impl RamTensor {
                 y: 1,
             },
             layer_length: self.layer_length,
-            data: (),
+            data: new_data,
         }
     }
 
