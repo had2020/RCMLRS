@@ -614,7 +614,7 @@ impl RamTensor {
                 data: new_data,
             })
         } else {
-            Err(String::from("Cannot add matrixs of differing sizes"))
+            Err(String::from("Cannot sub matrixs of differing sizes"))
         }
     }
 
