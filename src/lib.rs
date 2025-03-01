@@ -558,8 +558,24 @@ impl RamTensor {
         }
     }
 
+    pub fn flatten(&self) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
+        for matrix in self.data {}
+
+        RamTensor {
+            shape: Shape {
+                x: self.shape.x,
+                y: 1,
+            },
+            layer_length: self.layer_length,
+            data: (),
+        }
+    }
+
     /// resizes tensor based on shape, and layer_length shape
-    pub fn resize_tensor(
+    /// will cut data useful for padding.
+    pub fn resize(
         &self,
         to_shape: Shape,
         to_layer_length_shape: usize,
