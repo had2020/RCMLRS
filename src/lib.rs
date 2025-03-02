@@ -558,6 +558,18 @@ impl RamTensor {
         }
     }
 
+    pub fn sum(&self) -> f32 {
+        let mut sum: f32 = 0.0;
+        for matrix in 0..self.layer_length {
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    sum += self.data[matrix][row][col];
+                }
+            }
+        }
+        sum
+    }
+
     pub fn add(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
