@@ -38,7 +38,8 @@ fn main() {
 
     let mut weights: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
     let mut hidden_layer: RamTensor = RamTensor::new_random(Shape { x: 50, y: 150 }, 1, 0.0, 100.0);
-    let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+    //let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+    let mut bias: f32 = 0.0;
 
     let target: f32 = 1.0;
     let max_epochs = 1;
@@ -48,6 +49,7 @@ fn main() {
     for epoch in 0..max_epochs {
         weights = weights.matmul(input.clone()).unwrap();
         hidden_layer = hidden_layer.matmul(weights.clone()).unwrap();
+        bias = hidden_layer.flatten().sum();
 
         //let output = hidden_layer.sigmoid();
         //println!("{:?}", output);
