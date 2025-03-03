@@ -685,10 +685,10 @@ impl RamTensor {
 
     pub fn median(&self) -> f32 {
         if is_even_usize(self.layer_length) {
-            let matrix = self.layer_length / 2; // TODO
+            let matrix = self.layer_length / 2; //TODO
         } else {
             let matrix_middle = ((self.layer_length - 1) / 2) + 1;
-            let row_middle = self.data[matrix_middle].len(); //TODO
+            let row_middle = ((self.shape.x - 1) / 2) + 1; //TODO Functionize median formula
         }
         0.0
     }
