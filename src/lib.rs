@@ -692,7 +692,7 @@ impl RamTensor {
         if is_even_usize(self.layer_length) {
             let matrix = self.layer_length / 2; //TODO
         } else {
-            let matrix_middle = ((self.layer_length - 1) / 2) + 1;
+            let matrix_middle = median_usize(self.layer_length);
             let row_middle = ((self.shape.x - 1) / 2) + 1; //TODO Functionize median formula
         }
         0.0
