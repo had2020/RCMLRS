@@ -376,7 +376,9 @@ pub fn average_f32(num1: f32, num2: f32) -> f32 {
 }
 
 //((self.layer_length - 1) / 2) + 1;
-pub fn median() {}
+pub fn median_usize(length: usize) -> usize {
+    ((length - 1) / 2) + 1
+}
 
 // Ram tensor, TODO UPDATE STORAGE BASED
 // TODO transfer to storage or some type of direct storage connection.
