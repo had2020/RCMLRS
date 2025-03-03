@@ -652,6 +652,19 @@ impl RamTensor {
         }
     }
 
+    pub fn to_scalar(&self) -> RamTensor {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        if self.size == Shape {x: 1, y: 1} {
+
+        }
+
+        RamTensor {
+            shape: Shape { x: 1, y: 1 },
+            layer_length: 1,
+            data: new_data,
+        }
+    }
+
     /// resizes tensor based on shape, and layer_length shape
     /// will cut data useful for padding.
     pub fn resize(
