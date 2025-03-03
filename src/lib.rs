@@ -367,13 +367,16 @@ impl Tensor {
     }
 }
 
-fn is_even_usize(num: usize) -> bool {
+pub fn is_even_usize(num: usize) -> bool {
     num % 2 == 0
 }
 
-fn average_f32(num1: f32, num2: f32) -> f32 {
+pub fn average_f32(num1: f32, num2: f32) -> f32 {
     (num1 + num2) / 2.0
 }
+
+//((self.layer_length - 1) / 2) + 1;
+pub fn median() {}
 
 // Ram tensor, TODO UPDATE STORAGE BASED
 // TODO transfer to storage or some type of direct storage connection.
