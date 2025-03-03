@@ -49,7 +49,9 @@ fn main() {
     for epoch in 0..max_epochs {
         weights = weights.matmul(input.clone()).unwrap();
         hidden_layer = hidden_layer.matmul(weights.clone()).unwrap();
-        bias = hidden_layer.flatten().sum();
+        //bias = hidden_layer.flatten().sum();
+        println!("flattend: {:?}", hidden_layer.flatten().sum());
+        //println!("bias: {}", bias);
 
         //let output = hidden_layer.sigmoid();
         //println!("{:?}", output);

@@ -626,7 +626,7 @@ impl RamTensor {
                 data: new_data,
             })
         } else {
-            Err(String::from("Cannot sub matrixs of differing sizes"))
+            Err(String::from("Cannot subtract matrixs of differing sizes"))
         }
     }
 
@@ -644,10 +644,10 @@ impl RamTensor {
 
         RamTensor {
             shape: Shape {
-                x: self.shape.x,
+                x: new_data[0].len(),
                 y: 1,
             },
-            layer_length: self.layer_length,
+            layer_length: new_data.len(),
             data: new_data,
         }
     }
