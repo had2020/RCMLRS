@@ -652,16 +652,13 @@ impl RamTensor {
         }
     }
 
-    pub fn to_scalar(&self) -> RamTensor {
-        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        if self.size == Shape {x: 1, y: 1} {
-
-        }
-
-        RamTensor {
-            shape: Shape { x: 1, y: 1 },
-            layer_length: 1,
-            data: new_data,
+    pub fn to_scalar(&self) -> Result<f32, String> {
+        if self.shape.x == 1 && self.shape.y == 1 && self.layer_length == 1 {
+            Ok(self.data[0][0][0])
+        } else {
+            Err(String::from(
+                "Tensor must be of dims x:1,y:1, and have a layer_length of 1",
+            ))
         }
     }
 
