@@ -367,6 +367,10 @@ impl Tensor {
     }
 }
 
+fn is_even(num: usize) -> bool {
+    num % 2 == 0
+}
+
 // Ram tensor, TODO UPDATE STORAGE BASED
 // TODO transfer to storage or some type of direct storage connection.
 #[derive(Clone, Debug)]
@@ -675,7 +679,15 @@ impl RamTensor {
         data_sum / dataset_indexs as f32
     }
 
-    pub fn median(&self) {}
+    pub fn median(&self) -> f32 {
+        if is_even(self.layer_length) {
+            //let matrix = self.layer_length / 2;
+        } else {
+            // TODO find equal distance from both sides
+            let middle = (self.layer_length - 1) / 2;
+        }
+        0.0
+    }
 
     /// resizes tensor based on shape, and layer_length shape
     /// will cut data useful for padding.
