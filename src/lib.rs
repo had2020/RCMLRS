@@ -662,6 +662,21 @@ impl RamTensor {
         }
     }
 
+    pub fn mean(&self) -> f32 {
+        let mut data_sum: f32 = 0.0;
+        for matrix in 0..self.layer_length {
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    data_sum += self.data[matrix][row][col];
+                }
+            }
+        }
+        let dataset_indexs = (self.shape.x * self.shape.y) * self.layer_length;
+        data_sum / dataset_indexs as f32
+    }
+
+    pub fn median(&self) {}
+
     /// resizes tensor based on shape, and layer_length shape
     /// will cut data useful for padding.
     pub fn resize(
