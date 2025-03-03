@@ -367,8 +367,12 @@ impl Tensor {
     }
 }
 
-fn is_even(num: usize) -> bool {
+fn is_even_usize(num: usize) -> bool {
     num % 2 == 0
+}
+
+fn average_f32(num1: f32, num2: f32) -> f32 {
+    (num1 + num2) / 2.0
 }
 
 // Ram tensor, TODO UPDATE STORAGE BASED
@@ -680,11 +684,11 @@ impl RamTensor {
     }
 
     pub fn median(&self) -> f32 {
-        if is_even(self.layer_length) {
-            //let matrix = self.layer_length / 2;
+        if is_even_usize(self.layer_length) {
+            let matrix = self.layer_length / 2;
         } else {
-            // TODO find equal distance from both sides
-            let middle = (self.layer_length - 1) / 2;
+            let middle = ((self.layer_length - 1) / 2) + 1;
+            //self.data[middle]
         }
         0.0
     }
