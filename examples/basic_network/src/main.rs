@@ -47,16 +47,15 @@ fn main() {
     let learning_rate: f32 = 0.01;
 
     for epoch in 0..max_epochs {
-        weights = weights.matmul(input.clone()).unwrap();
-        hidden_layer = hidden_layer.matmul(weights.clone()).unwrap();
-        //bias = hidden_layer.flatten().sum();
-        println!("flattend: {:?}", hidden_layer.flatten().sum());
-        //println!("bias: {}", bias);
+        let mut output: RamTensor = weights;
+        output = weights.matmul(input.clone()).unwrap();
+        output = hidden_layer.matmul(output.clone()).unwrap();
+        bias = output.sum();
+        println!("bias: {}", bias);
 
         //let output = hidden_layer.sigmoid();
         //println!("{:?}", output);
-        //Output=activation(dot(input, kernel)+bias)
-        // todo add matrixs
+        //Output=activation(dot(input, kernel)+bia
         // TODO gradient descent
     }
 
