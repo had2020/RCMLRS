@@ -47,10 +47,11 @@ fn main() {
     let learning_rate: f32 = 0.01;
 
     for epoch in 0..max_epochs {
-        let mut output: RamTensor = weights;
+        let mut output: RamTensor = weights.clone();
         output = weights.matmul(input.clone()).unwrap();
         output = hidden_layer.matmul(output.clone()).unwrap();
-        bias = output.sum();
+        output = output.sigmoid();
+        bias = output.mean();
         println!("bias: {}", bias);
 
         //let output = hidden_layer.sigmoid();
@@ -60,7 +61,8 @@ fn main() {
     }
 
     /*
-    let weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2); // TODO fix panic when this tensor is bigger
+    let weights: RamTensor = RamTensor::new_l
+    ayer_zeros(Shape { x: 3, y: 3 }, 2); // TODO fix panic when this tensor is bigger
     let bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
 
     println!("Before: {:?}", weights.data);
