@@ -746,10 +746,7 @@ impl RamTensor {
                 let ri = odd_median_usize(self.shape.x);
                 let col = odd_median_usize(self.shape.y);
 
-                let first_p = self.data[mi][ri][col];
-                let second_p = self.data[mi][ri][col];
-
-                returned_median = average_2_f32(first_p, second_p);
+                returned_median = self.data[mi][ri][col];
             }
             (false, true, false) => {
                 let mi = odd_median_usize(self.layer_length);
@@ -763,34 +760,19 @@ impl RamTensor {
                 returned_median = average_2_f32(first_p, second_p);
             }
             (true, true, false) => {
-                let mi = odd_median_usize(self.layer_length);
-                let ri = odd_median_usize(self.shape.x);
+                let mi1 = self.layer_length / 2;
+                let mi2 = (self.layer_length / 2) + 1;
+                let ri1 = self.shape.x / 2;
+                let ri2 = (self.shape.x / 2) + 1;
                 let col = odd_median_usize(self.shape.y);
 
-                let first_p = self.data[mi][ri1][col];
-                let second_p = self.data[mi][ri2][col];
+                let first_p = self.data[mi1][ri1][col];
+                let second_p = self.data[mi2][ri2][col];
 
                 returned_median = average_2_f32(first_p, second_p);
             }
-            //TODO add the other cases and try to functionize more
             _ => (),
         };
-
-        // too many ifs
-        /*
-        if is_even_usize(self.layer_length) {
-            let matrix1 = self.layer_length / 2; //TODO
-            let matrix1 = (self.layer_length / 2) + 1;
-        } else {
-            let matrix_middle = median_usize(self.layer_length);
-            if is_even_usize(self.shape.x) {
-                let row1 = self.shape.x / 2;
-                let row2 = (self.shape.x / 2) + 1; //TODO
-            } else {
-                let row_middle = median_usize(self.shape.x);
-            }
-        }
-        */
         returned_median
     }
 
