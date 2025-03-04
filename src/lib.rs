@@ -375,7 +375,7 @@ pub fn average_f32(num1: f32, num2: f32) -> f32 {
     (num1 + num2) / 2.0
 }
 
-//((self.layer_length - 1) / 2) + 1;
+//((self.layer_length - 1) / 2) + 1; OLD idea
 pub fn median_usize(length: usize) -> usize {
     ((length - 1) / 2) + 1
 }
@@ -689,11 +689,27 @@ impl RamTensor {
     }
 
     pub fn median(&self) -> f32 {
+        // cases
+        let matrix_even = is_even_usize(self.layer_length);
+        let row_even = is_even_usize(self.shape.x);
+        let col_even = is_even_usize(self.shape.y);
+
+        let return_median: f32 = match  {
+            _ -> (),
+        };
+
+        // too many ifs
         if is_even_usize(self.layer_length) {
-            let matrix = self.layer_length / 2; //TODO
+            let matrix1 = self.layer_length / 2; //TODO
+            let matrix1 = (self.layer_length / 2) + 1;
         } else {
             let matrix_middle = median_usize(self.layer_length);
-            let row_middle = ((self.shape.x - 1) / 2) + 1; //TODO Functionize median formula
+            if is_even_usize(self.shape.x) {
+                let row1 = self.shape.x / 2;
+                let row2 = (self.shape.x / 2) + 2; //TODO
+            } else {
+                let row_middle = median_usize(self.shape.x);
+            }
         }
         0.0
     }
