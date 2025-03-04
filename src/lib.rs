@@ -492,9 +492,10 @@ impl RamTensor {
     }
 
     pub fn new_random(shape: Shape, layer_length: usize, rand_min: f32, rand_max: f32) -> Self {
-        if shape.x = 0 | shape.y = 0 | layer_length {
-            eprintln!("Error, on RamTensor creation, shape and layer_length start at 1, not 0");
+        if shape.x == 0 || shape.y == 0 || layer_length == 0 {
+            eprintln!("Error, on RamTensor creation, shape and layer_length start at 1, not 0. Please select 1 or greator!");
         }
+
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         let mut baseline_matrix: Vec<Vec<f32>> = vec![];
@@ -522,6 +523,10 @@ impl RamTensor {
     }
 
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
+        if shape.x == 0 || shape.y == 0 || layer_length == 0 {
+            eprintln!("Error, on RamTensor creation, shape and layer_length start at 1, not 0. Please select 1 or greator!");
+        }
+
         let zero_value: f32 = 0.0;
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         let mut baseline_matrix: Vec<Vec<f32>> = vec![];
