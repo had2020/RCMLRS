@@ -112,6 +112,7 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
 use std::fs::File;
 use std::io::Read;
 use std::io::{BufRead, BufReader};
+use std::num::FpCategory;
 use std::os::unix::fs::MetadataExt;
 
 /// Warning will load each whole line into memory in one block!
@@ -371,7 +372,7 @@ pub fn is_even_usize(num: usize) -> bool {
     num % 2 == 0
 }
 
-pub fn average_f32(num1: f32, num2: f32) -> f32 {
+pub fn average_2_f32(num1: f32, num2: f32) -> f32 {
     (num1 + num2) / 2.0
 }
 
@@ -689,16 +690,32 @@ impl RamTensor {
     }
 
     pub fn median(&self) -> f32 {
+        let mut returned_median: f32 = 0.0;
         // cases
         let matrix_even = is_even_usize(self.layer_length);
         let row_even = is_even_usize(self.shape.x);
         let col_even = is_even_usize(self.shape.y);
 
-        let return_median: f32 = match  {
-            _ -> (),
+        match (matrix_even, row_even, col_even) {
+            (true, true, true) => {
+                let mi1 = self.layer_length / 2;
+                let mi2 = (self.layer_length / 2) + 1;
+                let ri1 = self.shape.x / 2;
+                let ri2 = (self.shape.x / 2) + 1;
+                let col1 = self.shape.y / 2;
+                let col2 = (self.shape.y / 2) + 1;
+
+                let first_p = self.data[mi1][ri1][col1];
+                let second_p = self.data[mi2][ri2][col2];
+
+                returned_median = average_2_f32(first_p, second_p);
+            }
+            //TODO add the other cases and try to functionize more
+            _ => (),
         };
 
         // too many ifs
+        /*
         if is_even_usize(self.layer_length) {
             let matrix1 = self.layer_length / 2; //TODO
             let matrix1 = (self.layer_length / 2) + 1;
@@ -706,12 +723,13 @@ impl RamTensor {
             let matrix_middle = median_usize(self.layer_length);
             if is_even_usize(self.shape.x) {
                 let row1 = self.shape.x / 2;
-                let row2 = (self.shape.x / 2) + 2; //TODO
+                let row2 = (self.shape.x / 2) + 1; //TODO
             } else {
                 let row_middle = median_usize(self.shape.x);
             }
         }
-        0.0
+        */
+        returned_median
     }
 
     /// resizes tensor based on shape, and layer_length shape
