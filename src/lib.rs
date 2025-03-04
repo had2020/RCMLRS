@@ -377,7 +377,7 @@ pub fn average_2_f32(num1: f32, num2: f32) -> f32 {
 }
 
 //((self.layer_length - 1) / 2) + 1; OLD idea
-pub fn median_usize(length: usize) -> usize {
+pub fn odd_median_usize(length: usize) -> usize {
     ((length - 1) / 2) + 1
 }
 
@@ -492,6 +492,9 @@ impl RamTensor {
     }
 
     pub fn new_random(shape: Shape, layer_length: usize, rand_min: f32, rand_max: f32) -> Self {
+        if shape.x = 0 | shape.y = 0 | layer_length {
+            eprintln!("Error, on RamTensor creation, shape and layer_length start at 1, not 0");
+        }
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         let mut baseline_matrix: Vec<Vec<f32>> = vec![];
@@ -707,6 +710,39 @@ impl RamTensor {
 
                 let first_p = self.data[mi1][ri1][col1];
                 let second_p = self.data[mi2][ri2][col2];
+
+                returned_median = average_2_f32(first_p, second_p);
+            }
+            (false, true, true) => {
+                let mi = odd_median_usize(self.layer_length);
+                let ri1 = self.shape.x / 2;
+                let ri2 = (self.shape.x / 2) + 1;
+                let col1 = self.shape.y / 2;
+                let col2 = (self.shape.y / 2) + 1;
+
+                let first_p = self.data[mi][ri1][col1];
+                let second_p = self.data[mi][ri2][col2];
+
+                returned_median = average_2_f32(first_p, second_p);
+            }
+            (false, false, true) => {
+                let mi = odd_median_usize(self.layer_length);
+                let ri = odd_median_usize(self.shape.x);
+                let col1 = self.shape.y / 2;
+                let col2 = (self.shape.y / 2) + 1;
+
+                let first_p = self.data[mi][ri][col1];
+                let second_p = self.data[mi][ri][col2];
+
+                returned_median = average_2_f32(first_p, second_p);
+            }
+            (false, false, false) => {
+                let mi = odd_median_usize(self.layer_length);
+                let ri = odd_median_usize(self.shape.x);
+                let col = odd_median_usize(self.shape.y);
+
+                let first_p = self.data[mi][ri][col];
+                let second_p = self.data[mi][ri][col];
 
                 returned_median = average_2_f32(first_p, second_p);
             }
