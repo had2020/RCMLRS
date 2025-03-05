@@ -58,6 +58,7 @@ fn main() {
         let error = target - output.mean();
 
         // gradent decent
+        // let gradient = output * (1.0 - output) * error;
         let gradient = output.scaler((1.0 - output) * error); // For Sigmoid
 
         // backpropgation
