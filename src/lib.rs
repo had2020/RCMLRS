@@ -528,6 +528,31 @@ impl Sub<f32> for RamTensor {
     }
 }
 
+impl Sub<RamTensor> for RamTensor {
+    type Output = RamTensor;
+
+    fn sub(self, rhs: RamTensor) -> Self::Output {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
+        for matrix in 0..rhs.layer_length {
+            new_data.push(vec![]);
+            for row in 0..rhs.shape.x {
+                new_data[matrix].push(vec![]);
+                for col in 0..rhs.shape.y {
+                    new_data[matrix][row]
+                        .push(self.data[matrix][row][col] - rhs.data[matrix][row][col]);
+                }
+            }
+        }
+
+        RamTensor {
+            shape: rhs.shape,
+            layer_length: rhs.layer_length,
+            data: new_data,
+        }
+    }
+}
+
 impl Add<RamTensor> for f32 {
     type Output = RamTensor;
 
@@ -540,6 +565,31 @@ impl Add<RamTensor> for f32 {
                 new_data[matrix].push(vec![]);
                 for col in 0..rhs.shape.y {
                     new_data[matrix][row].push(self + rhs.data[matrix][row][col]);
+                }
+            }
+        }
+
+        RamTensor {
+            shape: rhs.shape,
+            layer_length: rhs.layer_length,
+            data: new_data,
+        }
+    }
+}
+
+impl Add<RamTensor> for RamTensor {
+    type Output = RamTensor;
+
+    fn add(self, rhs: RamTensor) -> Self::Output {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
+        for matrix in 0..rhs.layer_length {
+            new_data.push(vec![]);
+            for row in 0..rhs.shape.x {
+                new_data[matrix].push(vec![]);
+                for col in 0..rhs.shape.y {
+                    new_data[matrix][row]
+                        .push(self.data[matrix][row][col] + rhs.data[matrix][row][col]);
                 }
             }
         }
@@ -576,7 +626,6 @@ impl Div<RamTensor> for f32 {
     }
 }
 
-//TODO fix the rest like this one
 impl Mul<f32> for RamTensor {
     type Output = RamTensor;
 
@@ -593,6 +642,32 @@ impl Mul<f32> for RamTensor {
             }
         }
 
+        RamTensor {
+            shape: self.shape,
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
+}
+
+impl Mul<RamTensor> for RamTensor {
+    type Output = RamTensor;
+
+    fn mul(self, another_tensor: RamTensor) -> Self::Output {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        // rows times columns
+        for (matrix_index, matrix) in self.data.iter().enumerate() {
+            new_data.push(vec![]);
+            for (row_index, row) in matrix.iter().enumerate() {
+                new_data[matrix_index].push(vec![]);
+                for col_index in 0..self.shape.y {
+                    new_data[matrix_index][row_index].push(
+                        self.data[matrix_index][row_index][col_index]
+                            * another_tensor.data[matrix_index][row_index][col_index],
+                    );
+                }
+            }
+        }
         RamTensor {
             shape: self.shape,
             layer_length: self.layer_length,
@@ -756,6 +831,7 @@ impl RamTensor {
         sum
     }
 
+    /*
     pub fn add(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
@@ -785,6 +861,7 @@ impl RamTensor {
             Err(String::from("Cannot add matrixs of differing sizes"))
         }
     }
+    */
 
     pub fn sub(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];

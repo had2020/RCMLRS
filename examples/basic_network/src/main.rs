@@ -42,7 +42,7 @@ fn main() {
     let mut bias: f32 = 0.0;
 
     let target: f32 = 0.0;
-    let max_epochs = 1;
+    let max_epochs = 1000;
     let stopping_threshold: f32 = 1e-10;
     let learning_rate: f32 = 0.01;
 
@@ -58,13 +58,16 @@ fn main() {
         let error = target - output.mean();
 
         // gradent decent
-        // let gradient = output * (1.0 - output) * error;
-        //let gradient = output.scaler((1.0 - output) * error); // For Sigmoid
-        let gradient = output * (1.0 - output) * error;
+        // let gradient = output * (1.0 - output) * error; // For Sigmoid
+        //let gradient = output.scaler((1.0 - output) * error);
+        //let gradient = output.matmul((1.0 - output.clone())).unwrap() * error;
+        let gradient = output.clone() * (1.0 - output.clone()) * error;
 
         // backpropgation
         //weights = weights + (gradient * learning_rate);
-        weights = weights.add(gradient.scaler(learning_rate)).unwrap();
+        //println!("{:?}", gradient.clone() * learning_rate);
+        //weights = weights.add(gradient * learning_rate).unwrap();
+        weights = weights + (gradient * learning_rate);
 
         // update bias
         bias = output.mean();
