@@ -67,10 +67,13 @@ fn main() {
         //weights = weights + (gradient * learning_rate);
         //println!("{:?}", gradient.clone() * learning_rate);
         //weights = weights.add(gradient * learning_rate).unwrap();
-        weights = weights + (gradient * learning_rate);
+        //weights = weights + (gradient * learning_rate);
+        weights = weights + (gradient.clone() * input.clone() * learning_rate);
+        hidden_layer = hidden_layer + (gradient.clone() * output.clone() * learning_rate);
 
-        // update bias
-        bias = output.mean();
+        // Update bias
+        bias -= learning_rate * error;
+        // bias = output.mean();
 
         println!("Epoch {}: Bias: {}, Error: {}", epoch, bias, error);
     }
