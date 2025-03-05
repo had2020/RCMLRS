@@ -41,7 +41,7 @@ fn main() {
     //let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
     let mut bias: f32 = 0.0;
 
-    let target: f32 = 1.0;
+    let target: f32 = 0.0;
     let max_epochs = 1;
     let stopping_threshold: f32 = 1e-10;
     let learning_rate: f32 = 0.01;
@@ -51,7 +51,15 @@ fn main() {
         output = weights.matmul(input.clone()).unwrap();
         output = hidden_layer.matmul(output.clone()).unwrap();
         output = output.sigmoid();
+
+        // compute error
+        let error = target - output.mean();
+
+        // gradent decent
+        let gradient = output.scaler((1.0 - output) * error);
+
         bias = output.mean();
+
         println!("bias: {}", bias);
 
         //let output = hidden_layer.sigmoid();

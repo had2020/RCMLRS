@@ -480,6 +480,24 @@ use rand::prelude::*;
 
 //TODO get wighted_sum and matmul
 impl RamTensor {
+    pub fn scaler(&self, scaler: f32) -> Self {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        for matrix in 0..self.layer_length {
+            new_data.push(vec![]);
+            for row in 0..self.shape.x {
+                new_data[matrix].push(vec![]);
+                for col in 0..self.shape.y {
+                    new_data[matrix][row].push(self.data[matrix][row][col] * scaler);
+                }
+            }
+        }
+        RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
+
     /// Use to input inputs into a layer
     pub fn insert_matrix(&self, layer_index: usize, new_layer: Vec<Vec<f32>>) -> Self {
         let mut new_data = self.data.clone();
