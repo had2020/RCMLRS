@@ -504,6 +504,30 @@ impl Sub<RamTensor> for f32 {
     }
 }
 
+impl Sub<f32> for RamTensor {
+    type Output = RamTensor;
+
+    fn sub(self, num: f32) -> Self::Output {
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
+        for matrix in 0..self.layer_length {
+            new_data.push(vec![]);
+            for row in 0..self.shape.x {
+                new_data[matrix].push(vec![]);
+                for col in 0..self.shape.y {
+                    new_data[matrix][row].push(self.data[matrix][row][col] - num);
+                }
+            }
+        }
+
+        RamTensor {
+            shape: self.shape,
+            layer_length: self.layer_length,
+            data: new_data,
+        }
+    }
+}
+
 impl Add<RamTensor> for f32 {
     type Output = RamTensor;
 

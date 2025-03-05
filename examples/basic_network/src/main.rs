@@ -59,7 +59,8 @@ fn main() {
 
         // gradent decent
         // let gradient = output * (1.0 - output) * error;
-        let gradient = output.scaler((1.0 - output) * error); // For Sigmoid
+        //let gradient = output.scaler((1.0 - output) * error); // For Sigmoid
+        let gradient = output * (1.0 - output) * error;
 
         // backpropgation
         //weights = weights + (gradient * learning_rate);
