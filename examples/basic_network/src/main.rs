@@ -48,6 +48,8 @@ fn main() {
 
     for epoch in 0..max_epochs {
         let mut output: RamTensor = weights.clone();
+
+        // fowardfeed
         output = weights.matmul(input.clone()).unwrap();
         output = hidden_layer.matmul(output.clone()).unwrap();
         output = output.sigmoid();
@@ -56,29 +58,15 @@ fn main() {
         let error = target - output.mean();
 
         // gradent decent
-        let gradient = output.scaler((1.0 - output) * error);
+        let gradient = output.scaler((1.0 - output) * error); // For Sigmoid
 
+        // backpropgation
+        //weights = weights + (gradient * learning_rate);
+        weights = weights.add(gradient.scaler(learning_rate)).unwrap();
+
+        // update bias
         bias = output.mean();
 
-        println!("bias: {}", bias);
-
-        //let output = hidden_layer.sigmoid();
-        //println!("{:?}", output);
-        //Output=activation(dot(input, kernel)+bia
-        // TODO gradient descent
+        println!("Epoch {}: Bias: {}, Error: {}", epoch, bias, error);
     }
-
-    /*
-    let weights: RamTensor = RamTensor::new_l
-    ayer_zeros(Shape { x: 3, y: 3 }, 2); // TODO fix panic when this tensor is bigger
-    let bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
-
-    println!("Before: {:?}", weights.data);
-    let weights2: RamTensor = weights.matmul(bias).unwrap();
-    println!("After: {:?}", weights2.data);
-
-    // Relu
-    let relu_result = weights2.relu();
-    println!("ReLU: {:?}", relu_result.data);
-    */
 }
