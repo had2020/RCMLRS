@@ -822,8 +822,10 @@ impl RamTensor {
     }
 
     pub fn multi_threaded_matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
-        //let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        let first_matrix = Arc::new(self.data.clone());
+        let second_matrix = Arc::new(another_tensor.data);
         let shared_data: Arc<Mutex<Vec<Vec<Vec<f32>>>>> = Arc::new(Mutex::new(Vec::new()));
+        let row_shape = self.shape.y.clone();
         if (self.shape.x == another_tensor.shape.x)
             && (self.shape.y == another_tensor.shape.y)
             && (self.layer_length == another_tensor.layer_length)
@@ -831,12 +833,21 @@ impl RamTensor {
             let mut handles = vec![];
 
             // TODO control max number of threads
-            for (matrix_index, matrix) in self.data.iter().enumerate() {
+            for (matrix_index, matrix) in &self.data.iter().enumerate() {
                 let shared_data_clone = Arc::clone(&shared_data);
                 let handle = thread::spawn(move || {
                     let mut data = shared_data_clone.lock().unwrap();
                     data.push(vec![]);
                     println!("Thread {}", matrix_index);
+                    for (row_index, row) in matrix.iter().enumerate() {
+                        data[matrix_index].push(vec![]);
+                        for col_index in 0..row_shape {
+                            data[matrix_index][row_index].push(
+                                first_matrix[matrix_index][row_index][col_index]
+                                    * second_matrix[matrix_index][row_index][col_index],
+                            );
+                        }
+                    }
                 });
                 handles.push(handle);
             }
@@ -844,8 +855,6 @@ impl RamTensor {
             for handle in handles {
                 handle.join().unwrap();
             }
-
-            //new_data.push(shared_data.lock().unwrap().clone());
 
             /*
             // rows times columns
@@ -866,7 +875,7 @@ impl RamTensor {
             Ok(RamTensor {
                 shape: self.shape.clone(),
                 layer_length: self.layer_length,
-                data: new_data,
+                data: shared_data.lock().unwrap().clone(),
             })
         } else {
             Err(String::from("Cannot multiply matrixs of differing sizes"))
