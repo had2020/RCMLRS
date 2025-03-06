@@ -476,9 +476,9 @@ pub fn zeroed_input_tensor_matrices(
     }
 }
 
-use rand::prelude::*;
-
-use std::ops::{Add, Div, Mul, Neg, Sub};
+use rand::prelude::*; // for random tensor gen
+use std::ops::{Add, Div, Mul, Neg, Sub}; // for rust's operations to work on RamTensors
+use std::thread; // for effiency
 
 impl Sub<RamTensor> for f32 {
     type Output = RamTensor;
