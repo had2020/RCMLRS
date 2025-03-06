@@ -478,6 +478,7 @@ pub fn zeroed_input_tensor_matrices(
 
 use rand::prelude::*; // for random tensor gen
 use std::ops::{Add, Div, Mul, Neg, Sub}; // for rust's operations to work on RamTensors
+use std::sync::{Arc, Mutex};
 use std::thread; // for effiency
 
 impl Sub<RamTensor> for f32 {
@@ -792,6 +793,7 @@ impl RamTensor {
     // ram based Matrix Multiplication
     pub fn matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        //let shared_matrix: Arc<Mutex<Vec<Vec<f32>>>> = Arc::new(Mutex::new(Vec::new()));
         if (self.shape.x == another_tensor.shape.x)
             && (self.shape.y == another_tensor.shape.y)
             && (self.layer_length == another_tensor.layer_length)
@@ -809,6 +811,58 @@ impl RamTensor {
                     }
                 }
             }
+            Ok(RamTensor {
+                shape: self.shape.clone(),
+                layer_length: self.layer_length,
+                data: new_data,
+            })
+        } else {
+            Err(String::from("Cannot multiply matrixs of differing sizes"))
+        }
+    }
+
+    pub fn multi_threaded_matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
+        //let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        let shared_data: Arc<Mutex<Vec<Vec<Vec<f32>>>>> = Arc::new(Mutex::new(Vec::new()));
+        if (self.shape.x == another_tensor.shape.x)
+            && (self.shape.y == another_tensor.shape.y)
+            && (self.layer_length == another_tensor.layer_length)
+        {
+            let mut handles = vec![];
+
+            // TODO control max number of threads
+            for (matrix_index, matrix) in self.data.iter().enumerate() {
+                let shared_data_clone = Arc::clone(&shared_data);
+                let handle = thread::spawn(move || {
+                    let mut data = shared_data_clone.lock().unwrap();
+                    data.push(vec![]);
+                    println!("Thread {}", matrix_index);
+                });
+                handles.push(handle);
+            }
+
+            for handle in handles {
+                handle.join().unwrap();
+            }
+
+            //new_data.push(shared_data.lock().unwrap().clone());
+
+            /*
+            // rows times columns
+            for (matrix_index, matrix) in self.data.iter().enumerate() {
+                new_data.push(vec![]);
+                for (row_index, row) in matrix.iter().enumerate() {
+                    new_data[matrix_index].push(vec![]);
+                    for col_index in 0..self.shape.y {
+                        new_data[matrix_index][row_index].push(
+                            self.data[matrix_index][row_index][col_index]
+                                * another_tensor.data[matrix_index][row_index][col_index],
+                        );
+                    }
+                }
+            }
+            */
+
             Ok(RamTensor {
                 shape: self.shape.clone(),
                 layer_length: self.layer_length,
