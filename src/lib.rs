@@ -822,8 +822,8 @@ impl RamTensor {
     }
 
     pub fn multi_threaded_matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
-        let row_shape = self.shape.y;
-        let col_shape = self.shape.x;
+        let row_shape = self.shape.x;
+        let col_shape = self.shape.y;
         let layer_length = self.layer_length;
 
         if (self.shape.x != another_tensor.shape.x)
@@ -848,7 +848,6 @@ impl RamTensor {
             let handle = thread::spawn(move || {
                 let mut data = shared_data_clone.lock().unwrap();
                 for row_index in 0..row_shape {
-                    println!("{}", row_index);
                     for col_index in 0..col_shape {
                         data[matrix_index][row_index][col_index] = self_matrix[row_index]
                             [col_index]
