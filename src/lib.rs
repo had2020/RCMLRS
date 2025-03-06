@@ -1256,6 +1256,8 @@ impl RamTensor {
         }
         // TODO ELU or Mish
         // AGI: AReLU,SELU,
+        // Cross-Entropy Loss
+        // Mean Squared Error (MSE)
     }
 }
 
@@ -1301,3 +1303,44 @@ macro_rules! cus_act {
         }
     }};
 }
+
+/*
+pub struct Model {
+
+}
+
+pub struct Network {
+    pub
+}
+*/
+
+// Should be like
+/*
+# Define a simple feedforward neural network
+class NeuralNet:
+    def __init__(self, input_shape, output_units):
+        self.model = keras.Sequential([
+            layers.Dense(128, activation='relu', input_shape=input_shape),
+            layers.Dense(64, activation='relu'),
+            layers.Dense(output_units, activation='softmax')
+        ])
+
+    def compile(self, optimizer="adam", loss="sparse_categorical_crossentropy", metrics=None):
+        metrics = metrics or ["accuracy"]
+        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        return self
+
+    def train(self, x_train, y_train, epochs=10, batch_size=32):
+        return self.model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
+
+    def evaluate(self, x_test, y_test):
+        return self.model.evaluate(x_test, y_test)
+
+    def predict(self, x):
+        return self.model.predict(x)
+
+# Example usage
+if __name__ == "__main__":
+    net = NeuralNet(input_shape=(784,), output_units=10)
+    net.compile().train(x_train, y_train, epochs=5)
+*/

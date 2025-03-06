@@ -38,7 +38,7 @@ fn main() {
 
     let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
     let mut hidden_layer: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
-    //let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+
     let mut bias: f32 = 0.0;
 
     let target: f32 = 0.0;
@@ -58,16 +58,9 @@ fn main() {
         let error = target - output.mean();
 
         // gradent decent
-        // let gradient = output * (1.0 - output) * error; // For Sigmoid
-        //let gradient = output.scaler((1.0 - output) * error);
-        //let gradient = output.matmul((1.0 - output.clone())).unwrap() * error;
-        let gradient = output.clone() * (1.0 - output.clone()) * error;
+        let gradient = output.clone() * (1.0 - output.clone()) * error; // sigmoid based
 
         // backpropgation
-        //weights = weights + (gradient * learning_rate);
-        //println!("{:?}", gradient.clone() * learning_rate);
-        //weights = weights.add(gradient * learning_rate).unwrap();
-        //weights = weights + (gradient * learning_rate);
         weights = weights + (gradient.clone() * input.clone() * learning_rate);
         hidden_layer = hidden_layer + (gradient.clone() * output.clone() * learning_rate);
 
@@ -76,5 +69,9 @@ fn main() {
         // bias = output.mean();
 
         println!("Epoch {}: Bias: {}, Error: {}", epoch, bias, error);
+
+        if error.abs() < stopping_threshold {
+            break;
+        }
     }
 }
