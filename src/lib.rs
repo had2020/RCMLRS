@@ -822,53 +822,53 @@ impl RamTensor {
     }
 
     pub fn multi_threaded_matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
-        let first_matrix = Arc::new(self.data.clone());
-        let second_matrix = Arc::new(another_tensor.data);
-        let shared_data: Arc<Mutex<Vec<Vec<Vec<f32>>>>> = Arc::new(Mutex::new(Vec::new()));
-        let row_shape = self.shape.y.clone();
-        if (self.shape.x == another_tensor.shape.x)
-            && (self.shape.y == another_tensor.shape.y)
-            && (self.layer_length == another_tensor.layer_length)
+        let row_shape = self.shape.y;
+        let col_shape = self.shape.x;
+        let layer_length = self.layer_length;
+
+        if (self.shape.x != another_tensor.shape.x)
+            || (self.shape.y != another_tensor.shape.y)
+            || (self.layer_length != another_tensor.layer_length)
         {
-            let mut handles = vec![];
-
-            // TODO control max number of threads
-            for (matrix_index, matrix) in self.data.iter().enumerate() {
-                let shared_data_clone = Arc::clone(&shared_data);
-                let shared_matrix: Arc<Mutex<Vec<Vec<f32>>>> =
-                    Arc::new(Mutex::new(self.data[matrix_index].clone()));
-                let shared_matrix_clone = Arc::clone(&shared_matrix);
-
-                let handle = thread::spawn(move || {
-                    let mut data = shared_data_clone.lock().unwrap();
-                    let thread_matrix = shared_matrix_clone.lock().unwrap();
-                    data.push(vec![]);
-                    for (row_index, row) in thread_matrix.iter().enumerate() {
-                        data[matrix_index].push(vec![]);
-                        for col_index in 0..row_shape {
-                            data[matrix_index][row_index].push(
-                                first_matrix[matrix_index][row_index][col_index]
-                                    * second_matrix[matrix_index][row_index][col_index],
-                            );
-                        }
-                    }
-                });
-
-                handles.push(handle);
-            }
-
-            for handle in handles {
-                handle.join().unwrap();
-            }
-
-            Ok(RamTensor {
-                shape: self.shape.clone(),
-                layer_length: self.layer_length,
-                data: shared_data.lock().unwrap().clone(),
-            })
-        } else {
-            Err(String::from("Cannot multiply matrixs of differing sizes"))
+            return Err(String::from("cannot multiply matrices of differing sizes"));
         }
+
+        let shared_data = Arc::new(Mutex::new(vec![
+            vec![vec![0.0; col_shape]; row_shape];
+            layer_length
+        ]));
+
+        let mut handles = vec![];
+
+        for matrix_index in 0..layer_length {
+            let shared_data_clone = Arc::clone(&shared_data);
+            let self_matrix = self.data[matrix_index].clone();
+            let another_matrix = another_tensor.data[matrix_index].clone();
+
+            let handle = thread::spawn(move || {
+                let mut data = shared_data_clone.lock().unwrap();
+                for row_index in 0..row_shape {
+                    println!("{}", row_index);
+                    for col_index in 0..col_shape {
+                        data[matrix_index][row_index][col_index] = self_matrix[row_index]
+                            [col_index]
+                            * another_matrix[row_index][col_index];
+                    }
+                }
+            });
+
+            handles.push(handle);
+        }
+
+        for handle in handles {
+            handle.join().unwrap();
+        }
+
+        Ok(RamTensor {
+            shape: self.shape.clone(),
+            layer_length: self.layer_length,
+            data: Arc::try_unwrap(shared_data).unwrap().into_inner().unwrap(),
+        })
     }
 
     pub fn sum(&self) -> f32 {

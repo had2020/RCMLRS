@@ -50,8 +50,8 @@ fn main() {
         let mut output: RamTensor = weights.clone();
 
         // fowardfeed
-        output = weights.matmul(input.clone()).unwrap();
-        output = hidden_layer.matmul(output.clone()).unwrap();
+        output = weights.multi_threaded_matmul(input.clone()).unwrap();
+        output = hidden_layer.multi_threaded_matmul(output.clone()).unwrap();
         output = output.sigmoid();
 
         // compute error
