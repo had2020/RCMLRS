@@ -833,13 +833,17 @@ impl RamTensor {
             let mut handles = vec![];
 
             // TODO control max number of threads
-            for (matrix_index, matrix) in &self.data.iter().enumerate() {
+            for (matrix_index, matrix) in self.data.iter().enumerate() {
                 let shared_data_clone = Arc::clone(&shared_data);
+                let shared_matrix: Arc<Mutex<Vec<Vec<f32>>>> =
+                    Arc::new(Mutex::new(self.data[matrix_index].clone()));
+                let shared_matrix_clone = Arc::clone(&shared_matrix);
+
                 let handle = thread::spawn(move || {
                     let mut data = shared_data_clone.lock().unwrap();
+                    let thread_matrix = shared_matrix_clone.lock().unwrap();
                     data.push(vec![]);
-                    println!("Thread {}", matrix_index);
-                    for (row_index, row) in matrix.iter().enumerate() {
+                    for (row_index, row) in thread_matrix.iter().enumerate() {
                         data[matrix_index].push(vec![]);
                         for col_index in 0..row_shape {
                             data[matrix_index][row_index].push(
@@ -849,28 +853,13 @@ impl RamTensor {
                         }
                     }
                 });
+
                 handles.push(handle);
             }
 
             for handle in handles {
                 handle.join().unwrap();
             }
-
-            /*
-            // rows times columns
-            for (matrix_index, matrix) in self.data.iter().enumerate() {
-                new_data.push(vec![]);
-                for (row_index, row) in matrix.iter().enumerate() {
-                    new_data[matrix_index].push(vec![]);
-                    for col_index in 0..self.shape.y {
-                        new_data[matrix_index][row_index].push(
-                            self.data[matrix_index][row_index][col_index]
-                                * another_tensor.data[matrix_index][row_index][col_index],
-                        );
-                    }
-                }
-            }
-            */
 
             Ok(RamTensor {
                 shape: self.shape.clone(),
