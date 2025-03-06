@@ -646,21 +646,12 @@ impl Mul<f32> for RamTensor {
             let shared_data_clone = Arc::clone(&shared_data);
             let self_matrix = self.data[matrix].clone();
 
-            /*
-            new_data.push(vec![]);
-            for row in 0..self.shape.x {
-                new_data[matrix].push(vec![]);
-                for col in 0..self.shape.y {
-                    new_data[matrix][row].push(num * self.data[matrix][row][col]);
-                }
-            }
-            */
-
             let handle = thread::spawn(move || {
                 let mut data = shared_data_clone.lock().unwrap();
-                for row_index in 0..row_shape {
-                    for col_index in 0..col_shape {
-                        data[matrix][row_index].push(num * self_matrix[row_index][col_index]);
+                for row_index in 0..row_shape - 1 {
+                    for col_index in 0..col_shape - 1 {
+                        data[matrix][row_index]
+                            .push(num * self_matrix[row_index + 1][col_index + 1]);
                     }
                 }
             });
