@@ -28,3 +28,5 @@ Impl RamTensor
 - Softmax `exp(z_i) / Σ_j exp(z_j)`
 - Swish `x * (1.0 / (1.0 + e^-x))`
 - GELU `0.5x(1+Tanh(2/PI(x + 0.044715x^3)))`
+
+Main idea multi-thread completey memory safe AI
