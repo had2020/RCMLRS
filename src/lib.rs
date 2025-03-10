@@ -652,6 +652,7 @@ impl Mul<f32> for RamTensor {
                     for col_index in 0..col_shape - 1 {
                         data[matrix][row_index]
                             .push(num * self_matrix[row_index + 1][col_index + 1]);
+                        // error here
                     }
                 }
             });
