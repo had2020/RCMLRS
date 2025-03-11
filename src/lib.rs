@@ -631,32 +631,7 @@ impl Mul<f32> for RamTensor {
     type Output = RamTensor;
 
     fn mul(self, num: f32) -> Self::Output {
-        let row_shape = self.shape.x;
-        let col_shape = self.shape.y;
-        let layer_len = self.layer_length;
-
-        let data_ptr: *mut Vec<Vec<Vec<f32>>> = &mut self.data;
-
-        let mut handles = vec![];
-
-        for matrix in 0..layer_len {
-            let handle = thread::spawn(move || unsafe {
-                let layer = &mut (*data_ptr)[matrix];
-                for row in 0..row_shape {
-                    for col in 0..col_shape {
-                        layer[row][col] *= num;
-                    }
-                }
-            });
-
-            handles.push(handle);
-        }
-
-        for handle in handles {
-            handle.join().unwrap();
-        }
-
-        self
+        self.scaler(num)
     }
 }
 
@@ -738,7 +713,40 @@ impl Neg for RamTensor {
 }
 
 impl RamTensor {
-    pub fn scaler(&self, scaler: f32) -> Self {
+    pub fn scaler(self, num: f32) -> Self {
+        let row_shape = self.shape.x;
+        let col_shape = self.shape.y;
+
+        let mut handles = vec![];
+
+        for matrix in self.data {
+            let handle = thread::spawn(move || {
+                let mut new_matrix = vec![vec![0.0; col_shape]; row_shape];
+                for row in 0..row_shape {
+                    for col in 0..col_shape {
+                        new_matrix[row][col] = matrix[row][col] * num;
+                    }
+                }
+                new_matrix
+            });
+
+            handles.push(handle);
+        }
+
+        let mut result_data = vec![];
+        for handle in handles {
+            let result_layer = handle.join().unwrap();
+            result_data.push(result_layer);
+        }
+
+        RamTensor {
+            shape: self.shape,
+            layer_length: result_data.len(),
+            data: result_data,
+        }
+    }
+
+    pub fn oldscaler(&self, scaler: f32) -> Self {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         for matrix in 0..self.layer_length {
             new_data.push(vec![]);
