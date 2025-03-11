@@ -47,26 +47,30 @@ fn main() {
     let learning_rate: f32 = 0.01;
 
     for epoch in 0..max_epochs {
-        let mut output: RamTensor = weights.clone();
-
         // fowardfeed
-        output = weights.multi_threaded_matmul(input.clone()).unwrap();
-        output = hidden_layer.multi_threaded_matmul(output.clone()).unwrap();
-        output = output.sigmoid();
+        let z1 = weights.matmul(input.clone()).unwrap() + bias;
+        let a1 = z1.sigmoid();
+        let z2 = hidden_layer.matmul(a1.clone()).unwrap();
+        let a2 = z2.sigmoid();
 
-        // compute error
-        let error = target - output.mean();
+        // compute error/ loss
+        let error = target - a2.mean();
 
         // gradent decent
-        let gradient = output.clone() * (1.0 - output.clone()) * error; // sigmoid based
+        let d_output = error * a2.clone() * (1.0 - a2); // sigmoid based
 
-        // backpropgation
-        weights = weights + (gradient.clone() * input.clone() * learning_rate);
-        hidden_layer = hidden_layer + (gradient.clone() * output.clone() * learning_rate);
+        // backprogation
+        //weights = weights + (d_output.clone() * input.clone() * learning_rate);
+        //hidden_layer = hidden_layer + (d_output.clone() * a2.clone() * learning_rate);
+        let d_hidden_layer = d_output.matmul(a1.clone()).unwrap();
+        let d_weights = d_output.matmul(input.clone()).unwrap();
 
-        // Update bias
+        // update weights
+        weights += d_weights * learning_rate;
+        hidden_layer += d_hidden_layer * learning_rate;
+
+        // bias
         bias -= learning_rate * error;
-        // bias = output.mean();
 
         println!("Epoch {}: Bias: {}, Error: {}", epoch, bias, error);
 
