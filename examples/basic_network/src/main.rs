@@ -38,8 +38,8 @@ fn main() {
 
     let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
     let mut hidden_layer: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
-
-    let mut bias: f32 = 0.0;
+    let mut bias1: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+    let mut bias2: f32 = 0.0;
 
     let target: f32 = 0.0;
     let max_epochs = 1000;
@@ -48,9 +48,9 @@ fn main() {
 
     for epoch in 0..max_epochs {
         // fowardfeed
-        let z1 = weights.matmul(input.clone()).unwrap() + bias;
+        let z1 = weights.matmul(input.clone()).unwrap() + bias1.clone(); // bias1 tensor broadcasted
         let a1 = z1.sigmoid();
-        let z2 = hidden_layer.matmul(a1.clone()).unwrap();
+        let z2 = hidden_layer.matmul(a1.clone()).unwrap() + bias2;
         let a2 = z2.sigmoid();
 
         // compute error/ loss
@@ -60,19 +60,19 @@ fn main() {
         let d_output = error * a2.clone() * (1.0 - a2); // sigmoid based
 
         // backprogation
-        //weights = weights + (d_output.clone() * input.clone() * learning_rate);
-        //hidden_layer = hidden_layer + (d_output.clone() * a2.clone() * learning_rate);
         let d_hidden_layer = d_output.matmul(a1.clone()).unwrap();
         let d_weights = d_output.matmul(input.clone()).unwrap();
 
         // update weights
         weights += d_weights * learning_rate;
-        hidden_layer += d_hidden_layer * learning_rate;
+        hidden_layer += d_hidden_layer.clone() * learning_rate;
+        bias1 += d_hidden_layer.clone() * learning_rate;
+        bias2 -= learning_rate * error;
 
         // bias
-        bias -= learning_rate * error;
+        bias2 -= learning_rate * error;
 
-        println!("Epoch {}: Bias: {}, Error: {}", epoch, bias, error);
+        println!("Epoch {}: Bias: {}, Error: {}", epoch, bias2, error);
 
         if error.abs() < stopping_threshold {
             break;
