@@ -636,7 +636,7 @@ impl Mul<f32> for RamTensor {
         let layer_length = self.layer_length;
 
         let shared_data = Arc::new(Mutex::new(vec![
-            vec![vec![0.0; col_shape]; row_shape];
+            vec![vec![0.0; row_shape]; col_shape];
             layer_length
         ]));
 
@@ -648,10 +648,9 @@ impl Mul<f32> for RamTensor {
 
             let handle = thread::spawn(move || {
                 let mut data = shared_data_clone.lock().unwrap();
-                for row_index in 0..row_shape - 1 {
-                    for col_index in 0..col_shape - 1 {
-                        data[matrix][row_index]
-                            .push(num * self_matrix[row_index + 1][col_index + 1]);
+                for row_index in 0..row_shape {
+                    for col_index in 0..col_shape {
+                        data[matrix][row_index].push(num * self_matrix[row_index][col_index]);
                         // error here
                     }
                 }
