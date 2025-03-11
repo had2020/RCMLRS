@@ -633,34 +633,30 @@ impl Mul<f32> for RamTensor {
     fn mul(self, num: f32) -> Self::Output {
         let row_shape = self.shape.x;
         let col_shape = self.shape.y;
+        let layer_len = self.layer_length;
+
+        let data_ptr: *mut Vec<Vec<Vec<f32>>> = &mut self.data;
 
         let mut handles = vec![];
 
-        for matrix in self.data {
-            let handle = thread::spawn(move || {
-                let mut new_matrix = vec![vec![0.0; col_shape]; row_shape];
+        for matrix in 0..layer_len {
+            let handle = thread::spawn(move || unsafe {
+                let layer = &mut (*data_ptr)[matrix];
                 for row in 0..row_shape {
                     for col in 0..col_shape {
-                        new_matrix[row][col] = matrix[row][col] * num;
+                        layer[row][col] *= num;
                     }
                 }
-                new_matrix
             });
 
             handles.push(handle);
         }
 
-        let mut result_data = vec![];
         for handle in handles {
-            let result_layer = handle.join().unwrap();
-            result_data.push(result_layer);
+            handle.join().unwrap();
         }
 
-        RamTensor {
-            shape: self.shape,
-            layer_length: self.layer_length,
-            data: result_data,
-        }
+        self
     }
 }
 
