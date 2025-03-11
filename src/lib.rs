@@ -633,41 +633,33 @@ impl Mul<f32> for RamTensor {
     fn mul(self, num: f32) -> Self::Output {
         let row_shape = self.shape.x;
         let col_shape = self.shape.y;
-        let layer_length = self.layer_length;
-
-        let shared_data = Arc::new(Mutex::new(vec![
-            vec![vec![0.0; row_shape]; col_shape];
-            layer_length
-        ]));
 
         let mut handles = vec![];
 
-        for matrix in 0..self.layer_length {
-            let shared_data_clone = Arc::clone(&shared_data);
-            let self_matrix = self.data[matrix].clone(); // needs to change each thread to the new one
-
+        for matrix in self.data {
             let handle = thread::spawn(move || {
-                let mut data = shared_data_clone.lock().unwrap();
-                for row_index in 0..row_shape {
-                    for col_index in 0..col_shape {
-                        //println!("row: {:?}, col: {:?}", row_index, col_index);
-                        data[matrix][row_index][col_index] =
-                            1.0 * self_matrix[row_index][col_index];
+                let mut new_matrix = vec![vec![0.0; col_shape]; row_shape];
+                for row in 0..row_shape {
+                    for col in 0..col_shape {
+                        new_matrix[row][col] = matrix[row][col] * num;
                     }
                 }
+                new_matrix
             });
 
             handles.push(handle);
         }
 
+        let mut result_data = vec![];
         for handle in handles {
-            handle.join().unwrap();
+            let result_layer = handle.join().unwrap();
+            result_data.push(result_layer);
         }
 
         RamTensor {
             shape: self.shape,
             layer_length: self.layer_length,
-            data: Arc::try_unwrap(shared_data).unwrap().into_inner().unwrap(),
+            data: result_data,
         }
     }
 }
