@@ -644,14 +644,15 @@ impl Mul<f32> for RamTensor {
 
         for matrix in 0..self.layer_length {
             let shared_data_clone = Arc::clone(&shared_data);
-            let self_matrix = self.data[matrix].clone();
+            let self_matrix = self.data[matrix].clone(); // needs to change each thread to the new one
 
             let handle = thread::spawn(move || {
                 let mut data = shared_data_clone.lock().unwrap();
                 for row_index in 0..row_shape {
                     for col_index in 0..col_shape {
-                        data[matrix][row_index].push(num * self_matrix[row_index][col_index]);
-                        // error here
+                        //println!("row: {:?}, col: {:?}", row_index, col_index);
+                        data[matrix][row_index][col_index] =
+                            1.0 * self_matrix[row_index][col_index];
                     }
                 }
             });

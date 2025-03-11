@@ -6,6 +6,6 @@ fn main() {
 
     println!("Before: {:?}", bias.data);
     //let weights2: RamTensor = weights.multi_threaded_matmul(bias).unwrap();
-    let weights2: RamTensor = weights * 2.0; //TODO  fix zeros
+    let weights2: RamTensor = weights * 1.0; //TODO  fix zeros
     println!("After: {:?}", weights2.data);
 }
