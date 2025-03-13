@@ -72,7 +72,13 @@ fn main() {
         // bias
         bias2 -= learning_rate * error;
 
-        println!("Epoch {}: Bias: {}, Error: {}", epoch, bias2, error);
+        println!(
+            "Epoch {}: Bias: {}, Error: {}, Output: {}",
+            epoch,
+            bias2,
+            error,
+            error + target
+        );
 
         if error.abs() < stopping_threshold {
             break;
