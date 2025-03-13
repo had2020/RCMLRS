@@ -43,7 +43,7 @@ fn main() {
 
     let target: f32 = 0.0;
     let max_epochs = 1000;
-    let stopping_threshold: f32 = 1e-10;
+    let stopping_threshold: f32 = 0.08; //1e-10 for most precise training
     let learning_rate: f32 = -0.01;
 
     for epoch in 0..max_epochs {
@@ -53,8 +53,11 @@ fn main() {
         let z2 = hidden_layer.matmul(a1.clone()).unwrap() + bias2;
         let a2 = z2.sigmoid();
 
+        // output mean
+        let output_mean = a2.mean();
+
         // compute error/ loss
-        let error = target - a2.mean();
+        let error = target - output_mean;
 
         // gradent decent
         let d_output = error * a2.clone() * (1.0 - a2); // sigmoid based
@@ -73,11 +76,8 @@ fn main() {
         bias2 -= learning_rate * error;
 
         println!(
-            "Epoch {}: Bias: {}, Error: {}, Output: {}",
-            epoch,
-            bias2,
-            error,
-            error + target
+            "Epoch {}: Bias2: {}, Error: {}, Output: {}",
+            epoch, bias2, error, output_mean,
         );
 
         if error.abs() < stopping_threshold {
