@@ -1422,17 +1422,12 @@ macro_rules! cus_act {
     }};
 }
 
-/*
-pub struct Model {
-
+pub struct NeuralNetwork {
+    pub input: RamTensor,
+    pub layers: Vec<RamTensor>,
 }
 
-pub struct Network {
-    pub
-}
-*/
-
-// Should be like
+// Example
 /*
 # Define a simple feedforward neural network
 class NeuralNet:

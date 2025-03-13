@@ -36,6 +36,7 @@ fn scan_image(image_name: &str) -> RamTensor {
 fn main() {
     train("white", 0.0);
     train("black", 1.0);
+    // took roughly 18.78 secs last tests
 }
 
 fn train(file_name: &str, output_target: f32) {
