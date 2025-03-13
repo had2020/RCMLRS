@@ -34,14 +34,21 @@ fn scan_image(image_name: &str) -> RamTensor {
 }
 
 fn main() {
-    let input: RamTensor = scan_image("white");
+    train("white", 0.0);
+    train("black", 1.0);
+}
+
+fn train(file_name: &str, output_target: f32) {
+    println!("Training on ->, {}", file_name);
+
+    let input: RamTensor = scan_image(file_name);
 
     let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
     let mut hidden_layer: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
     let mut bias1: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
     let mut bias2: f32 = 0.0;
 
-    let target: f32 = 0.0;
+    let target: f32 = output_target; //
     let max_epochs = 1000;
     let stopping_threshold: f32 = 0.08; //1e-10 for most precise training
     let learning_rate: f32 = -0.01;
@@ -75,10 +82,12 @@ fn main() {
         // bias
         bias2 -= learning_rate * error;
 
-        println!(
-            "Epoch {}: Bias2: {}, Error: {}, Output: {}",
-            epoch, bias2, error, output_mean,
-        );
+        if epoch % 10 == 0 {
+            println!(
+                "Epoch {}: Bias2: {}, Error: {}, Output: {}",
+                epoch, bias2, error, output_mean,
+            );
+        }
 
         if error.abs() < stopping_threshold {
             break;
