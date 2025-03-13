@@ -44,7 +44,7 @@ fn main() {
     let target: f32 = 0.0;
     let max_epochs = 1000;
     let stopping_threshold: f32 = 1e-10;
-    let learning_rate: f32 = 0.01;
+    let learning_rate: f32 = -0.01;
 
     for epoch in 0..max_epochs {
         // fowardfeed
