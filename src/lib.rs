@@ -1423,6 +1423,9 @@ macro_rules! cus_act {
     }};
 }
 
+pub fn reshape_for_dense(tensor: RamTensor, units: usize) -> Self {}
+
+#[derive(Clone, Debug)]
 pub struct Layer {
     pub activation: String,
     pub tensor: RamTensor,
@@ -1431,6 +1434,7 @@ pub struct Layer {
 }
 
 /// Main class used for easy NeuralNetworks
+#[derive(Clone, Debug)]
 pub struct NeuralNetwork {
     pub input: RamTensor,
     pub layers: Vec<Layer>,
@@ -1439,6 +1443,7 @@ pub struct NeuralNetwork {
 
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
+    /*
     /// dense a input, will push a new layer on NeuralNetwork
     pub fn model_input(mut self, neural_units: usize, input: RamTensor, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
@@ -1460,15 +1465,21 @@ impl NeuralNetwork {
             layer_id: 0,
         });
     }
+    */
 
+    /// This function basicly records and sets up the network structure, it will not run any ML calulcations yet
     pub fn dense(mut self, neural_units: usize, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
         let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
         let last_tensor_layer_len: usize =
             self.layers[last_tensor_index].tensor.layer_length.clone();
 
-        // bias = last layer matmul current, flattened.
-        //let bias = input.matmul(self.layers[last_tensor_index]).flatten();
+        // bias = last layer matmul current, flattened. Needed for proper dims
+        let bias: RamTensor = self.layers[last_tensor_index]
+            .tensor
+            .matmul(self.layers[last_tensor_index].tensor.clone())
+            .unwrap()
+            .flatten();
 
         let layer_tensor: RamTensor = RamTensor::new_random(
             last_tensor_shape,
@@ -1481,6 +1492,7 @@ impl NeuralNetwork {
             activation: activation.to_string(),
             tensor: layer_tensor.clone(), // TODO
             bias: vec![],
+            layer_id: 0,
         });
     }
 }
