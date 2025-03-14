@@ -1432,6 +1432,7 @@ pub struct NeuralNetwork {
     pub layers: Vec<Layer>,
 }
 
+/// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
     pub fn input_dense(mut self, input: RamTensor, activation: &str) {
         self.layers.push(Layer {
@@ -1440,6 +1441,7 @@ impl NeuralNetwork {
         });
     }
     pub fn dense(mut self, nuural_units: usize, activation: &str) {
+        let last_tensor = self.layers[self.layers.len() - 1].tensor;
         self.layers.push(Layer {
             activation: activation.to_string(),
             tensor: input.clone(),
