@@ -1422,14 +1422,29 @@ macro_rules! cus_act {
     }};
 }
 
-pub struct Layers {
-    pub shape: usize,
-    pub activation: &str,
+pub struct Layer {
+    pub activation: String,
+    pub tensor: RamTensor,
 }
 
+/// Main class used for easy NeuralNetworks
 pub struct NeuralNetwork {
-    pub input: RamTensor,
-    pub layers: Vec<RamTensor>,
+    pub layers: Vec<Layer>,
+}
+
+impl NeuralNetwork {
+    pub fn input_dense(mut self, input: RamTensor, activation: &str) {
+        self.layers.push(Layer {
+            activation: activation.to_string(),
+            tensor: input.clone(),
+        });
+    }
+    pub fn dense(mut self, nuural_units: usize, activation: &str) {
+        self.layers.push(Layer {
+            activation: activation.to_string(),
+            tensor: input.clone(),
+        });
+    }
 }
 
 // Example
