@@ -1422,6 +1422,11 @@ macro_rules! cus_act {
     }};
 }
 
+pub struct Layers {
+    pub shape: usize,
+    pub activation: &str,
+}
+
 pub struct NeuralNetwork {
     pub input: RamTensor,
     pub layers: Vec<RamTensor>,
