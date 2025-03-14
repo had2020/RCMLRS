@@ -1441,10 +1441,11 @@ impl NeuralNetwork {
         });
     }
     pub fn dense(mut self, nuural_units: usize, activation: &str) {
-        let last_tensor = self.layers[self.layers.len() - 1].tensor;
+        let last_tensor_index: usize = self.layers.len() - 1;
+
         self.layers.push(Layer {
             activation: activation.to_string(),
-            tensor: input.clone(),
+            tensor: input.clone(), // TODO
         });
     }
 }
