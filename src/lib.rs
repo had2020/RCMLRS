@@ -1432,22 +1432,32 @@ pub struct Layer {
 /// Main class used for easy NeuralNetworks
 pub struct NeuralNetwork {
     pub layers: Vec<Layer>,
+    pub rand_min_max: (f32, f32),
 }
 
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
+
+    /// dense a input, will push a new layer on NeuralNetwork
     pub fn model_input(mut self, input: RamTensor, activation: &str) {
+        let last_tensor_index: usize = self.layers.len() - 1;
+        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape;
+        let last_tensor_layer_len: usize = self.layers[last_tensor_index].tensor.layer_length;
+
+        let mut intial_first_layer: RamTensor = RamTensor::new_random(last_tensor_shape, last_tensor_layer_len, self.rand_min_max, self.rand_min_max);
+
         self.layers.push(Layer {
             activation: activation.to_string(),
             tensor: input.clone(),
-            bias:
+            bias
         });
     }
+
     pub fn dense(mut self, nuural_units: usize, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
         let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape;
 
-        let bias = input.matmul().flatten();
+        let bias = input.matmul(self.layers[last_tensor_index]).flatten();
 
         self.layers.push(Layer {
             activation: activation.to_string(),
