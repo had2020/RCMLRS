@@ -1427,42 +1427,60 @@ pub struct Layer {
     pub activation: String,
     pub tensor: RamTensor,
     pub bias: Vec<f32>,
+    pub layer_id: usize,
 }
 
 /// Main class used for easy NeuralNetworks
 pub struct NeuralNetwork {
+    pub input: RamTensor,
     pub layers: Vec<Layer>,
     pub rand_min_max: (f32, f32),
 }
 
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
-
     /// dense a input, will push a new layer on NeuralNetwork
-    pub fn model_input(mut self, input: RamTensor, activation: &str) {
+    pub fn model_input(mut self, neural_units: usize, input: RamTensor, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
-        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape;
-        let last_tensor_layer_len: usize = self.layers[last_tensor_index].tensor.layer_length;
+        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
+        let last_tensor_layer_len: usize =
+            self.layers[last_tensor_index].tensor.layer_length.clone();
 
-        let mut intial_first_layer: RamTensor = RamTensor::new_random(last_tensor_shape, last_tensor_layer_len, self.rand_min_max, self.rand_min_max);
+        let layer_after_input: RamTensor = RamTensor::new_random(
+            last_tensor_shape,
+            last_tensor_layer_len,
+            self.rand_min_max.0,
+            self.rand_min_max.1,
+        );
 
         self.layers.push(Layer {
             activation: activation.to_string(),
             tensor: input.clone(),
-            bias
+            bias: vec![],
+            layer_id: 0,
         });
     }
 
-    pub fn dense(mut self, nuural_units: usize, activation: &str) {
+    pub fn dense(mut self, neural_units: usize, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
-        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape;
+        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
+        let last_tensor_layer_len: usize =
+            self.layers[last_tensor_index].tensor.layer_length.clone();
 
-        let bias = input.matmul(self.layers[last_tensor_index]).flatten();
+        // bias = last layer matmul current, flattened.
+        //let bias = input.matmul(self.layers[last_tensor_index]).flatten();
+
+        let layer_tensor: RamTensor = RamTensor::new_random(
+            last_tensor_shape,
+            last_tensor_layer_len,
+            self.rand_min_max.0,
+            self.rand_min_max.1,
+        );
 
         self.layers.push(Layer {
             activation: activation.to_string(),
-            tensor: input.clone(), // TODO
-            bias:
+            tensor: layer_tensor.clone(), // TODO
+            bias: vec![],
         });
     }
 }
