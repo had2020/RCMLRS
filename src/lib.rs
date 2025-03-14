@@ -1137,6 +1137,7 @@ impl RamTensor {
 
     /// resizes tensor based on shape, and layer_length shape
     /// will cut data useful for padding.
+    /// It is prefered to use Dense in ML
     pub fn resize(
         &self,
         to_shape: Shape,
@@ -1425,6 +1426,7 @@ macro_rules! cus_act {
 pub struct Layer {
     pub activation: String,
     pub tensor: RamTensor,
+    pub bias: Vec<f32>,
 }
 
 /// Main class used for easy NeuralNetworks
@@ -1434,18 +1436,23 @@ pub struct NeuralNetwork {
 
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
-    pub fn input_dense(mut self, input: RamTensor, activation: &str) {
+    pub fn model_input(mut self, input: RamTensor, activation: &str) {
         self.layers.push(Layer {
             activation: activation.to_string(),
             tensor: input.clone(),
+            bias:
         });
     }
     pub fn dense(mut self, nuural_units: usize, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
+        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape;
+
+        let bias = input.matmul().flatten();
 
         self.layers.push(Layer {
             activation: activation.to_string(),
             tensor: input.clone(), // TODO
+            bias:
         });
     }
 }
