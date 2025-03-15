@@ -1423,19 +1423,20 @@ macro_rules! cus_act {
     }};
 }
 
-pub fn reshape_for_dense(tensor: RamTensor, units: usize) -> Self {}
+//TODO
+//pub fn reshape_for_dense(tensor: RamTensor, units: usize) -> Self {}
 
 #[derive(Clone, Debug)]
 pub struct Layer {
     pub activation: String,
     pub tensor: RamTensor,
     pub bias: Vec<f32>,
+    pub neural_units: usize,
 }
 
 /// Main class used for easy NeuralNetworks
 #[derive(Clone, Debug)]
 pub struct NeuralNetwork {
-    pub iter_id: usize,
     pub input: RamTensor,
     pub layers: Vec<Layer>,
     pub rand_min_max: (f32, f32),
@@ -1443,6 +1444,17 @@ pub struct NeuralNetwork {
 
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
+    pub fn new() -> Self {
+        NeuralNetwork {
+            input: RamTensor {
+                shape: Shape { x: 0, y: 0 },
+                layer_length: 0,
+                data: vec![],
+            },
+            layers: vec![],
+            rand_min_max: (0.0, 0.0),
+        }
+    }
     /*
     /// dense a input, will push a new layer on NeuralNetwork
     pub fn model_input(mut self, neural_units: usize, input: RamTensor, activation: &str) {
@@ -1469,19 +1481,19 @@ impl NeuralNetwork {
 
     /// This function basicly records and sets up the network structure, it will not run any ML calulcations yet
     pub fn dense(mut self, neural_units: usize, activation: &str) {
-        if self.iter_id == 0 {}
-
         let last_tensor_index: usize = self.layers.len() - 1;
         let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
         let last_tensor_layer_len: usize =
             self.layers[last_tensor_index].tensor.layer_length.clone();
 
+        /*  TODO USE TO CHOOSE THE SHAPE with neural_units
         // bias = last layer matmul current, flattened. Needed for proper dims
         let bias: RamTensor = self.layers[last_tensor_index]
             .tensor
             .matmul(self.layers[last_tensor_index].tensor.clone())
             .unwrap()
             .flatten();
+        */
 
         let layer_tensor: RamTensor = RamTensor::new_random(
             last_tensor_shape,
@@ -1492,9 +1504,9 @@ impl NeuralNetwork {
 
         self.layers.push(Layer {
             activation: activation.to_string(),
-            tensor: layer_tensor.clone(), // TODO
+            tensor: layer_tensor.clone(),
             bias: vec![],
-            layer_id: 0,
+            neural_units: neural_units.clone(),
         });
     }
 }

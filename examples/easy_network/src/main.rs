@@ -34,9 +34,15 @@ fn scan_image(image_name: &str) -> RamTensor {
 }
 
 fn main() {
-    train("white", 0.0);
-    train("black", 1.0);
-    // took roughly 18.78 secs last tests
+    //train("white", 0.0);
+    //train("black", 1.0);
+    // took roughly 18.78 secs last tests with zeroed tensors
+
+    // defining model
+    let mut neuralnet_model = NeuralNetwork::new();
+    neuralnet_model = NeuralNetwork::dense(128, "Sigmoid");
+    neuralnet_model = NeuralNetwork::dense(64, "Sigmoid");
+    neuralnet_model = NeuralNetwork::dense(1, "Sigmoid");
 }
 
 fn train(file_name: &str, output_target: f32) {
