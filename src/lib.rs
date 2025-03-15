@@ -1430,12 +1430,12 @@ pub struct Layer {
     pub activation: String,
     pub tensor: RamTensor,
     pub bias: Vec<f32>,
-    pub layer_id: usize,
 }
 
 /// Main class used for easy NeuralNetworks
 #[derive(Clone, Debug)]
 pub struct NeuralNetwork {
+    pub iter_id: usize,
     pub input: RamTensor,
     pub layers: Vec<Layer>,
     pub rand_min_max: (f32, f32),
@@ -1469,6 +1469,8 @@ impl NeuralNetwork {
 
     /// This function basicly records and sets up the network structure, it will not run any ML calulcations yet
     pub fn dense(mut self, neural_units: usize, activation: &str) {
+        if self.iter_id == 0 {}
+
         let last_tensor_index: usize = self.layers.len() - 1;
         let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
         let last_tensor_layer_len: usize =
