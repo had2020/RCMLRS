@@ -21,7 +21,7 @@ pub struct Memory {
 }
 
 use std::f32::consts::E;
-use std::fs;
+use std::{fs, string};
 
 pub fn dir_exists(path: &str) -> std::io::Result<()> {
     match fs::metadata(path) {
@@ -1455,29 +1455,6 @@ impl NeuralNetwork {
             rand_min_max: (0.0, 0.0),
         }
     }
-    /*
-    /// dense a input, will push a new layer on NeuralNetwork
-    pub fn model_input(mut self, neural_units: usize, input: RamTensor, activation: &str) {
-        let last_tensor_index: usize = self.layers.len() - 1;
-        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
-        let last_tensor_layer_len: usize =
-            self.layers[last_tensor_index].tensor.layer_length.clone();
-
-        let layer_after_input: RamTensor = RamTensor::new_random(
-            last_tensor_shape,
-            last_tensor_layer_len,
-            self.rand_min_max.0,
-            self.rand_min_max.1,
-        );
-
-        self.layers.push(Layer {
-            activation: activation.to_string(),
-            tensor: input.clone(),
-            bias: vec![],
-            layer_id: 0,
-        });
-    }
-    */
 
     /// This function basicly records and sets up the network structure, it will not run any ML calulcations yet
     pub fn dense(mut self, neural_units: usize, activation: &str) {
@@ -1508,6 +1485,18 @@ impl NeuralNetwork {
             bias: vec![],
             neural_units: neural_units.clone(),
         });
+    }
+
+    pub fn train(&self) {
+        for layer in &self.layers {
+            let activation_type = layer.activation.clone().to_string();
+            match &activation_type {
+                "Sigmoid" => {
+                    print!("Sigmoid")
+                }
+                _ => (),
+            }
+        }
     }
 }
 
