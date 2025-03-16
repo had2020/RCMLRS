@@ -39,10 +39,10 @@ fn main() {
     // took roughly 18.78 secs last tests with zeroed tensors
 
     // defining model
-    let mut neuralnet_model = NeuralNetwork::new();
-    neuralnet_model = NeuralNetwork::dense(128, "Sigmoid");
-    neuralnet_model = NeuralNetwork::dense(64, "Sigmoid");
-    neuralnet_model = NeuralNetwork::dense(1, "Sigmoid");
+    let mut model = NeuralNetwork::new();
+    model.dense(128, "Sigmoid");
+    model.dense(64, "Sigmoid");
+    model.dense(1, "Sigmoid");
 }
 
 fn train(file_name: &str, output_target: f32) {

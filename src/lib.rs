@@ -1489,12 +1489,8 @@ impl NeuralNetwork {
 
     pub fn train(&self) {
         for layer in &self.layers {
-            let activation_type = layer.activation.clone().to_string();
-            match &activation_type {
-                "Sigmoid" => {
-                    print!("Sigmoid")
-                }
-                _ => (),
+            if layer.activation == "Sigmoid".to_string() {
+                println!("sig");
             }
         }
     }
