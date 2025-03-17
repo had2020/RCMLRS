@@ -1471,6 +1471,7 @@ impl NeuralNetwork {
         let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
         let last_tensor_layer_len: usize =
             self.layers[last_tensor_index].tensor.layer_length.clone();
+        let last_neural_units: usize = last_tensor_shape.x * last_tensor_shape.y;
 
         /*  TODO USE TO CHOOSE THE SHAPE with neural_units
         // bias = last layer matmul current, flattened. Needed for proper dims
@@ -1480,6 +1481,17 @@ impl NeuralNetwork {
             .unwrap()
             .flatten();
         */
+
+        // size estimation
+        if last_neural_units == neural_units {
+            println!("Proceed");
+        } else if last_neural_units > neural_units {
+            println!("Shrink");
+        } else if last_neural_units < neural_units {
+            println!("Grow");
+            // padding with zero, works but is bad.
+            // y = Wx + b
+        }
 
         let layer_tensor: RamTensor = RamTensor::new_random(
             last_tensor_shape,
