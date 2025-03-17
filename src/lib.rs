@@ -1495,6 +1495,7 @@ impl NeuralNetwork {
             let neural_units_f32: f32 = neural_units as f32;
             let possible_size = neural_units_f32.sqrt();
             self.layers[last_tensor_index].tensor.resize(
+                // set the new layer not from self
                 Shape {
                     x: possible_size as usize,
                     y: possible_size as usize,
@@ -1507,6 +1508,7 @@ impl NeuralNetwork {
             let neural_units_f32: f32 = neural_units as f32;
             let possible_size = neural_units_f32.sqrt();
             self.layers[last_tensor_index].tensor.resize(
+                // set the new layer not from self
                 Shape {
                     x: possible_size as usize,
                     y: possible_size as usize,
@@ -1517,8 +1519,8 @@ impl NeuralNetwork {
         }
 
         let layer_tensor: RamTensor = RamTensor::new_random(
-            last_tensor_shape,
-            last_tensor_layer_len,
+            last_tensor_shape,     // TODO change
+            last_tensor_layer_len, // TODO change
             self.rand_min_max.0,
             self.rand_min_max.1,
         );
