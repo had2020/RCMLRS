@@ -1469,9 +1469,11 @@ impl NeuralNetwork {
     pub fn dense(&mut self, neural_units: usize, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
         let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
+        let last_layer_length: usize = self.layers[last_tensor_index].tensor.layer_length.clone();
         let last_tensor_layer_len: usize =
             self.layers[last_tensor_index].tensor.layer_length.clone();
-        let last_neural_units: usize = last_tensor_shape.x * last_tensor_shape.y;
+        let last_neural_units: usize =
+            (last_tensor_shape.x * last_tensor_shape.y) * last_layer_length;
 
         /*  TODO USE TO CHOOSE THE SHAPE with neural_units
         // bias = last layer matmul current, flattened. Needed for proper dims
@@ -1489,8 +1491,7 @@ impl NeuralNetwork {
             println!("Shrink");
         } else if last_neural_units < neural_units {
             println!("Grow");
-            // padding with zero, works but is bad.
-            // y = Wx + b
+            // padding with random
         }
 
         let layer_tensor: RamTensor = RamTensor::new_random(
