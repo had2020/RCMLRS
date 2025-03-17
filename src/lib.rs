@@ -1485,13 +1485,35 @@ impl NeuralNetwork {
         */
 
         // size estimation
+        // TODO more check for layer length
         if last_neural_units == neural_units {
             println!("Proceed");
         } else if last_neural_units > neural_units {
-            println!("Shrink");
+            //println!("Shirnk");
+            // finding what number will divide rows to get the other number on other
+            // TODO some other method
+            let neural_units_f32: f32 = neural_units as f32;
+            let possible_size = neural_units_f32.sqrt();
+            self.layers[last_tensor_index].tensor.resize(
+                Shape {
+                    x: possible_size as usize,
+                    y: possible_size as usize,
+                },
+                1, // TODO smallest number that sqrt of neural units can be multipled by to = neural_units
+                0.0,
+            );
         } else if last_neural_units < neural_units {
-            println!("Grow");
-            // padding with random
+            //println!("Grow");
+            let neural_units_f32: f32 = neural_units as f32;
+            let possible_size = neural_units_f32.sqrt();
+            self.layers[last_tensor_index].tensor.resize(
+                Shape {
+                    x: possible_size as usize,
+                    y: possible_size as usize,
+                },
+                1, // TODO smallest number that sqrt of neural units can be multipled by to = neural_units
+                0.0,
+            );
         }
 
         let layer_tensor: RamTensor = RamTensor::new_random(
