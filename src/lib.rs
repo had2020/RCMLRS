@@ -1437,27 +1437,36 @@ pub struct Layer {
 /// Main class used for easy NeuralNetworks
 #[derive(Clone, Debug)]
 pub struct NeuralNetwork {
-    pub input: RamTensor,
-    pub layers: Vec<Layer>,
+    pub layers: Vec<Layer>, // Layer 0, is always input layer
     pub rand_min_max: (f32, f32),
 }
 
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
-    pub fn new() -> Self {
-        NeuralNetwork {
-            input: RamTensor {
-                shape: Shape { x: 0, y: 0 },
-                layer_length: 0,
+    pub fn new(
+        input_shape: Shape,
+        input_layer_length: usize,
+        random_range_min_max: (f32, f32),
+    ) -> Self {
+        let input_layer_init = Layer {
+            activation: "None".to_string(),
+            bias: vec![],
+            tensor: RamTensor {
+                shape: input_shape.clone(),
+                layer_length: input_layer_length,
                 data: vec![],
             },
-            layers: vec![],
-            rand_min_max: (0.0, 0.0),
+            neural_units: input_shape.x * input_shape.y,
+        };
+
+        NeuralNetwork {
+            layers: vec![input_layer_init],
+            rand_min_max: random_range_min_max,
         }
     }
 
     /// This function basicly records and sets up the network structure, it will not run any ML calulcations yet
-    pub fn dense(mut self, neural_units: usize, activation: &str) {
+    pub fn dense(&mut self, neural_units: usize, activation: &str) {
         let last_tensor_index: usize = self.layers.len() - 1;
         let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
         let last_tensor_layer_len: usize =

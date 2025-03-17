@@ -39,7 +39,7 @@ fn main() {
     // took roughly 18.78 secs last tests with zeroed tensors
 
     // defining model
-    let mut model = NeuralNetwork::new();
+    let mut model = NeuralNetwork::new(Shape { x: 3, y: 2 }, 2, (0.0, 1.0));
     model.dense(128, "Sigmoid");
     model.dense(64, "Sigmoid");
     model.dense(1, "Sigmoid");
