@@ -1493,12 +1493,17 @@ impl NeuralNetwork {
             // finding what number will divide rows to get the other number on other
             // TODO some other method
             let neural_units_f32: f32 = neural_units as f32;
-            let possible_size = neural_units_f32.sqrt();
+
+            let mut possible_matrix_size: f32 = 0.0;
+            if is_even_usize(neural_units) {
+                possible_matrix_size = neural_units_f32.sqrt();
+            }
+
             self.layers[last_tensor_index].tensor.resize(
                 // set the new layer not from self
                 Shape {
-                    x: possible_size as usize,
-                    y: possible_size as usize,
+                    x: possible_matrix_size as usize,
+                    y: possible_matrix_size as usize,
                 },
                 1, // TODO smallest number that sqrt of neural units can be multipled by to = neural_units
                 0.0,
