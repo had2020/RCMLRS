@@ -1496,7 +1496,11 @@ impl NeuralNetwork {
 
             let mut possible_matrix_size: f32 = 0.0;
             if is_even_usize(neural_units) {
-                possible_matrix_size = neural_units_f32.sqrt();
+                possible_matrix_size = neural_units_f32 / 2.0;
+                let mut guess_counter: f32 = 2.0;
+                let mut number_found = false;
+                while number_found == false {}
+            } else {
             }
 
             self.layers[last_tensor_index].tensor.resize(
