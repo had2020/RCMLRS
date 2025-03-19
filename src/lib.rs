@@ -1467,78 +1467,27 @@ impl NeuralNetwork {
 
     /// This function basicly records and sets up the network structure, it will not run any ML calulcations yet
     pub fn dense(&mut self, neural_units: usize, activation: &str) {
-        let last_tensor_index: usize = self.layers.len() - 1;
-        let last_tensor_shape: Shape = self.layers[last_tensor_index].tensor.shape.clone();
-        let last_layer_length: usize = self.layers[last_tensor_index].tensor.layer_length.clone();
-        let last_tensor_layer_len: usize =
-            self.layers[last_tensor_index].tensor.layer_length.clone();
-        let last_neural_units: usize =
-            (last_tensor_shape.x * last_tensor_shape.y) * last_layer_length;
+        let last_layer_index = self.layers.len() - 1;
+        let last_tensor = &self.layers[last_layer_index].tensor;
+        //let input_units = last_tensor.shape.x * last_tensor.shape.y * last_tensor.layer_length;
 
-        /*  TODO USE TO CHOOSE THE SHAPE with neural_units
-        // bias = last layer matmul current, flattened. Needed for proper dims
-        let bias: RamTensor = self.layers[last_tensor_index]
-            .tensor
-            .matmul(self.layers[last_tensor_index].tensor.clone())
-            .unwrap()
-            .flatten();
-        */
+        let new_shape = Shape {
+            x: 1,
+            y: neural_units,
+        };
 
-        // size estimation
-        // TODO more check for layer length
-        if last_neural_units == neural_units {
-            println!("Proceed");
-        } else if last_neural_units > neural_units {
-            //println!("Shirnk");
-            // finding what number will divide rows to get the other number on other
-            // TODO some other method
-            let neural_units_f32: f32 = neural_units as f32;
-
-            let mut possible_matrix_size: f32 = 0.0;
-            if is_even_usize(neural_units) {
-                possible_matrix_size = neural_units_f32 / 2.0;
-                let mut guess_counter: f32 = 2.0;
-                let mut number_found = false;
-                while number_found == false {}
-            } else {
-            }
-
-            self.layers[last_tensor_index].tensor.resize(
-                // set the new layer not from self
-                Shape {
-                    x: possible_matrix_size as usize,
-                    y: possible_matrix_size as usize,
-                },
-                1, // TODO smallest number that sqrt of neural units can be multipled by to = neural_units
-                0.0,
-            );
-        } else if last_neural_units < neural_units {
-            //println!("Grow");
-            let neural_units_f32: f32 = neural_units as f32;
-            let possible_size = neural_units_f32.sqrt();
-            self.layers[last_tensor_index].tensor.resize(
-                // set the new layer not from self
-                Shape {
-                    x: possible_size as usize,
-                    y: possible_size as usize,
-                },
-                1, // TODO smallest number that sqrt of neural units can be multipled by to = neural_units
-                0.0,
-            );
-        }
-
-        let layer_tensor: RamTensor = RamTensor::new_random(
-            last_tensor_shape,     // TODO change
-            last_tensor_layer_len, // TODO change
+        let layer_tensor = RamTensor::new_random(
+            new_shape,
+            1, // layer length
             self.rand_min_max.0,
             self.rand_min_max.1,
         );
 
         self.layers.push(Layer {
             activation: activation.to_string(),
-            tensor: layer_tensor.clone(),
-            bias: vec![],
-            neural_units: neural_units.clone(),
+            tensor: layer_tensor,
+            bias: vec![0.0; neural_units],
+            neural_units,
         });
     }
 
