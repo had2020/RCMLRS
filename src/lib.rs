@@ -1439,8 +1439,14 @@ pub struct Layer {
 pub struct NeuralNetwork {
     pub layers: Vec<Layer>, // Layer 0, is always input layer
     pub rand_min_max: (f32, f32),
+    // training metrics
+    /*
     pub target_f32: f32,
     pub matrix_target_f32: RamTensor,
+    //pub max_epochs: f32,
+    pub stopping_threshold: f32,
+    pub learning_rate: f32,
+    */
 }
 
 pub fn find_good_breakup(neural_units: usize) -> usize {
@@ -1502,7 +1508,9 @@ impl NeuralNetwork {
         });
     }
 
-    pub fn train(&self) {
+    /// x_train, sets input shape.
+    /// y_train, sets output shape.
+    pub fn train(&self, x_train: f32, y_train: f32) {
         for layer in &self.layers {
             if layer.activation == "Sigmoid".to_string() {}
         }
