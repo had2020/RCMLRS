@@ -1510,9 +1510,13 @@ impl NeuralNetwork {
 
     /// x_train, sets input shape.
     /// y_train, sets output shape.
-    pub fn train(&self, x_train: f32, y_train: f32) {
+    pub fn train(&self, x_train: Shape, y_train: Shape) {
         for layer in &self.layers {
-            if layer.activation == "Sigmoid".to_string() {}
+            let activation = layer.activation.as_str();
+            match activation {
+                "Sigmoid" => (),
+                _ => (),
+            }
         }
     }
 }
