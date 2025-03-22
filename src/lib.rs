@@ -1518,6 +1518,9 @@ impl NeuralNetwork {
                 "Leaky Relu" => (),
                 "Sigmoid" => (),
                 "Tanh" => (),
+                "Softmax" => (),
+                "Swish" => (),
+                "GELU" => (),
                 _ => (),
             }
         }
