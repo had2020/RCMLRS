@@ -1514,8 +1514,8 @@ impl NeuralNetwork {
         for layer in &self.layers {
             let activation = layer.activation.as_str();
             match activation {
-                "Relu" => (),
-                "Leaky Relu" => (),
+                "ReLU" => (),
+                "Leaky ReLU" => (),
                 "Sigmoid" => (),
                 "Tanh" => (),
                 "Softmax" => (),
