@@ -41,11 +41,11 @@ fn main() {
     // defining model
     let mut model = NeuralNetwork::new(Shape { x: 3, y: 2 }, 2, (0.0, 1.0));
 
-    model.dense(128, "Sigmoid");
+    model.dense(128, "ReLU");
     model.dense(64, "Sigmoid");
     model.dense(1, "Sigmoid");
 
-    model.train();
+    model.train(Shape { x: 50, y: 150 }, Shape { x: 1, y: 1 });
 }
 
 fn train(file_name: &str, output_target: f32) {
