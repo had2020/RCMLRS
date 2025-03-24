@@ -1,6 +1,8 @@
 [package]
 name = "storage_operations"
-version = "0.1.0"
+version = { workspace = true }
 edition = "2021"
+authors = ["Hadrian Lazic"]
+license = "MIT"
 
 [dependencies]
