@@ -1516,7 +1516,6 @@ impl NeuralNetwork {
             match activation {
                 "ReLU" => {
                     println!("ReLU");
-                    println!("ReLU");
                 }
                 "Leaky ReLU" => (),
                 "Sigmoid" => (),
