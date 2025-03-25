@@ -11,8 +11,11 @@ license = "MIT"
 members = [
     "packages/cli",
     "packages/neuralnet-impls",
+    "packages/shared-types",
     "storage-op",
     "tensor-impls",
     "tensor-std-operations",
     "wasm-features",
 ]
+
+# TODO removal of main src
