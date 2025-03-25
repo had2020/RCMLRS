@@ -11,11 +11,18 @@ license = "MIT"
 members = [
     "packages/cli",
     "packages/neuralnet-impls",
-    "packages/shared", "packages/tensor-impls",
+    "packages/shared",
+    "packages/tensor-impls",
     "storage-op",
     "tensor-impls",
     "tensor-std-op",
     "wasm-features",
-]
 
+]
 # TODO removal of main src
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+opt-level = 3

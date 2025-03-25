@@ -6,3 +6,4 @@ authors = ["Hadrian Lazic"]
 license = "MIT"
 
 [dependencies]
+shared = { path = "../shared" }
