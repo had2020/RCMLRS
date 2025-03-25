@@ -1,3 +1,7 @@
+// RCMLRS neuralnet-impls
+// By: Hadrian Lazic
+// Under MIT
+
 #[derive(Clone, Debug)]
 pub struct Layer {
     pub activation: String,
