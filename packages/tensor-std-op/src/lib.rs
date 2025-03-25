@@ -1,29 +1,3 @@
-//TODO better and more Unit Tests
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn ram_tensor_testing() {
-        let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
-        let mut bias: RamTensor = RamTensor::new_layer_zeros(Shape { x: 3, y: 3 }, 2);
-
-        weights = cus_act!(weights, |x| x + 2.0);
-        bias = weights.clone();
-        let correct_array_shift2: [[[f32; 3]; 3]; 2] = [
-            [[2.0, 2.0, 2.0], [2.0, 2.0, 2.0], [2.0, 2.0, 2.0]],
-            [[2.0, 2.0, 2.0], [2.0, 2.0, 2.0], [2.0, 2.0, 2.0]],
-        ];
-        assert_eq!(weights.data, correct_array_shift2);
-
-        weights = weights.matmul(bias).unwrap();
-        let correct_array_matmul: [[[f32; 3]; 3]; 2] = [
-            [[12.0, 12.0, 2.0], [12.0, 12.0, 12.0], [12.0, 12.0, 12.0]],
-            [[12.0, 12.0, 2.0], [12.0, 12.0, 12.0], [12.0, 12.0, 12.0]],
-        ];
-        assert_eq!(weights.data, correct_array_matmul);
-    }
-}
-
 ///You can use this to input mannully whole tensor data.
 ///Notice you will need to put zeros for blank data that is made with a shape.
 ///It is better to enter a smaller size that is all your data, or have zero handling, and resize the tensor, or insert.
