@@ -11,10 +11,10 @@ license = "MIT"
 members = [
     "packages/cli",
     "packages/neuralnet-impls",
-    "packages/shared-types",
+    "packages/shared", "packages/tensor-impls",
     "storage-op",
     "tensor-impls",
-    "tensor-std-operations",
+    "tensor-std-op",
     "wasm-features",
 ]
 
