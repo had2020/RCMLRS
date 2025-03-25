@@ -1,9 +1,10 @@
 [package]
 name = "cli"
-version = { workspace = true }
-edition = "2021"
-authors = ["Hadrian Lazic"]
-license = "MIT"
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+license.workspace = true
 
 [dependencies]
-shared = { path = "../shared" }
+shared.workspace = true
+tensor-impls.workspace = true
