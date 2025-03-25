@@ -1,5 +1,5 @@
 [package]
-name = "wasm_features"
+name = "tensor-std-operations"
 version = { workspace = true }
 edition = "2021"
 authors = ["Hadrian Lazic"]

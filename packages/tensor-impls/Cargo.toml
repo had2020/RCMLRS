@@ -1,6 +1,8 @@
 [package]
-name = "nn_impls"
+name = "tensor-impls"
 version = { workspace = true }
 edition = "2021"
 authors = ["Hadrian Lazic"]
 license = "MIT"
+
+[dependencies]

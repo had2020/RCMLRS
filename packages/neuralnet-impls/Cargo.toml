@@ -1,5 +1,5 @@
 [package]
-name = "tensor_std_operations"
+name = "neuralnet-impls"
 version = { workspace = true }
 edition = "2021"
 authors = ["Hadrian Lazic"]

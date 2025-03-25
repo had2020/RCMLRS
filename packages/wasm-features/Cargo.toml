@@ -1,9 +1,8 @@
 [package]
-name = "tensor_impls"
+name = "wasm-features"
 version = { workspace = true }
 edition = "2021"
 authors = ["Hadrian Lazic"]
 license = "MIT"
 
 [dependencies]
-rand = "0.9.0"

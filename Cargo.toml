@@ -6,3 +6,13 @@ authors = ["Hadrian Lazic"]
 license = "MIT"
 
 [dependencies]
+
+[workspace]
+members = [
+    "packages/cli",
+    "packages/neuralnet-impls",
+    "storage-op",
+    "tensor-impls",
+    "tensor-std-operations",
+    "wasm-features",
+]
