@@ -5,8 +5,6 @@ edition = "2021"
 authors = ["Hadrian Lazic"]
 license = "MIT"
 
-[dependencies]
-
 [workspace]
 members = [
     "packages/cli",
@@ -17,9 +15,21 @@ members = [
     "tensor-impls",
     "tensor-std-op",
     "wasm-features",
-
 ]
-# TODO removal of main src
+
+[dependencies]
+cli = { path = "packages/cli", optional = true }
+neuralnet-impls = { path = "packages/neuralnet-impls" }
+shared = { path = "packages/shared" }
+tensor-impls = { path = "packages/tensor-impls" }
+storage-op = { path = "storage-op" }
+tensor-std-op = { path = "tensor-std-op" }
+wasm-features = { path = "wasm-features", optional = true }
+
+[features]
+default = []
+cli = ["dep:cli"]
+wasm = ["dep:wasm-features"]
 
 [profile.dev]
 opt-level = 1
