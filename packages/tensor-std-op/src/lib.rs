@@ -1,3 +1,7 @@
+// RCMLRS tensor-std-operations
+// By: Hadrian Lazic
+// Under: MIT
+
 ///You can use this to input mannully whole tensor data.
 ///Notice you will need to put zeros for blank data that is made with a shape.
 ///It is better to enter a smaller size that is all your data, or have zero handling, and resize the tensor, or insert.
