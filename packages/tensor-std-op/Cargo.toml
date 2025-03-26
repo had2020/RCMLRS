@@ -1,9 +1,0 @@
-[package]
-name = "tensor-std-op"
-version = { workspace = true }
-edition = "2021"
-authors = ["Hadrian Lazic"]
-license = "MIT"
-
-[dependencies]
-shared = { path = "../shared" }

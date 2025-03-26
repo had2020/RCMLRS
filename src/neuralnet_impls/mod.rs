@@ -2,6 +2,11 @@
 // By: Hadrian Lazic
 // Under MIT
 
+use crate::*;
+use rand::Rng;
+use std::sync::{Arc, Mutex};
+use std::thread;
+
 #[derive(Clone, Debug)]
 pub struct Layer {
     pub activation: String,
@@ -105,7 +110,7 @@ impl NeuralNetwork {
     }
 }
 
-// Example
+// Desired
 /*
 # Define a simple feedforward neural network
 class NeuralNet:

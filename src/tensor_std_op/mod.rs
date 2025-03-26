@@ -2,6 +2,11 @@
 // By: Hadrian Lazic
 // Under: MIT
 
+use crate::*;
+use rand::Rng;
+use std::sync::{Arc, Mutex};
+use std::thread;
+
 ///You can use this to input mannully whole tensor data.
 ///Notice you will need to put zeros for blank data that is made with a shape.
 ///It is better to enter a smaller size that is all your data, or have zero handling, and resize the tensor, or insert.
@@ -15,7 +20,7 @@ pub fn raw_input_tensor_matrices(
         layer_length: input_layer_length,
         data: input_matrices,
     }
-}
+    }
 
 ///Prefer using raw_input_tensor_matrices, and resizing if needed.
 pub fn zeroed_input_tensor_matrices(

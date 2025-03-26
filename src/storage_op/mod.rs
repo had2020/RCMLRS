@@ -1,3 +1,8 @@
+use crate::*;
+use rand::Rng;
+use std::sync::{Arc, Mutex};
+use std::thread;
+
 pub struct Shape {
     pub x: usize,
     pub y: usize,

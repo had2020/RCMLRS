@@ -6,45 +6,10 @@ authors = ["Hadrian Lazic"]
 license = "MIT"
 
 [dependencies]
-
-[workspace]
-members = [
-    "packages/cli",
-    "packages/neuralnet-impls",
-    "packages/shared",
-    "packages/tensor-impls",
-    "packages/storage-op",
-    "packages/tensor-impls",
-    "packages/tensor-std-op",
-    "packages/wasm-features",
-]
-
-[workspace.package]
-version = "0.0.1"
-edition = "2021"
-authors = ["Hadrian Lazic"]
-license = "MIT"
-
-# does it apply?
-[workspace.dependencies]
-cli = { path = "packages/cli" }
-neuralnet-impls = { path = "packages/neuralnet-impls" }
-shared = { path = "packages/shared" }
-tensor-impls = { path = "packages/tensor-impls" }
-storage-op = { path = "packages/storage-op" }
-tensor-std-op = { path = "packages/tensor-std-op" }
-wasm-features = { path = "packages/wasm-features" }
+rand = "0.9.0"
 
 [profile.dev]
 opt-level = 1
 
 [profile.release]
 opt-level = 3
-
-# example projects
-exclude = [
-    "examples/easy_network",
-    "examples/basic_network",
-    "examples/basic_ram",
-    "examples/basic_ssd",
-]
