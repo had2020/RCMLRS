@@ -1,3 +1,12 @@
+[package]
+name = "RC-ML-RS"
+version = "0.0.1"
+edition = "2021"
+authors = ["Hadrian Lazic"]
+license = "MIT"
+
+[dependencies]
+
 [workspace]
 members = [
     "packages/cli",
