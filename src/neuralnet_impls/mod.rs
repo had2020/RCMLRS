@@ -89,6 +89,7 @@ impl NeuralNetwork {
     /// x_train, sets input shape.
     /// y_train, sets output shape.
     pub fn train(&self, x_train: Shape, y_train: Shape, epochs: usize) {
+        println!("{:?}", self.layers);
         for layer in &self.layers {
             // matmul first than activation
             println!("{:?}", self.layers);
@@ -98,7 +99,9 @@ impl NeuralNetwork {
                     println!("ReLU");
                 }
                 "Leaky ReLU" => (),
-                "Sigmoid" => (),
+                "Sigmoid" => {
+                    println!("Sigmoid");
+                }
                 "Tanh" => (),
                 "Softmax" => (),
                 "Swish" => (),
