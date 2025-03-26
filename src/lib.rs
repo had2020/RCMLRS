@@ -1,8 +1,10 @@
 // Shared/Core RC-ML-RS script
 // By: Hadrian Lazic
 // Notes: main functionality is split into modules for organization
+// Folders under src are each a feature
 // Under: MIT
 
+// module imports
 pub mod activations;
 pub mod cli;
 pub mod neuralnet_impls;
@@ -13,8 +15,8 @@ pub mod wasm_features;
 
 #[derive(Clone, Debug)]
 pub struct Shape {
-    pub x: usize,
-    pub y: usize,
+    pub x: usize, // Rows →
+    pub y: usize, // Columns ↓
 }
 
 pub fn is_even_usize(num: usize) -> bool {

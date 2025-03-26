@@ -1,7 +1,4 @@
-use crate::*;
-use rand::Rng;
-use std::sync::{Arc, Mutex};
-use std::thread;
+pub use crate::*;
 
 #[macro_export] // TODO delete
 macro_rules! init_memory {
@@ -22,8 +19,9 @@ pub struct Memory {
     pub current_layer: usize,
 }
 
-use std::f32::consts::E;
-use std::{fs, string};
+//use std::f32::consts::E;
+//use std::{fs, string};
+use std::fs;
 
 pub fn dir_exists(path: &str) -> std::io::Result<()> {
     match fs::metadata(path) {
@@ -114,8 +112,8 @@ pub fn save_matrix(memory: &mut Memory, matrix: Matrix) {
 use std::fs::File;
 use std::io::Read;
 use std::io::{BufRead, BufReader};
-use std::num::FpCategory;
-use std::os::unix::fs::MetadataExt;
+//use std::num::FpCategory;
+//use std::os::unix::fs::MetadataExt;
 
 /// Warning will load each whole line into memory in one block!
 pub fn print_tensor(memory: &Memory, tensor: Tensor) -> std::io::Result<()> {
@@ -194,6 +192,7 @@ pub fn find_point_matrix(
 
 // TODO single operations / and or scaler
 /// Multiples a whole layer, by another, each layer stands as a Tensor.
+// TODO just replace with convert, it is better to load one whole into a ramtensor
 pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor) {
     if tensor_1.shape.x == tensor_2.shape.x && tensor_1.shape.y == tensor_2.shape.y {
         let read_file_path = format!("{}/saved/{}_layer.txt", &memory.dir_name, tensor_1.id);
@@ -223,7 +222,7 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                 'b' => {
                     // new column
                     shape_counter.y += 1;
-                    index_string_value = "".to_string(); // TODO multiply and temp
+                    //index_string_value = "".to_string(); // TODO multiply and temp
                     let other_file_path =
                         format!("{}/saved/{}_layer.txt", &memory.dir_name, tensor_2.id);
                     find_point_matrix(
@@ -237,7 +236,7 @@ pub fn matrix_multiplication(memory: &Memory, tensor_1: Tensor, tensor_2: Tensor
                         new_line_counter,
                     );
                     // return something from find_point_matrix and use mult
-                    index_f64_value = 0.0;
+                    //index_f64_value = 0.0;
                     index_string_value = "".to_string();
                     index_f64_value = 0.0;
                 }
@@ -283,12 +282,6 @@ pub fn clear_save(memory: &Memory) {
 pub fn clear_load(memory: &Memory) {
     let file_path = format!("{}/loaded", memory.dir_name);
     fs::remove_dir_all(file_path).unwrap();
-}
-
-#[derive(Clone, Debug)]
-pub struct Shape {
-    pub x: usize, // Rows →
-    pub y: usize, // Columns ↓
 }
 
 /// holds single layer tensor operation qualites

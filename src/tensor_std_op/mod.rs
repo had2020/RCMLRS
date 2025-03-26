@@ -3,7 +3,7 @@
 // Under: MIT
 
 use crate::*;
-use rand::Rng;
+//use rand::Rng;
 
 ///You can use this to input mannully whole tensor data.
 ///Notice you will need to put zeros for blank data that is made with a shape.
@@ -65,7 +65,7 @@ pub fn zeroed_input_tensor_matrices(
     }
 }
 
-use rand::prelude::*; // for random tensor gen
+//use rand::prelude::*; // for random tensor gen
 use std::ops::{Add, AddAssign, Div, Mul, Neg, Sub, SubAssign}; // for rust's operations to work on RamTensors
 use std::sync::{Arc, Mutex};
 use std::thread; // for effiency

@@ -3,9 +3,6 @@
 // Under MIT
 
 use crate::*;
-use rand::Rng;
-use std::sync::{Arc, Mutex};
-use std::thread;
 
 #[derive(Clone, Debug)]
 pub struct Layer {
@@ -66,8 +63,8 @@ impl NeuralNetwork {
     /// Each dense will create a flattend layer with a size of the neural_units units and split it down into batchs.
     pub fn dense(&mut self, neural_units: usize, activation: &str) {
         let last_layer_index = self.layers.len() - 1;
-        let last_tensor = &self.layers[last_layer_index].tensor;
         //let input_units = last_tensor.shape.x * last_tensor.shape.y * last_tensor.layer_length;
+        let last_tensor = &self.layers[last_layer_index].tensor;
 
         let new_shape = Shape {
             x: 1,
