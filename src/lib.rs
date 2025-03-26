@@ -4,7 +4,12 @@
 // Under: MIT
 
 pub mod activations;
+pub mod cli;
+pub mod neuralnet_impls;
+pub mod storage_op;
 pub mod tensor_op;
+pub mod tensor_std_op;
+pub mod wasm_features;
 
 #[derive(Clone, Debug)]
 pub struct Shape {

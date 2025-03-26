@@ -4,8 +4,6 @@
 
 use crate::*;
 use rand::Rng;
-use std::sync::{Arc, Mutex};
-use std::thread;
 
 ///You can use this to input mannully whole tensor data.
 ///Notice you will need to put zeros for blank data that is made with a shape.
@@ -20,7 +18,7 @@ pub fn raw_input_tensor_matrices(
         layer_length: input_layer_length,
         data: input_matrices,
     }
-    }
+}
 
 ///Prefer using raw_input_tensor_matrices, and resizing if needed.
 pub fn zeroed_input_tensor_matrices(
@@ -324,37 +322,3 @@ impl Neg for RamTensor {
         }
     }
 }
-
-impl RamTensor {
-    pub fn scaler(self, num: f32) -> Self {
-        let row_shape = self.shape.x;
-        let col_shape = self.shape.y;
-
-        let mut handles = vec![];
-
-        for matrix in self.data {
-            let handle = thread::spawn(move || {
-                let mut new_matrix = vec![vec![0.0; col_shape]; row_shape];
-                for row in 0..row_shape {
-                    for col in 0..col_shape {
-                        new_matrix[row][col] = matrix[row][col] * num;
-                    }
-                }
-                new_matrix
-            });
-
-            handles.push(handle);
-        }
-
-        let mut result_data = vec![];
-        for handle in handles {
-            let result_layer = handle.join().unwrap();
-            result_data.push(result_layer);
-        }
-
-        RamTensor {
-            shape: self.shape,
-            layer_length: result_data.len(),
-            data: result_data,
-        }
-    }

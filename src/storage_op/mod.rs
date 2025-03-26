@@ -3,12 +3,6 @@ use rand::Rng;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-pub struct Shape {
-    pub x: usize,
-    pub y: usize,
-}
-
-
 #[macro_export] // TODO delete
 macro_rules! init_memory {
     ($name:expr) => {
@@ -374,3 +368,4 @@ impl Tensor {
             saved: true,
         }
     }
+}

@@ -1,4 +1,5 @@
 use image::{DynamicImage, ImageFormat, ImageReader, Pixel, Rgb};
+use rcmlrs::neuralnet_impls::NeuralNetwork;
 use rcmlrs::*;
 
 fn scan_image(image_name: &str) -> RamTensor {

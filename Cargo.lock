@@ -3,13 +3,6 @@
 version = 4
 
 [[package]]
-name = "RC-ML-RS"
-version = "0.0.1"
-dependencies = [
- "rand",
-]
-
-[[package]]
 name = "bitflags"
 version = "2.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -100,6 +93,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99d9a13982dcf210057a8a78572b2217b667c3beacbf3a0d8b454f6f82837d38"
 dependencies = [
  "getrandom",
+]
+
+[[package]]
+name = "rcmlrs"
+version = "0.0.1"
+dependencies = [
+ "rand",
 ]
 
 [[package]]
