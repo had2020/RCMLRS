@@ -1,6 +1,8 @@
 # RCMLRS
 - Ramless - Cluster - Machine - Learning - Rust - Syntax
 
+The code is divided into modules to make it easier to optimize and maintain, for readability.
+
 WIP, "Work in Progress"
 
 Machine learning framework in Rust, ramless, cluster compute
