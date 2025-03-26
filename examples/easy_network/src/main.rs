@@ -1,4 +1,4 @@
-use image::{DynamicImage, ImageFormat, ImageReader, Pixel, Rgb};
+use image::ImageReader;
 use rcmlrs::neuralnet_impls::NeuralNetwork;
 use rcmlrs::*;
 
