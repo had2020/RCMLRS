@@ -78,16 +78,16 @@ impl RamTensor {
 
         let mut rng = rand::rng();
 
-        for row in 0..shape.x {
+        for _row in 0..shape.x {
             let mut current_row: Vec<f32> = vec![];
-            for col in 0..shape.y {
+            for _col in 0..shape.y {
                 let value = rng.random_range(rand_min..rand_max);
                 current_row.push(value);
             }
             baseline_matrix.push(current_row);
         }
 
-        for matrice in 0..layer_length {
+        for _matrice in 0..layer_length {
             new_data.push(baseline_matrix.clone());
         }
 
@@ -107,15 +107,15 @@ impl RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         let mut baseline_matrix: Vec<Vec<f32>> = vec![];
 
-        for row in 0..shape.x {
+        for _row in 0..shape.x {
             let mut current_row: Vec<f32> = vec![];
-            for col in 0..shape.y {
+            for _col in 0..shape.y {
                 current_row.push(zero_value);
             }
             baseline_matrix.push(current_row);
         }
 
-        for matrice in 0..layer_length {
+        for _matrice in 0..layer_length {
             new_data.push(baseline_matrix.clone());
         }
 
@@ -137,7 +137,7 @@ impl RamTensor {
             // rows times columns
             for (matrix_index, matrix) in self.data.iter().enumerate() {
                 new_data.push(vec![]);
-                for (row_index, row) in matrix.iter().enumerate() {
+                for (row_index, _row) in matrix.iter().enumerate() {
                     new_data[matrix_index].push(vec![]);
                     for col_index in 0..self.shape.y {
                         new_data[matrix_index][row_index].push(
@@ -221,7 +221,7 @@ impl RamTensor {
 
     /// single threaded matrix addition
     pub fn st_add(&self, another_tensor: RamTensor) -> Result<RamTensor, String> {
-        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+        //let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         if (self.shape.x == another_tensor.shape.x)
             && (self.shape.y == another_tensor.shape.y)
@@ -421,7 +421,7 @@ impl RamTensor {
                 new_data[matrix_index].push(vec![]);
 
                 if self.shape.x < row {
-                    for col in 0..to_shape.y {
+                    for _col in 0..to_shape.y {
                         new_data[matrix_index][row].push(pad_value);
                     }
                 } else {

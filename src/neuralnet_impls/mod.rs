@@ -62,9 +62,9 @@ impl NeuralNetwork {
     /// This function basicly records and sets up the network structure, it will not run any ML calulcations yet
     /// Each dense will create a flattend layer with a size of the neural_units units and split it down into batchs.
     pub fn dense(&mut self, neural_units: usize, activation: &str) {
-        let last_layer_index = self.layers.len() - 1;
+        //let last_layer_index = self.layers.len() - 1; //TODO in training
         //let input_units = last_tensor.shape.x * last_tensor.shape.y * last_tensor.layer_length;
-        let last_tensor = &self.layers[last_layer_index].tensor;
+        //let last_tensor = &self.layers[last_layer_index].tensor; //TODO in training
 
         let new_shape = Shape {
             x: 1,
@@ -94,6 +94,7 @@ impl NeuralNetwork {
             match activation {
                 "ReLU" => {
                     println!("ReLU");
+                    println!("{:?},{:?}", x_train, y_train);
                 }
                 "Leaky ReLU" => (),
                 "Sigmoid" => (),

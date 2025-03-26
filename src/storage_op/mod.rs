@@ -312,9 +312,9 @@ impl Tensor {
 
         let zero_value: f64 = 0.1;
 
-        for layer in 0..layer_length {
+        for _layer in 0..layer_length {
             let mut matrix_data: Vec<Vec<f64>> = vec![];
-            for row in 0..shape.y {
+            for _row in 0..shape.y {
                 let col: Vec<f64> = vec![zero_value; shape.x as usize];
                 matrix_data.push(col);
             }

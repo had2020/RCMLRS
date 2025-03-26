@@ -66,7 +66,7 @@ pub fn zeroed_input_tensor_matrices(
 }
 
 //use rand::prelude::*; // for random tensor gen
-use std::ops::{Add, AddAssign, Div, Mul, Neg, Sub, SubAssign}; // for rust's operations to work on RamTensors
+use std::ops::{Add, AddAssign, Div, Mul, Neg, Sub}; // for rust's operations to work on RamTensors // TODO  SubAssign
 use std::sync::{Arc, Mutex};
 use std::thread; // for effiency
 
