@@ -86,6 +86,23 @@ impl NeuralNetwork {
         });
     }
 
+    /// Use this to train your model, use a for loop for a larger dataset.
+    pub fn input(&mut self, input: RamTensor, neural_units: usize) {
+        let new_shape = Shape {
+            x: 1,
+            y: neural_units,
+        };
+
+        let layer_tensor = input.flatten();
+
+        self.layers.push(Layer {
+            activation: "None".to_string(),
+            tensor: layer_tensor,
+            bias: vec![0.0; neural_units],
+            neural_units,
+        });
+    }
+
     /// x_train, sets input shape.
     /// y_train, sets output shape.
     pub fn train(&self, x_train: Shape, y_train: Shape, epochs: usize) {

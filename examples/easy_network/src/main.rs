@@ -42,6 +42,9 @@ fn main() {
     // defining model
     let mut model = NeuralNetwork::new(Shape { x: 3, y: 2 }, 2, (0.0, 1.0));
 
+    let input: RamTensor = scan_image(file_name);
+    model.input(input, 7500);
+
     model.dense(128, "Sigmoid");
     model.dense(64, "Sigmoid");
     model.dense(1, "Sigmoid");
