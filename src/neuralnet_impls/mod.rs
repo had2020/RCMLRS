@@ -105,8 +105,9 @@ impl NeuralNetwork {
 
     /// x_train, sets input shape.
     /// y_train, sets output shape.
-    pub fn train(&self, x_train: Shape, y_train: Shape, epochs: usize) {
+    pub fn train(&mut self, x_train: Shape, y_train: Shape, epochs: usize) {
         let mut layer_id: usize = 0; // this is the next matrix, when layer starts from zero
+
         for layer in &self.layers {
             layer_id += 1;
 
@@ -144,12 +145,7 @@ impl NeuralNetwork {
                 }
                 "Leaky ReLU" => (),
                 "Sigmoid" => {
-                    self.layers[layer_id - 1] = (Layer {
-                        activation: "Sigmoid".to_string(),
-                        tensor: tensor_layer.sigmoid(),
-                        bias: vec![0.0; neural_units],
-                        neural_units,
-                    });
+                    self.layers[layer_id - 1].tensor = tensor_layer;
                 }
                 "Tanh" => (),
                 "Softmax" => (),
