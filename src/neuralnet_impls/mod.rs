@@ -108,7 +108,7 @@ impl NeuralNetwork {
     pub fn train(&mut self, x_train: Shape, y_train: Shape, epochs: usize) {
         let mut layer_id: usize = 0; // this is the next matrix, when layer starts from zero
 
-        for layer in &self.layers {
+        for layer in 0..self.layers.len() {
             layer_id += 1;
 
             // to match size etheir zero pad or Linear projection
@@ -120,8 +120,8 @@ impl NeuralNetwork {
                 data: vec![vec![vec![0.0]]],
             };
 
-            if layer.tensor.shape > self.layers[layer_id].tensor.shape {
-                tensor_layer = layer.tensor.flatten().pad(
+            if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
+                tensor_layer = self.layers[layer].tensor.flatten().pad(
                     self.layers[layer_id].tensor.shape.clone(),
                     self.layers[layer_id].tensor.layer_length,
                     0.0,
@@ -129,23 +129,25 @@ impl NeuralNetwork {
                 tensor_layer = tensor_layer
                     .matmul(self.layers[layer_id].tensor.clone())
                     .unwrap();
-            } else if layer.tensor.shape < self.layers[layer_id].tensor.shape {
+            } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
                 tensor_layer = self.layers[layer_id].tensor.flatten().pad(
-                    layer.tensor.shape.clone(),
-                    layer.tensor.layer_length,
+                    self.layers[layer].tensor.shape.clone(),
+                    self.layers[layer].tensor.layer_length,
                     0.0,
                 );
-                tensor_layer = tensor_layer.matmul(layer.tensor.clone()).unwrap();
+                tensor_layer = tensor_layer
+                    .matmul(self.layers[layer].tensor.clone())
+                    .unwrap();
             }
 
-            let activation = layer.activation.as_str();
+            let activation = self.layers[layer].activation.as_str();
             match activation {
                 "ReLU" => {
                     println!("ReLU");
                 }
                 "Leaky ReLU" => (),
                 "Sigmoid" => {
-                    self.layers[layer_id - 1].tensor = tensor_layer;
+                    self.layers[layer].tensor = tensor_layer;
                 }
                 "Tanh" => (),
                 "Softmax" => (),
