@@ -106,6 +106,7 @@ impl NeuralNetwork {
     /// x_train, sets input shape.
     /// y_train, sets output shape.
     pub fn train(&mut self, x_train: Shape, y_train: Shape, epochs: usize) {
+        let last_id = self.layers.len();
         let mut layer_id: usize = 0; // this is the next matrix, when layer starts from zero
 
         for layer in 0..self.layers.len() {
@@ -120,24 +121,26 @@ impl NeuralNetwork {
                 data: vec![vec![vec![0.0]]],
             };
 
-            if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
-                tensor_layer = self.layers[layer].tensor.flatten().pad(
-                    self.layers[layer_id].tensor.shape.clone(),
-                    self.layers[layer_id].tensor.layer_length,
-                    0.0,
-                );
-                tensor_layer = tensor_layer
-                    .matmul(self.layers[layer_id].tensor.clone())
-                    .unwrap();
-            } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
-                tensor_layer = self.layers[layer_id].tensor.flatten().pad(
-                    self.layers[layer].tensor.shape.clone(),
-                    self.layers[layer].tensor.layer_length,
-                    0.0,
-                );
-                tensor_layer = tensor_layer
-                    .matmul(self.layers[layer].tensor.clone())
-                    .unwrap();
+            if last_id != layer {
+                if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
+                    tensor_layer = self.layers[layer].tensor.flatten().pad(
+                        self.layers[layer_id].tensor.shape.clone(),
+                        self.layers[layer].tensor.layer_length,
+                        0.0,
+                    );
+                    tensor_layer = tensor_layer
+                        .matmul(self.layers[layer_id].tensor.clone())
+                        .unwrap();
+                } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
+                    tensor_layer = self.layers[layer_id].tensor.flatten().pad(
+                        self.layers[layer].tensor.shape.clone(),
+                        self.layers[layer_id].tensor.layer_length,
+                        0.0,
+                    );
+                    tensor_layer = tensor_layer
+                        .matmul(self.layers[layer].tensor.clone())
+                        .unwrap();
+                }
             }
 
             let activation = self.layers[layer].activation.as_str();
