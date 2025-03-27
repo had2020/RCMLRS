@@ -143,17 +143,29 @@ impl NeuralNetwork {
             let activation = self.layers[layer].activation.as_str();
             match activation {
                 "ReLU" => {
-                    println!("ReLU");
+                    self.layers[layer].tensor = tensor_layer.relu();
                 }
-                "Leaky ReLU" => (),
+                //"Leaky ReLU" => (),  # requires negiative slope
                 "Sigmoid" => {
-                    self.layers[layer].tensor = tensor_layer;
+                    self.layers[layer].tensor = tensor_layer.sigmoid();
                 }
-                "Tanh" => (),
-                "Softmax" => (),
-                "Swish" => (),
-                "GELU" => (),
-                _ => (),
+                "Tanh" => {
+                    self.layers[layer].tensor = tensor_layer.tanh();
+                }
+                "Softmax" => {
+                    self.layers[layer].tensor = tensor_layer.softmax();
+                }
+                "Swish" => {
+                    self.layers[layer].tensor = tensor_layer.swish();
+                }
+                "GELU" => {
+                    self.layers[layer].tensor = tensor_layer.gelu();
+                }
+                _ => {
+                    if layer != 0 {
+                        println!("No activiation on layer: {}", layer)
+                    }
+                }
             }
         }
     }
