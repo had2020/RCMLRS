@@ -95,7 +95,7 @@ impl NeuralNetwork {
 
         let layer_tensor = input.flatten();
 
-        self.layers.push(Layer {
+        self.layers[0] = (Layer {
             activation: "None".to_string(),
             tensor: layer_tensor,
             bias: vec![0.0; neural_units],
@@ -106,10 +106,10 @@ impl NeuralNetwork {
     /// x_train, sets input shape.
     /// y_train, sets output shape.
     pub fn train(&self, x_train: Shape, y_train: Shape, epochs: usize) {
-        println!("{:?}", self.layers);
         for layer in &self.layers {
+            // to match size etheir zero pad or Linear projection
             // matmul first than activation
-            println!("{:?}", self.layers);
+
             let activation = layer.activation.as_str();
             match activation {
                 "ReLU" => {
