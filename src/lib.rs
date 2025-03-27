@@ -13,7 +13,7 @@ pub mod tensor_op;
 pub mod tensor_std_op;
 pub mod wasm_features;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Shape {
     pub x: usize, // Rows →
     pub y: usize, // Columns ↓

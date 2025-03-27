@@ -106,9 +106,20 @@ impl NeuralNetwork {
     /// x_train, sets input shape.
     /// y_train, sets output shape.
     pub fn train(&self, x_train: Shape, y_train: Shape, epochs: usize) {
+        let mut layer_id: usize = 0;
         for layer in &self.layers {
+            layer_id += 1;
+
             // to match size etheir zero pad or Linear projection
             // matmul first than activation
+
+            let mut tensor_layer: RamTensor = RamTensor {
+                shape: Shape { x: 1, y: 1 },
+                layer_length: 1,
+                data: vec![vec![vec![0.0]]],
+            };
+
+            if layer.tensor.shape != self.layers[layer_id].tensor.shape {}
 
             let activation = layer.activation.as_str();
             match activation {
