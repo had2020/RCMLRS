@@ -106,7 +106,7 @@ impl NeuralNetwork {
     /// x_train, sets input shape.
     /// y_train, sets output shape.
     pub fn train(&self, x_train: Shape, y_train: Shape, epochs: usize) {
-        let mut layer_id: usize = 0;
+        let mut layer_id: usize = 0; // this is the next matrix, when layer starts from zero
         for layer in &self.layers {
             layer_id += 1;
 
@@ -119,7 +119,23 @@ impl NeuralNetwork {
                 data: vec![vec![vec![0.0]]],
             };
 
-            if layer.tensor.shape != self.layers[layer_id].tensor.shape {}
+            if layer.tensor.shape > self.layers[layer_id].tensor.shape {
+                tensor_layer = layer.tensor.flatten().pad(
+                    self.layers[layer_id].tensor.shape.clone(),
+                    self.layers[layer_id].tensor.layer_length,
+                    0.0,
+                );
+                tensor_layer = tensor_layer
+                    .matmul(self.layers[layer_id].tensor.clone())
+                    .unwrap();
+            } else if layer.tensor.shape < self.layers[layer_id].tensor.shape {
+                tensor_layer = self.layers[layer_id].tensor.flatten().pad(
+                    layer.tensor.shape.clone(),
+                    layer.tensor.layer_length,
+                    0.0,
+                );
+                tensor_layer = tensor_layer.matmul(layer.tensor.clone()).unwrap();
+            }
 
             let activation = layer.activation.as_str();
             match activation {
@@ -128,7 +144,12 @@ impl NeuralNetwork {
                 }
                 "Leaky ReLU" => (),
                 "Sigmoid" => {
-                    println!("Sigmoid");
+                    self.layers[layer_id - 1] = (Layer {
+                        activation: "Sigmoid".to_string(),
+                        tensor: tensor_layer.sigmoid(),
+                        bias: vec![0.0; neural_units],
+                        neural_units,
+                    });
                 }
                 "Tanh" => (),
                 "Softmax" => (),

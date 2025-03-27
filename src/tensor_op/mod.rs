@@ -404,15 +404,10 @@ impl RamTensor {
         returned_median
     }
 
-    /// resizes tensor based on shape, and layer_length shape
+    /// pads tensor based on shape, and layer_length shape
     /// will cut data useful for padding.
     /// It is prefered to use Dense in ML
-    pub fn resize(
-        &self,
-        to_shape: Shape,
-        to_layer_length_shape: usize,
-        pad_value: f32,
-    ) -> RamTensor {
+    pub fn pad(&self, to_shape: Shape, to_layer_length_shape: usize, pad_value: f32) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         for matrix_index in 0..to_layer_length_shape {
