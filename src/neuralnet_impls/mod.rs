@@ -188,13 +188,30 @@ impl NeuralNetwork {
                 * (1.0 - self.layers[last_id].tensor.clone());
 
             // TODO for loop
+
             // backprogation
+
+            for layer in 0..self.layers.len() {
+                if layer != 0 && layer != self.layers.len() {
+                    self.layers[layer].tensor = self.layers[layer]
+                        .tensor
+                        .matmul(self.layers[layer + 1].tensor.clone())
+                        .unwrap();
+                }
+            }
+
             let d_hidden_layer = d_output
                 .matmul(self.layers[last_id].tensor.clone())
                 .unwrap();
             let d_weights = d_output.matmul(self.layers[0].tensor.clone()).unwrap();
 
             // weight updates
+
+            // bias updates
+
+            if error.abs() < stopping_threshold {
+                break;
+            }
         }
     }
 }

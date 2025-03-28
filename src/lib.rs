@@ -13,7 +13,7 @@ pub mod tensor_op;
 pub mod tensor_std_op;
 pub mod wasm_features;
 
-#[derive(Clone, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Copy)]
 pub struct Shape {
     pub x: usize, // Rows →
     pub y: usize, // Columns ↓
@@ -34,7 +34,7 @@ pub fn odd_median_usize(length: usize) -> usize {
 
 // Ram tensor, TODO UPDATE STORAGE BASED
 // TODO transfer to storage or some type of direct storage connection.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct RamTensor {
     pub shape: Shape,
     pub layer_length: usize,
