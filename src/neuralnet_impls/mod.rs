@@ -101,68 +101,72 @@ impl NeuralNetwork {
         let last_id = self.layers.len();
         let mut layer_id: usize = 0; // this is the next matrix, when layer starts from zero
 
-        for layer in 0..self.layers.len() {
-            layer_id += 1;
+        for epoch in 0..epochs {
+            for layer in 0..self.layers.len() {
+                println!("{:?}", self.layers[layer]); // temp debug
+                layer_id += 1;
 
-            // to match size etheir zero pad or Linear projection
-            // matmul first than activation
+                // to match size etheir zero pad or Linear projection
+                // matmul first than activation
 
-            let mut tensor_layer: RamTensor = RamTensor {
-                shape: Shape { x: 1, y: 1 },
-                layer_length: 1,
-                data: vec![vec![vec![0.0]]],
-            };
+                let mut tensor_layer: RamTensor = RamTensor {
+                    shape: Shape { x: 1, y: 1 },
+                    layer_length: 1,
+                    data: vec![vec![vec![0.0]]],
+                };
 
-            if last_id - 1 != layer {
-                if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
-                    tensor_layer = self.layers[layer].tensor.flatten().pad(
-                        self.layers[layer_id].tensor.shape.clone(),
-                        self.layers[layer].tensor.layer_length,
-                        0.0,
-                    );
-                    tensor_layer = tensor_layer
-                        .matmul(self.layers[layer_id].tensor.clone())
-                        .unwrap();
-                } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
-                    tensor_layer = self.layers[layer_id].tensor.flatten().pad(
-                        self.layers[layer].tensor.shape.clone(),
-                        self.layers[layer_id].tensor.layer_length,
-                        0.0,
-                    );
-                    tensor_layer = tensor_layer
-                        .matmul(self.layers[layer].tensor.clone())
-                        .unwrap();
-                }
-            }
-
-            let activation = self.layers[layer].activation.as_str();
-            match activation {
-                "ReLU" => {
-                    self.layers[layer].tensor = tensor_layer.relu();
-                }
-                //"Leaky ReLU" => (),  # requires negiative slope
-                "Sigmoid" => {
-                    self.layers[layer].tensor = tensor_layer.sigmoid();
-                }
-                "Tanh" => {
-                    self.layers[layer].tensor = tensor_layer.tanh();
-                }
-                "Softmax" => {
-                    self.layers[layer].tensor = tensor_layer.softmax();
-                }
-                "Swish" => {
-                    self.layers[layer].tensor = tensor_layer.swish();
-                }
-                "GELU" => {
-                    self.layers[layer].tensor = tensor_layer.gelu();
-                }
-                _ => {
-                    if layer != 0 {
-                        println!("No activiation on layer: {}", layer)
+                if last_id - 1 != layer {
+                    if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
+                        tensor_layer = self.layers[layer].tensor.flatten().pad(
+                            self.layers[layer_id].tensor.shape.clone(),
+                            self.layers[layer].tensor.layer_length,
+                            0.0,
+                        );
+                        tensor_layer = tensor_layer
+                            .matmul(self.layers[layer_id].tensor.clone())
+                            .unwrap();
+                    } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
+                        tensor_layer = self.layers[layer_id].tensor.flatten().pad(
+                            self.layers[layer].tensor.shape.clone(),
+                            self.layers[layer_id].tensor.layer_length,
+                            0.0,
+                        );
+                        tensor_layer = tensor_layer
+                            .matmul(self.layers[layer].tensor.clone())
+                            .unwrap();
                     }
                 }
+
+                let activation = self.layers[layer].activation.as_str();
+                match activation {
+                    "ReLU" => {
+                        self.layers[layer].tensor = tensor_layer.relu();
+                    }
+                    //"Leaky ReLU" => (),  # requires negiative slope
+                    "Sigmoid" => {
+                        self.layers[layer].tensor = tensor_layer.sigmoid();
+                    }
+                    "Tanh" => {
+                        self.layers[layer].tensor = tensor_layer.tanh();
+                    }
+                    "Softmax" => {
+                        self.layers[layer].tensor = tensor_layer.softmax();
+                    }
+                    "Swish" => {
+                        self.layers[layer].tensor = tensor_layer.swish();
+                    }
+                    "GELU" => {
+                        self.layers[layer].tensor = tensor_layer.gelu();
+                    }
+                    _ => {
+                        if layer != 0 {
+                            println!("No activiation on layer: {}", layer)
+                        }
+                    }
+                }
+                // layer loop
             }
-            println!("{:?}", self.layers[layer]); // temp debug
+            // epochs loop
         }
     }
 }
