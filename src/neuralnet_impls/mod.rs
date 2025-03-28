@@ -189,11 +189,15 @@ impl NeuralNetwork {
 
             // backprogation
             for layer in 0..self.layers.len() {
+                // check to see if their really is something to backprogate
                 if layer != 0 && layer != last_id {
-                    println!("backone");
-
-                    //let d_layer = self.layers[layer].tensor.matmul(d_output.clone()).unwrap();
+                    // gradent decent for each layer
                     let d_layer = d_output
+                        .pad(
+                            self.layers[layer - 1].tensor.shape,
+                            self.layers[layer - 1].tensor.layer_length,
+                            0.0,
+                        )
                         .matmul(self.layers[layer - 1].tensor.clone())
                         .unwrap();
 
