@@ -49,7 +49,7 @@ fn main() {
     model.dense(64, "Sigmoid");
     model.dense(1, "Sigmoid");
 
-    model.train(1000, 1, 0.01, -0.01);
+    model.train(1000, RamTensor::from(1.0), 0.01, -0.01);
 }
 
 fn train(file_name: &str, output_target: f32) {

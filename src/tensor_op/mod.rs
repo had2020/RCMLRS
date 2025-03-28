@@ -437,4 +437,13 @@ impl RamTensor {
             data: new_data,
         }
     }
+
+    // turn one number into a tensor
+    pub fn from<T: Into<f32>>(value: T) -> Self {
+        Self {
+            data: vec![vec![vec![value.into()]]],
+            shape: Shape { x: 1, y: 1 },
+            layer_length: 1,
+        }
+    }
 }
