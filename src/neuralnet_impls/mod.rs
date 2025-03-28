@@ -190,12 +190,14 @@ impl NeuralNetwork {
             // backprogation
             for layer in 0..self.layers.len() {
                 if layer != 0 && layer != last_id {
+                    println!("backone");
+
                     //let d_layer = self.layers[layer].tensor.matmul(d_output.clone()).unwrap();
                     let d_layer = d_output
                         .matmul(self.layers[layer - 1].tensor.clone())
                         .unwrap();
 
-                    println!("{:?}", self.layers[layer].tensor);
+                    //println!("{:?}", self.layers[layer].tensor);
 
                     // weight updates
                     self.layers[layer].tensor = d_layer.pad(

@@ -412,18 +412,30 @@ impl RamTensor {
 
         for matrix_index in 0..to_layer_length_shape {
             new_data.push(vec![]);
+
+            if matrix_index >= self.data.len() {
+                continue;
+            }
+
             for row in 0..to_shape.x {
                 new_data[matrix_index].push(vec![]);
 
-                if self.shape.x < row {
+                if self.shape.x <= row {
                     for _col in 0..to_shape.y {
                         new_data[matrix_index][row].push(pad_value);
                     }
                 } else {
                     for col in 0..to_shape.y {
-                        if self.shape.y > col {
+                        if self.shape.y <= col {
                             new_data[matrix_index][row].push(pad_value);
                         } else {
+                            if row >= self.data[matrix_index].len() {
+                                continue;
+                            }
+                            if col >= self.data[matrix_index][row].len() {
+                                continue;
+                            }
+
                             new_data[matrix_index][row].push(self.data[matrix_index][row][col]);
                         }
                     }
