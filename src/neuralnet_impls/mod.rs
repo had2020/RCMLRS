@@ -121,7 +121,7 @@ impl NeuralNetwork {
                 data: vec![vec![vec![0.0]]],
             };
 
-            if last_id != layer {
+            if last_id - 1 != layer {
                 if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
                     tensor_layer = self.layers[layer].tensor.flatten().pad(
                         self.layers[layer_id].tensor.shape.clone(),
@@ -170,6 +170,7 @@ impl NeuralNetwork {
                     }
                 }
             }
+            println!("{:?}", self.layers[layer]); // temp debug
         }
     }
 }
