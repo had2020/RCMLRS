@@ -176,9 +176,25 @@ impl NeuralNetwork {
             // epochs loop
             layer_id = 0; // reset loop state
 
+            // TODO handling if it is a full tensor and not a scaler
+
             let output_mean = self.layers[last_id].tensor.mean();
+
             let error: f32 = (target.clone() - RamTensor::from(output_mean)).into(); // computer error
-            let d_output = error;
+
+            // gradent decent
+            let d_output = error
+                * self.layers[last_id].tensor.clone()
+                * (1.0 - self.layers[last_id].tensor.clone());
+
+            // TODO for loop
+            // backprogation
+            let d_hidden_layer = d_output
+                .matmul(self.layers[last_id].tensor.clone())
+                .unwrap();
+            let d_weights = d_output.matmul(self.layers[0].tensor.clone()).unwrap();
+
+            // weight updates
         }
     }
 }
