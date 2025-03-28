@@ -41,6 +41,14 @@ pub struct RamTensor {
     pub data: Vec<Vec<Vec<f32>>>, // matrices, rows, cols, values
 }
 
+pub fn find_good_breakup(neural_units: usize) -> usize {
+    if is_even_usize(neural_units) {
+        neural_units / 2
+    } else {
+        neural_units
+    }
+}
+
 /*
 //TODO better and more Unit Tests
 #[cfg(test)]

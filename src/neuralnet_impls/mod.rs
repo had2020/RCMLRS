@@ -27,14 +27,6 @@ pub struct NeuralNetwork {
     */
 }
 
-pub fn find_good_breakup(neural_units: usize) -> usize {
-    if is_even_usize(neural_units) {
-        neural_units / 2
-    } else {
-        neural_units
-    }
-}
-
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
     pub fn new(
