@@ -178,20 +178,20 @@ impl NeuralNetwork {
 
             // TODO handling if it is a full tensor and not a scaler
 
-            let output_mean = self.layers[last_id].tensor.mean();
+            let output_mean = self.layers[last_id - 1].tensor.mean();
 
             let error: f32 = (target.clone() - RamTensor::from(output_mean)).into(); // computer error
 
             // gradent decent
             let d_output = error
-                * self.layers[last_id].tensor.clone()
-                * (1.0 - self.layers[last_id].tensor.clone());
+                * self.layers[last_id - 1].tensor.clone()
+                * (1.0 - self.layers[last_id - 1].tensor.clone());
 
             // TODO for loop
 
             // backprogation
             for layer in 0..self.layers.len() {
-                if layer != 0 && layer != self.layers.len() {
+                if layer != 0 && layer != last_id {
                     let d_layer = self.layers[layer].tensor.matmul(d_output.clone()).unwrap();
                     // weight updates
                     self.layers[layer].tensor = d_layer * learning_rate;
