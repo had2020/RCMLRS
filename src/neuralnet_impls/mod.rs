@@ -187,14 +187,15 @@ impl NeuralNetwork {
                 * self.layers[last_id - 1].tensor.clone()
                 * (1.0 - self.layers[last_id - 1].tensor.clone());
 
-            // TODO for loop
-
             // backprogation
             for layer in 0..self.layers.len() {
                 if layer != 0 && layer != last_id {
-                    let d_layer = self.layers[layer].tensor.matmul(d_output.clone()).unwrap();
+                    //let d_layer = self.layers[layer].tensor.matmul(d_output.clone()).unwrap();
+                    let d_layer = d_output
+                        .matmul(self.layers[layer - 1].tensor.clone())
+                        .unwrap();
                     // weight updates
-                    self.layers[layer].tensor = d_layer * learning_rate;
+                    self.layers[layer].tensor += d_layer * learning_rate;
                 }
             }
 
