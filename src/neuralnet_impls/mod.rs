@@ -103,7 +103,8 @@ impl NeuralNetwork {
 
         for epoch in 0..epochs {
             for layer in 0..self.layers.len() {
-                println!("{:?}", self.layers[layer]); // temp debug
+                println!("{:?}", layer);
+
                 layer_id += 1;
 
                 // to match size etheir zero pad or Linear projection
@@ -167,6 +168,7 @@ impl NeuralNetwork {
                 // layer loop
             }
             // epochs loop
+            layer_id = 0; // reset loop state
         }
     }
 }
