@@ -8,8 +8,9 @@ use crate::*;
 pub struct Layer {
     pub activation: String,
     pub tensor: RamTensor,
-    pub bias: Vec<f32>,
+    pub bias: RamTensor,
     pub neural_units: usize,
+    pub target_bias: RamTensor, // aka bias2 in earlyer protypes TODO
 }
 
 /// Main class used for easy NeuralNetworks
@@ -17,14 +18,6 @@ pub struct Layer {
 pub struct NeuralNetwork {
     pub layers: Vec<Layer>, // Layer 0, is always input layer
     pub rand_min_max: (f32, f32),
-    // training metrics
-    /*
-    pub target_f32: f32,
-    pub matrix_target_f32: RamTensor,
-    pub max_epochs: f32,
-    pub stopping_threshold: f32,
-    pub learning_rate: f32,
-    */
 }
 
 /// each dense will create a new layer on layers of NeuralNetwork
@@ -36,7 +29,7 @@ impl NeuralNetwork {
     ) -> Self {
         let input_layer_init = Layer {
             activation: "None".to_string(),
-            bias: vec![],
+            bias: RamTensor::new_layer_zeros(input_shape.clone(), input_layer_length),
             tensor: RamTensor {
                 shape: input_shape.clone(),
                 layer_length: input_layer_length,
@@ -72,8 +65,8 @@ impl NeuralNetwork {
 
         self.layers.push(Layer {
             activation: activation.to_string(),
-            tensor: layer_tensor,
-            bias: vec![0.0; neural_units],
+            tensor: layer_tensor.clone(),
+            bias: RamTensor::new_layer_zeros(layer_tensor.shape, layer_tensor.layer_length),
             neural_units,
         });
     }
@@ -89,8 +82,8 @@ impl NeuralNetwork {
 
         self.layers[0] = (Layer {
             activation: "None".to_string(),
-            tensor: layer_tensor,
-            bias: vec![0.0; neural_units],
+            tensor: layer_tensor.clone(),
+            bias: RamTensor::new_layer_zeros(layer_tensor.shape, layer_tensor.layer_length),
             neural_units,
         });
     }
@@ -185,7 +178,7 @@ impl NeuralNetwork {
             // gradent decent
             let d_output = error
                 * self.layers[last_id - 1].tensor.clone()
-                * (1.0 - self.layers[last_id - 1].tensor.clone());
+                * (1.0 - self.layers[last_id - 1].tensor.clone()); // For sigmoid
 
             // backprogation
             for layer in 0..self.layers.len() {
@@ -201,24 +194,32 @@ impl NeuralNetwork {
                         .matmul(self.layers[layer - 1].tensor.clone())
                         .unwrap();
 
-                    //println!("{:?}", self.layers[layer].tensor);
-
                     // weight updates
                     self.layers[layer].tensor = d_layer.pad(
                         self.layers[layer].tensor.shape.clone(),
                         self.layers[layer].tensor.layer_length.clone(),
                         0.0,
                     ) + self.layers[layer].tensor.clone()
-                        * learning_rate
+                        * learning_rate;
+
+                    self.layers[layer].bias = d_layer * learning_rate;
                 }
             }
 
-            // bias updates
+            // bias updates TODO
 
             if error.abs() < stopping_threshold {
+                println!("Training safely ending early!");
                 break;
             }
+            if epoch % 10 == 0 {
+                println!(
+                    "Epoch {:?}, Error: {:?}, Output: {:?}",
+                    epoch, error, output_mean,
+                );
+            }
         }
+        println!("Max epochs reached!")
     }
 }
 
