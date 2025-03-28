@@ -175,6 +175,10 @@ impl NeuralNetwork {
             }
             // epochs loop
             layer_id = 0; // reset loop state
+
+            let output_mean = self.layers[last_id].tensor.mean();
+            let error: f32 = (target.clone() - RamTensor::from(output_mean)).into(); // computer error
+            let d_output = error;
         }
     }
 }

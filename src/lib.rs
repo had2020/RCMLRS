@@ -76,3 +76,19 @@ mod tests {
     }
 }
 */
+
+use std::convert::From;
+
+impl From<RamTensor> for f32 {
+    fn from(tensor: RamTensor) -> Self {
+        tensor
+            .data
+            .first()
+            .unwrap()
+            .first()
+            .unwrap()
+            .first()
+            .copied()
+            .unwrap_or(0.0)
+    }
+}
