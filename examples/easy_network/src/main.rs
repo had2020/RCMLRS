@@ -49,7 +49,7 @@ fn main() {
     model.dense(64, "Sigmoid");
     model.dense(1, "Sigmoid");
 
-    model.train(Shape { x: 50, y: 150 }, Shape { x: 1, y: 1 }, 100);
+    model.train(1000, 1, 0.01, -0.01);
 }
 
 fn train(file_name: &str, output_target: f32) {

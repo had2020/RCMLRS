@@ -21,7 +21,7 @@ pub struct NeuralNetwork {
     /*
     pub target_f32: f32,
     pub matrix_target_f32: RamTensor,
-    //pub max_epochs: f32,
+    pub max_epochs: f32,
     pub stopping_threshold: f32,
     pub learning_rate: f32,
     */
@@ -97,14 +97,20 @@ impl NeuralNetwork {
 
     /// x_train, sets input shape.
     /// y_train, sets output shape.
-    pub fn train(&mut self, x_train: Shape, y_train: Shape, epochs: usize) {
+    pub fn train(
+        &mut self,
+        //x_train: Shape, /*Shape { x: 50, y: 150 }, Shape { x: 1, y: 1 },*/
+        //y_train: Shape,
+        max_epochs: usize,
+        target: RamTensor,
+        learning_rate: f32,
+        stopping_threshold: f32,
+    ) {
         let last_id = self.layers.len();
         let mut layer_id: usize = 0; // this is the next matrix, when layer starts from zero
 
-        for epoch in 0..epochs {
+        for epoch in 0..max_epochs {
             for layer in 0..self.layers.len() {
-                println!("{:?}", layer);
-
                 layer_id += 1;
 
                 // to match size etheir zero pad or Linear projection
