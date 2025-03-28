@@ -194,8 +194,16 @@ impl NeuralNetwork {
                     let d_layer = d_output
                         .matmul(self.layers[layer - 1].tensor.clone())
                         .unwrap();
+
+                    println!("{:?}", self.layers[layer].tensor);
+
                     // weight updates
-                    self.layers[layer].tensor += d_layer * learning_rate;
+                    self.layers[layer].tensor = d_layer.pad(
+                        self.layers[layer].tensor.shape.clone(),
+                        self.layers[layer].tensor.layer_length.clone(),
+                        0.0,
+                    ) + self.layers[layer].tensor.clone()
+                        * learning_rate
                 }
             }
 
