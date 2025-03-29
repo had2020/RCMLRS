@@ -201,7 +201,9 @@ impl NeuralNetwork {
                     ) + self.layers[layer].tensor.clone()
                         * learning_rate;
 
-                    self.layers[layer].bias = d_layer * learning_rate;
+                    //self.layers[layer].bias = d_layer * learning_rate;
+                    self.layers[layer].bias =
+                        self.layers[layer].bias.clone() - learning_rate * error;
                 }
             }
 
