@@ -36,6 +36,7 @@ impl NeuralNetwork {
                 data: vec![],
             },
             neural_units: input_shape.x * input_shape.y,
+            target_bias: RamTensor::new_layer_zeros(input_shape.clone(), input_layer_length),
         };
 
         NeuralNetwork {
@@ -68,6 +69,10 @@ impl NeuralNetwork {
             tensor: layer_tensor.clone(),
             bias: RamTensor::new_layer_zeros(layer_tensor.shape, layer_tensor.layer_length),
             neural_units,
+            target_bias: RamTensor::new_layer_zeros(
+                layer_tensor.shape.clone(),
+                layer_tensor.layer_length,
+            ),
         });
     }
 
