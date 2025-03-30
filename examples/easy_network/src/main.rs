@@ -45,7 +45,7 @@ fn main() {
     let input: RamTensor = scan_image("white"); // any custom code
     model.input(input, 7500);
 
-    model.dense(128, "Sigmoid");
+    model.dense(128, "Sigmoid"); // replace "" with enum
     model.dense(64, "Sigmoid");
     model.dense(1, "Sigmoid");
 

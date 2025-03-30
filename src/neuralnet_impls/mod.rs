@@ -114,6 +114,7 @@ impl NeuralNetwork {
                     data: vec![vec![vec![0.0]]],
                 };
 
+                // fowardfeed
                 if last_id - 1 != layer {
                     if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
                         tensor_layer = self.layers[layer].tensor.flatten().pad(
@@ -172,7 +173,8 @@ impl NeuralNetwork {
 
             let output_mean = self.layers[last_id - 1].tensor.mean();
 
-            let error: f32 = (target.clone() - RamTensor::from(output_mean)).into(); // computer error
+            let error: f32 =
+                target.clone().scaler_to_f32() - self.layers[last_id - 1].tensor.scaler_to_f32();
 
             // gradent decent
             let d_output = error
@@ -181,25 +183,16 @@ impl NeuralNetwork {
 
             // backprogation
             for layer in 0..self.layers.len() {
+                //for layer in (1..last_id).rev() {
                 // check to see if their really is something to backprogate
                 if layer != 0 && layer != last_id {
                     // gradent decent for each layer
-                    let d_layer = d_output
-                        .pad(
-                            self.layers[layer - 1].tensor.shape,
-                            self.layers[layer - 1].tensor.layer_length,
-                            0.0,
-                        )
-                        .matmul(self.layers[layer - 1].tensor.clone())
-                        .unwrap();
+
+                    let d_layer = d_output.clone() * self.layers[layer - 1].tensor.clone();
 
                     // weight updates
-                    self.layers[layer].tensor = d_layer.pad(
-                        self.layers[layer].tensor.shape.clone(),
-                        self.layers[layer].tensor.layer_length.clone(),
-                        0.0,
-                    ) + self.layers[layer].tensor.clone()
-                        * learning_rate;
+                    self.layers[layer].tensor =
+                        d_layer.scaler_to_f32() + self.layers[layer].tensor.clone() * learning_rate;
 
                     //self.layers[layer].bias = d_layer * learning_rate;
                     self.layers[layer].bias =

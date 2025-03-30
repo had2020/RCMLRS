@@ -458,4 +458,14 @@ impl RamTensor {
             layer_length: 1,
         }
     }
+
+    pub fn retrive_matrice(&self, matrix: usize, row: usize, col: usize) -> f32 {
+        self.data[matrix][row][col]
+    }
+
+    pub fn scaler_to_f32(&self) -> f32 {
+        self.data[0][0][0]
+    }
+
+    //TODO transpose aka rotate matrix
 }
