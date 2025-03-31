@@ -125,6 +125,7 @@ impl NeuralNetwork {
                         tensor_layer = tensor_layer
                             .matmul(self.layers[layer_id].tensor.clone())
                             .unwrap();
+                        //+ self.layers[layer_id].bias.clone();
                     } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
                         tensor_layer = self.layers[layer_id].tensor.flatten().pad(
                             self.layers[layer].tensor.shape.clone(),
@@ -134,6 +135,7 @@ impl NeuralNetwork {
                         tensor_layer = tensor_layer
                             .matmul(self.layers[layer].tensor.clone())
                             .unwrap();
+                        //+ self.layers[layer_id].bias.clone();
                     }
                 }
 
@@ -208,8 +210,11 @@ impl NeuralNetwork {
             }
             if epoch % 10 == 0 {
                 println!(
-                    "Epoch {:?}, Error: {:?}, Output: {:?}",
-                    epoch, error, output_mean,
+                    "Epoch {:?}, Error: {:?}, Output: {:?}, Target: {:?}",
+                    epoch,
+                    error,
+                    output_mean,
+                    target.scaler_to_f32(),
                 );
             }
         }

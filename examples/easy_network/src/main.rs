@@ -50,7 +50,7 @@ fn main() {
     model.dense(1, "Sigmoid");
 
     model.train(1000, RamTensor::from(1.0), 0.01, -0.01);
-    //println!("{:?}", model); Debug whole network
+    println!("{:?}", model); //Debug whole network
 }
 
 fn train(file_name: &str, output_target: f32) {
