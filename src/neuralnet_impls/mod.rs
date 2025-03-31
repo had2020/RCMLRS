@@ -121,14 +121,23 @@ impl NeuralNetwork {
                 if last_id - 1 != layer {
                     tensor_layer.shape = self.layers[layer].tensor.shape.clone();
                     if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
+                        /*
                         // resize to match
                         tensor_layer = self.layers[layer].tensor.flatten().pad(
                             self.layers[layer_id].tensor.shape.clone(),
                             self.layers[layer].tensor.layer_length,
                             0.0,
                         );
+                        */
+                        tensor_layer = self.layers[layer].tensor.flatten();
+
                         tensor_layer = tensor_layer
-                            .matmul(self.layers[layer_id].tensor.clone())
+                            .clone()
+                            .matmul(self.layers[layer_id].tensor.clone().pad(
+                                tensor_layer.shape,
+                                tensor_layer.layer_length,
+                                0.0,
+                            ))
                             .unwrap();
                         // add bias
                         tensor_layer = tensor_layer.clone()
@@ -139,13 +148,21 @@ impl NeuralNetwork {
                             )
                     } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
                         tensor_layer.shape = self.layers[layer].tensor.shape.clone();
+                        /*
                         tensor_layer = self.layers[layer_id].tensor.flatten().pad(
                             self.layers[layer].tensor.shape.clone(),
                             self.layers[layer_id].tensor.layer_length,
                             0.0,
                         );
+                        */
+                        tensor_layer = self.layers[layer].tensor.flatten();
+
                         tensor_layer = tensor_layer
-                            .matmul(self.layers[layer].tensor.clone())
+                            .matmul(self.layers[layer_id].tensor.clone().pad(
+                                tensor_layer.shape,
+                                tensor_layer.layer_length,
+                                0.0,
+                            ))
                             .unwrap();
                         // add bias
                         tensor_layer = tensor_layer.clone()
