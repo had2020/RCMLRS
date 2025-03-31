@@ -82,7 +82,7 @@ impl NeuralNetwork {
         self.layers[0] = (Layer {
             activation: "None".to_string(),
             tensor: layer_tensor.clone(),
-            bias: RamTensor::new_layer_zeros(layer_tensor.shape, layer_tensor.layer_length),
+            bias: RamTensor::new_layer_zeros(new_shape, layer_tensor.layer_length),
             neural_units,
         });
     }
@@ -109,14 +109,19 @@ impl NeuralNetwork {
                 // matmul first than activation
 
                 let mut tensor_layer: RamTensor = RamTensor {
-                    shape: Shape { x: 1, y: 1 },
+                    shape: Shape {
+                        x: 1,
+                        y: self.layers[layer].neural_units.clone(),
+                    },
                     layer_length: 1,
                     data: vec![vec![vec![0.0]]],
                 };
 
                 // fowardfeed
                 if last_id - 1 != layer {
+                    tensor_layer.shape = self.layers[layer].tensor.shape.clone();
                     if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
+                        // resize to match
                         tensor_layer = self.layers[layer].tensor.flatten().pad(
                             self.layers[layer_id].tensor.shape.clone(),
                             self.layers[layer].tensor.layer_length,
@@ -125,8 +130,15 @@ impl NeuralNetwork {
                         tensor_layer = tensor_layer
                             .matmul(self.layers[layer_id].tensor.clone())
                             .unwrap();
-                        //+ self.layers[layer_id].bias.clone();
+                        // add bias
+                        tensor_layer = tensor_layer.clone()
+                            + self.layers[layer].bias.clone().pad(
+                                tensor_layer.shape.clone(),
+                                tensor_layer.layer_length,
+                                0.0,
+                            )
                     } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
+                        tensor_layer.shape = self.layers[layer].tensor.shape.clone();
                         tensor_layer = self.layers[layer_id].tensor.flatten().pad(
                             self.layers[layer].tensor.shape.clone(),
                             self.layers[layer_id].tensor.layer_length,
@@ -135,7 +147,13 @@ impl NeuralNetwork {
                         tensor_layer = tensor_layer
                             .matmul(self.layers[layer].tensor.clone())
                             .unwrap();
-                        //+ self.layers[layer_id].bias.clone();
+                        // add bias
+                        tensor_layer = tensor_layer.clone()
+                            + self.layers[layer].bias.clone().pad(
+                                tensor_layer.shape.clone(),
+                                tensor_layer.layer_length,
+                                0.0,
+                            )
                     }
                 }
 
@@ -210,11 +228,12 @@ impl NeuralNetwork {
             }
             if epoch % 10 == 0 {
                 println!(
-                    "Epoch {:?}, Error: {:?}, Output: {:?}, Target: {:?}",
+                    "Epoch {:?}, Error: {:?}, Output: {:?}, Target: {:?}, bias: {:?}",
                     epoch,
                     error,
                     output_mean,
                     target.scaler_to_f32(),
+                    self.layers[last_id - 1].bias.mean()
                 );
             }
         }

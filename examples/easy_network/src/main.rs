@@ -45,12 +45,12 @@ fn main() {
     let input: RamTensor = scan_image("white"); // any custom code
     model.input(input, 7500);
 
-    model.dense(128, "Sigmoid"); // replace "" with enum
-    model.dense(64, "Sigmoid");
+    model.dense(3, "Sigmoid"); // replace "" with enum
+    model.dense(2, "Sigmoid");
     model.dense(1, "Sigmoid");
 
     model.train(1000, RamTensor::from(1.0), 0.01, -0.01);
-    println!("{:?}", model); //Debug whole network
+    println!("{:?}", model); //Debugs whole network
 }
 
 fn train(file_name: &str, output_target: f32) {
