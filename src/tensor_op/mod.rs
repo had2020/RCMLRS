@@ -207,6 +207,16 @@ impl RamTensor {
         })
     }
 
+    pub fn pad_matmul_to_another(&self, another_tensor: RamTensor) -> RamTensor {
+        if self.shape != another_tensor.shape {
+            self.pad(another_tensor.shape, another_tensor.layer_length, 0.0)
+                .matmul(another_tensor)
+                .unwrap()
+        } else {
+            self.matmul(another_tensor).unwrap()
+        }
+    }
+
     pub fn sum(&self) -> f32 {
         let mut sum: f32 = 0.0;
         for matrix in 0..self.layer_length {

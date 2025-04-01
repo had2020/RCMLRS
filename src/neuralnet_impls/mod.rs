@@ -121,52 +121,17 @@ impl NeuralNetwork {
                 if last_id - 1 != layer {
                     tensor_layer.shape = self.layers[layer].tensor.shape.clone();
                     if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
-                        /*
-                        // resize to match
-                        tensor_layer = self.layers[layer].tensor.flatten().pad(
-                            self.layers[layer_id].tensor.shape.clone(),
-                            self.layers[layer].tensor.layer_length,
-                            0.0,
-                        );
-                        */
-                        tensor_layer = self.layers[layer].tensor.flatten();
-
-                        tensor_layer = tensor_layer
-                            .clone()
+                        tensor_layer = self.layers[layer]
+                            .tensor
                             .matmul(self.layers[layer_id].tensor.clone().pad(
-                                tensor_layer.shape,
-                                tensor_layer.layer_length,
+                                self.layers[layer].tensor.shape,
+                                self.layers[layer].tensor.layer_length,
                                 0.0,
                             ))
                             .unwrap();
                         // add bias
                         tensor_layer = tensor_layer.clone()
-                            + self.layers[layer].bias.clone().pad(
-                                tensor_layer.shape.clone(),
-                                tensor_layer.layer_length,
-                                0.0,
-                            )
-                    } else if self.layers[layer].tensor.shape < self.layers[layer_id].tensor.shape {
-                        tensor_layer.shape = self.layers[layer].tensor.shape.clone();
-                        /*
-                        tensor_layer = self.layers[layer_id].tensor.flatten().pad(
-                            self.layers[layer].tensor.shape.clone(),
-                            self.layers[layer_id].tensor.layer_length,
-                            0.0,
-                        );
-                        */
-                        tensor_layer = self.layers[layer].tensor.flatten();
-
-                        tensor_layer = tensor_layer
-                            .matmul(self.layers[layer_id].tensor.clone().pad(
-                                tensor_layer.shape,
-                                tensor_layer.layer_length,
-                                0.0,
-                            ))
-                            .unwrap();
-                        // add bias
-                        tensor_layer = tensor_layer.clone()
-                            + self.layers[layer].bias.clone().pad(
+                            - self.layers[layer].bias.clone().pad(
                                 tensor_layer.shape.clone(),
                                 tensor_layer.layer_length,
                                 0.0,
@@ -225,7 +190,9 @@ impl NeuralNetwork {
                 if layer != 0 && layer != last_id {
                     // gradent decent for each layer
 
-                    let d_layer = d_output.clone() * self.layers[layer - 1].tensor.clone();
+                    let d_layer = d_output
+                        .clone()
+                        .pad_matmul_to_another(self.layers[layer - 1].tensor.clone());
 
                     // weight updates
                     self.layers[layer].tensor =
