@@ -120,23 +120,20 @@ impl NeuralNetwork {
                 // fowardfeed
                 if last_id - 1 != layer {
                     tensor_layer.shape = self.layers[layer].tensor.shape.clone();
-                    if self.layers[layer].tensor.shape > self.layers[layer_id].tensor.shape {
-                        tensor_layer = self.layers[layer]
-                            .tensor
-                            .matmul(self.layers[layer_id].tensor.clone().pad(
-                                self.layers[layer].tensor.shape,
-                                self.layers[layer].tensor.layer_length,
-                                0.0,
-                            ))
-                            .unwrap();
-                        // add bias
-                        tensor_layer = tensor_layer.clone()
-                            - self.layers[layer].bias.clone().pad(
-                                tensor_layer.shape.clone(),
-                                tensor_layer.layer_length,
-                                0.0,
-                            )
-                    }
+                    tensor_layer = self.layers[layer]
+                        .tensor
+                        .matmul(self.layers[layer_id].tensor.clone().pad(
+                            self.layers[layer].tensor.shape,
+                            self.layers[layer].tensor.layer_length,
+                            0.0,
+                        ))
+                        .unwrap();
+                    // add bias
+                    println!(
+                        "t1{:?} b2{:?}",
+                        tensor_layer.shape, self.layers[layer].bias.shape
+                    );
+                    tensor_layer = tensor_layer.clone() + self.layers[layer].bias.clone()
                 }
 
                 let activation = self.layers[layer].activation.as_str();
