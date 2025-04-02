@@ -82,7 +82,8 @@ impl NeuralNetwork {
         self.layers[0] = (Layer {
             activation: "None".to_string(),
             tensor: layer_tensor.clone(),
-            bias: RamTensor::new_layer_zeros(new_shape, layer_tensor.layer_length),
+            //bias: RamTensor::new_layer_zeros(new_shape, layer_tensor.layer_length),
+            bias: RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1),
             neural_units,
         });
     }
@@ -99,11 +100,11 @@ impl NeuralNetwork {
         stopping_threshold: f32,
     ) {
         let last_id = self.layers.len();
-        let mut layer_id: usize = 0; // this is the next matrix, when layer starts from zero
+        let mut next_id: usize = 0; // this is the next matrix, when layer starts from zero
 
         for epoch in 0..max_epochs {
             for layer in 0..self.layers.len() {
-                layer_id += 1;
+                next_id += 1;
 
                 // to match size etheir zero pad or Linear projection
                 // matmul first than activation
@@ -118,21 +119,27 @@ impl NeuralNetwork {
                 };
 
                 // fowardfeed
-                if last_id - 1 != layer {
+                if last_id - 1 != layer && layer != 0 {
+                    // not last layer
                     tensor_layer.shape = self.layers[layer].tensor.shape.clone();
-                    tensor_layer = self.layers[layer]
+                    tensor_layer = self.layers[next_id]
                         .tensor
-                        .matmul(self.layers[layer_id].tensor.clone().pad(
-                            self.layers[layer].tensor.shape,
-                            self.layers[layer].tensor.layer_length,
-                            0.0,
-                        ))
-                        .unwrap();
+                        .pad_matmul_to_another(self.layers[layer].tensor.clone());
+                    /*
+                    .matmul(self.layers[next_id].tensor.clone().pad(
+                        self.layers[layer].tensor.shape,
+                        self.layers[layer].tensor.layer_length,
+                        0.0,
+                    ))
+                    .unwrap();
+                    */
                     // add bias
+                    /*
                     println!(
-                        "t1{:?} b2{:?}",
-                        tensor_layer.shape, self.layers[layer].bias.shape
+                        "t1{:?} b2{:?} Layer: {:?}",
+                        tensor_layer.shape, self.layers[layer].bias.shape, layer
                     );
+                    */
                     tensor_layer = tensor_layer.clone() + self.layers[layer].bias.clone()
                 }
 
@@ -166,7 +173,7 @@ impl NeuralNetwork {
                 // layer loop
             }
             // epochs loop
-            layer_id = 0; // reset loop state
+            next_id = 0; // reset loop state
 
             // TODO handling if it is a full tensor and not a scaler
 
