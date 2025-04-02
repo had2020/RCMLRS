@@ -146,27 +146,27 @@ impl NeuralNetwork {
                 let activation = self.layers[layer].activation.as_str();
                 match activation {
                     "ReLU" => {
-                        self.layers[layer].tensor = tensor_layer.relu();
+                        tensor_layer.relu();
                     }
                     //"Leaky ReLU" => (),  # requires negiative slope
                     "Sigmoid" => {
-                        self.layers[layer].tensor = tensor_layer.sigmoid();
+                        tensor_layer.sigmoid();
                     }
                     "Tanh" => {
-                        self.layers[layer].tensor = tensor_layer.tanh();
+                        tensor_layer.tanh();
                     }
                     "Softmax" => {
-                        self.layers[layer].tensor = tensor_layer.softmax();
+                        tensor_layer.softmax();
                     }
                     "Swish" => {
-                        self.layers[layer].tensor = tensor_layer.swish();
+                        tensor_layer.swish();
                     }
                     "GELU" => {
-                        self.layers[layer].tensor = tensor_layer.gelu();
+                        tensor_layer.gelu();
                     }
                     _ => {
                         if layer != 0 {
-                            println!("No activiation on layer: {}", layer)
+                            tensor_layer.clone();
                         }
                     }
                 }
@@ -199,12 +199,13 @@ impl NeuralNetwork {
                         .pad_matmul_to_another(self.layers[layer - 1].tensor.clone());
 
                     // weight updates
-                    self.layers[layer].tensor =
-                        d_layer.scaler_to_f32() + self.layers[layer].tensor.clone() * learning_rate;
+                    self.layers[layer].tensor = (d_layer.scaler_to_f32()
+                        + self.layers[layer].tensor.clone())
+                        * learning_rate;
 
-                    //self.layers[layer].bias = d_layer * learning_rate;
                     self.layers[layer].bias =
-                        self.layers[layer].bias.clone() - learning_rate * error;
+                        self.layers[layer].bias.clone() + d_layer.clone() * learning_rate;
+                    //self.layers[layer].bias.clone() - learning_rate * error;
                 }
             }
 
@@ -223,6 +224,7 @@ impl NeuralNetwork {
                     target.scaler_to_f32(),
                     self.layers[last_id - 1].bias.mean()
                 );
+                //println!("{:?}", self.layers[1]); // layer debug
             }
         }
         println!("Max epochs reached!")
