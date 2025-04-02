@@ -102,6 +102,9 @@ impl NeuralNetwork {
         let last_id = self.layers.len();
         let mut next_id: usize = 0; // this is the next matrix, when layer starts from zero
 
+        let mut fowardfeed_copy: Vec<RamTensor> = vec![];
+        fowardfeed_copy.push(self.layers[0].tensor.clone()); // add input layer to stack
+
         for epoch in 0..max_epochs {
             for layer in 0..self.layers.len() {
                 next_id += 1;
@@ -146,31 +149,34 @@ impl NeuralNetwork {
                 let activation = self.layers[layer].activation.as_str();
                 match activation {
                     "ReLU" => {
-                        tensor_layer.relu();
+                        tensor_layer = tensor_layer.relu();
                     }
                     //"Leaky ReLU" => (),  # requires negiative slope
                     "Sigmoid" => {
-                        tensor_layer.sigmoid();
+                        tensor_layer = tensor_layer.sigmoid();
                     }
                     "Tanh" => {
-                        tensor_layer.tanh();
+                        tensor_layer = tensor_layer.tanh();
                     }
                     "Softmax" => {
-                        tensor_layer.softmax();
+                        tensor_layer = tensor_layer.softmax();
                     }
                     "Swish" => {
-                        tensor_layer.swish();
+                        tensor_layer = tensor_layer.swish();
                     }
                     "GELU" => {
-                        tensor_layer.gelu();
+                        tensor_layer = tensor_layer.gelu();
                     }
                     _ => {
                         if layer != 0 {
-                            tensor_layer.clone();
+                            tensor_layer = tensor_layer.clone();
                         }
                     }
                 }
-                // layer loop
+
+                fowardfeed_copy.push(tensor_layer);
+
+                // inside layer loop
             }
             // epochs loop
             next_id = 0; // reset loop state
@@ -203,8 +209,9 @@ impl NeuralNetwork {
                         + self.layers[layer].tensor.clone())
                         * learning_rate;
 
-                    self.layers[layer].bias =
-                        self.layers[layer].bias.clone() + d_layer.clone() * learning_rate;
+                    self.layers[layer].bias = (self.layers[layer].bias.clone()
+                        + d_layer.clone().scaler_to_f32())
+                        * learning_rate;
                     //self.layers[layer].bias.clone() - learning_rate * error;
                 }
             }
