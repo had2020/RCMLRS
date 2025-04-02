@@ -189,9 +189,9 @@ impl NeuralNetwork {
                 target.clone().scaler_to_f32() - self.layers[last_id - 1].tensor.scaler_to_f32();
 
             // gradent decent
-            let d_output = error
-                * self.layers[last_id - 1].tensor.clone()
-                * (1.0 - self.layers[last_id - 1].tensor.clone()); // For sigmoid
+            let d_output: f32 = error
+                * self.layers[last_id - 1].tensor.clone().scaler_to_f32()
+                * (1.0 - self.layers[last_id - 1].tensor.clone().scaler_to_f32()); // For sigmoid
 
             // backprogation
             for layer in 0..self.layers.len() {
@@ -200,9 +200,7 @@ impl NeuralNetwork {
                 if layer != 0 && layer != last_id {
                     // gradent decent for each layer
 
-                    let d_layer = d_output
-                        .clone()
-                        .pad_matmul_to_another(self.layers[layer - 1].tensor.clone());
+                    let d_layer = d_output * self.layers[layer - 1].tensor.clone();
 
                     // weight updates
                     self.layers[layer].tensor = (d_layer.scaler_to_f32()
@@ -224,7 +222,7 @@ impl NeuralNetwork {
             }
             if epoch % 10 == 0 {
                 println!(
-                    "Epoch {:?}, Error: {:?}, Output: {:?}, Target: {:?}, bias: {:?}",
+                    "🔁Epoch {:?}, ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}",
                     epoch,
                     error,
                     output_mean,
