@@ -137,12 +137,10 @@ impl NeuralNetwork {
                     .unwrap();
                     */
                     // add bias
-                    /*
                     println!(
                         "t1{:?} b2{:?} Layer: {:?}",
                         tensor_layer.shape, self.layers[layer].bias.shape, layer
                     );
-                    */
                     tensor_layer = tensor_layer.clone() + self.layers[layer].bias.clone()
                 }
 
@@ -220,6 +218,7 @@ impl NeuralNetwork {
                 println!("Training safely ending early!");
                 break;
             }
+            /*
             if epoch % 10 == 0 {
                 println!(
                     "🔁Epoch {:?}, ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}",
@@ -231,6 +230,7 @@ impl NeuralNetwork {
                 );
                 //println!("{:?}", self.layers[1]); // layer debug
             }
+            */
         }
         println!("Max epochs reached!")
     }
