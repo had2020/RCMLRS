@@ -49,9 +49,9 @@ fn main() {
     model.dense(2, "Sigmoid");
     model.dense(1, "Sigmoid");
 
-    model.train(1000, RamTensor::from(1.0), 0.01, -0.01);
+    model.train(1000, RamTensor::from(1.0), 0.001, -0.01);
     //println!("{:?}", model); //Debugs whole network
-    println!("{:?}", model.layers[1]);
+    //println!("{:?}", model.layers[1]);
 }
 
 fn train(file_name: &str, output_target: f32) {
