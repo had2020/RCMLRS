@@ -88,9 +88,14 @@ impl NeuralNetwork {
         });
     }
 
-    pub fn normalize_layer(layer_index: usize, divide_by: f32) {}
+    pub fn normalize_layer(&mut self, layer_index: usize) {
+        self.layers[layer_index].tensor.normalize();
+        self.layers[layer_index].bias.normalize();
+    }
 
-    pub fn standardize_layer(layer_index: usize) {}
+    pub fn normalize_input(&mut self) {
+        self.normalize_layer(0);
+    }
 
     /// x_train, sets input shape.
     /// y_train, sets output shape.

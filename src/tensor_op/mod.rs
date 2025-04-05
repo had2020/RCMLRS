@@ -506,9 +506,9 @@ impl RamTensor {
         }
     }
 
-    pub fn normalize(tensor: RamTensor) -> RamTensor {
-        let mean: f32 = tensor.mean();
-        let std: f32 = tensor.std(true);
-        (tensor - mean) / std
+    pub fn normalize(&self) -> RamTensor {
+        let mean: f32 = self.mean();
+        let std: f32 = self.std(true);
+        (self.clone() - mean) / std
     }
 }
