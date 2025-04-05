@@ -507,12 +507,8 @@ impl RamTensor {
     }
 
     pub fn normalize(tensor: RamTensor) -> RamTensor {
-        let mean = tensor.mean();
-        let std = tensor.std(true);
-        RamTensor {
-            shape: tensor.shape,
-            layer_length: tensor.layer_length,
-            data: (tensor - mean) / std,
-        }
+        let mean: f32 = tensor.mean();
+        let std: f32 = tensor.std(true);
+        (tensor - mean) / std
     }
 }
