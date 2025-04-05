@@ -40,7 +40,7 @@ fn main() {
     // took roughly 18.78 secs last tests with zeroed tensors
 
     // defining model
-    let mut model = NeuralNetwork::new(Shape { x: 3, y: 2 }, 2, (0.0, 1.0));
+    let mut model = NeuralNetwork::new(Shape { x: 3, y: 2 }, 2, (0.0, 1.0)); //TODO possible error with random. Xavier or He initialization
 
     let input: RamTensor = scan_image("white"); // any custom code
     model.input(input, 7500);
@@ -50,10 +50,7 @@ fn main() {
     model.dense(2, "Sigmoid");
     model.dense(1, "Sigmoid");
 
-    model.train(60, RamTensor::from(1.0), 0.1, -0.01);
-    // user possible issue states for cli (vanishing or exploding gradients)
-    //println!("{:?}", model); //Debugs whole network
-    //println!("{:?}", model.layers[1]);
+    model.train(70, RamTensor::from(1.0), 0.1, -0.01); // TODO adaptive learning rate. like Adam or Adagrad
 }
 
 fn train(file_name: &str, output_target: f32) {

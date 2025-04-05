@@ -198,9 +198,14 @@ impl NeuralNetwork {
                 target.clone().scaler_to_f32() - self.layers[last_id - 1].tensor.scaler_to_f32();
 
             // gradent decent
+            /*
             let d_output: f32 = error
                 * self.layers[last_id - 1].tensor.clone().scaler_to_f32()
                 * (1.0 - self.layers[last_id - 1].tensor.clone().scaler_to_f32()); // For sigmoid
+            */
+            let d_output: f32 = error
+                * self.layers[last_id - 1].tensor.scaler_to_f32()
+                * (1.0 - self.layers[last_id - 1].tensor.scaler_to_f32());
 
             // backprogation
             for layer in 0..self.layers.len() {
@@ -218,7 +223,7 @@ impl NeuralNetwork {
 
                     // bias updates
                     self.layers[layer].bias = (self.layers[layer].bias.clone()
-                        + d_layer.clone().scaler_to_f32())
+                        - d_layer.clone().scaler_to_f32())
                         * learning_rate;
                     //self.layers[layer].bias.clone() - learning_rate * error;
                 }
