@@ -88,6 +88,10 @@ impl NeuralNetwork {
         });
     }
 
+    pub fn normalize_layer(layer_index: usize, divide_by: f32) {}
+
+    pub fn standardize_layer(layer_index: usize) {}
+
     /// x_train, sets input shape.
     /// y_train, sets output shape.
     pub fn train(

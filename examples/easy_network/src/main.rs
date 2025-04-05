@@ -49,7 +49,8 @@ fn main() {
     model.dense(2, "Sigmoid");
     model.dense(1, "Sigmoid");
 
-    model.train(1000, RamTensor::from(1.0), 0.001, -0.01);
+    model.train(60, RamTensor::from(1.0), 0.1, -0.01);
+    // user possible issue states for cli (vanishing or exploding gradients)
     //println!("{:?}", model); //Debugs whole network
     //println!("{:?}", model.layers[1]);
 }

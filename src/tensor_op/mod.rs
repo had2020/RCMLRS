@@ -478,4 +478,41 @@ impl RamTensor {
     }
 
     //TODO transpose aka rotate matrix
+
+    /// population standard deviation or sample, and outputs variance
+    pub fn std(&self, sample: bool) -> f32 {
+        let mut variance: f32 = 0.0;
+        let flattened_self = self.flatten();
+        let n = flattened_self.data.len();
+
+        if n == 0 {
+            0.0
+        } else {
+            let mean = self.sum() / n as f32;
+
+            let mut squared_differnces: Vec<f32> = vec![];
+            for x in 0..flattened_self.shape.y {
+                squared_differnces.push((x as f32 - mean).powf(2.0));
+            }
+
+            // returning variance
+            if sample {
+                variance = squared_differnces.iter().copied().sum::<f32>() / (n as f32 - 1.0);
+            } else {
+                variance = squared_differnces.iter().copied().sum::<f32>() / n as f32;
+            }
+
+            variance
+        }
+    }
+
+    pub fn normalize(tensor: RamTensor) -> RamTensor {
+        let mean = tensor.mean();
+        let std = tensor.std(true);
+        RamTensor {
+            shape: tensor.shape,
+            layer_length: tensor.layer_length,
+            data: (tensor - mean) / std,
+        }
+    }
 }
