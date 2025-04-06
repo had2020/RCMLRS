@@ -223,7 +223,7 @@ impl NeuralNetwork {
 
                     // bias updates
                     self.layers[layer].bias = (self.layers[layer].bias.clone()
-                        - d_layer.clone().scaler_to_f32())
+                        + d_layer.clone().scaler_to_f32())
                         * learning_rate;
                     //self.layers[layer].bias.clone() - learning_rate * error;
                 }
