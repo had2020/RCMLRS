@@ -530,4 +530,24 @@ impl RamTensor {
             data: vec![],
         }
     }
+
+    pub fn from_scalar(&self, value: f32, shape: Shape) {
+        self.pad(shape, 1, value);
+    }
+
+    pub fn is_scalar(&self) -> bool {
+        if self.shape.x == 1 && self.shape.y == 1 {
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn outer_product(&self, another_tensor: RamTensor) -> RamTensor {
+        if self.is_scalar() && another_tensor.is_scalar() {
+            self.clone() * another_tensor
+        }
+        if self.is_scalar() {}
+        if another_tensor.is_scalar() {}
+    }
 }
