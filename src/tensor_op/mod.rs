@@ -511,4 +511,23 @@ impl RamTensor {
         let std: f32 = self.std(true);
         (self.clone() - mean) / std
     }
+
+    pub fn transpose(&self) -> RamTensor {
+        let mut new_data: Vec<Vec<f32>> = vec![];
+
+        for col in 0..self.shape.y {
+            for row in 0..self.shape.x {
+                new_data.push(self.data[row][col].clone());
+            }
+        }
+
+        RamTensor {
+            shape: Shape {
+                x: self.shape.y,
+                y: self.shape.x,
+            },
+            layer_length: self.layer_length,
+            data: vec![],
+        }
+    }
 }
