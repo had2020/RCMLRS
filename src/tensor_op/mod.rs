@@ -555,4 +555,18 @@ impl RamTensor {
         if another_tensor.is_scalar() {}
         */
     }
+
+    pub fn relu_derivative(&self) -> RamTensor {}
+
+    pub fn sigmoid_derivative(&self) -> RamTensor {}
+
+    pub fn tanh_derivative(&self) -> RamTensor {}
+}
+
+pub fn f32_to_scaler(scaler: f32) -> RamTensor {
+    RamTensor {
+        shape: Shape { x: 1, y: 1 },
+        layer_length: 1,
+        data: vec![vec![vec![scaler]]],
+    }
 }
