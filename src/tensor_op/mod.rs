@@ -544,10 +544,15 @@ impl RamTensor {
     }
 
     pub fn outer_product(&self, another_tensor: RamTensor) -> RamTensor {
+        self.clone() * another_tensor
+        /*
         if self.is_scalar() && another_tensor.is_scalar() {
             self.clone() * another_tensor
         }
-        if self.is_scalar() {}
+        if self.is_scalar() {
+            another_tensor.scaler(self.clone().to_scalar().unwrap())
+        }
         if another_tensor.is_scalar() {}
+        */
     }
 }
