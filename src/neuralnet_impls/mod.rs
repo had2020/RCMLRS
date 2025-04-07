@@ -27,8 +27,6 @@ impl NeuralNetwork {
         input_shape: Shape,
         input_layer_length: usize,
         random_range_min_max: (f32, f32),
-        optimizer: String,
-        loss: String,
     ) -> Self {
         let input_layer_init = Layer {
             activation: "None".to_string(),
@@ -259,6 +257,7 @@ impl NeuralNetwork {
     }
 
     //TODO metrics
+    /// current optimizers "adam" or "" and loss or ""
     pub fn compile(&mut self, optimizer: &str, loss: &str) {
         self.optimizer = optimizer.to_string();
         self.loss = loss.to_string();
