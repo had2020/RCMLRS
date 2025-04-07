@@ -17,6 +17,8 @@ pub struct Layer {
 pub struct NeuralNetwork {
     pub layers: Vec<Layer>, // Layer 0, is always input layer
     pub rand_min_max: (f32, f32),
+    pub optimizer: String,
+    pub loss: String,
 }
 
 /// each dense will create a new layer on layers of NeuralNetwork
@@ -25,6 +27,8 @@ impl NeuralNetwork {
         input_shape: Shape,
         input_layer_length: usize,
         random_range_min_max: (f32, f32),
+        optimizer: String,
+        loss: String,
     ) -> Self {
         let input_layer_init = Layer {
             activation: "None".to_string(),
@@ -40,6 +44,8 @@ impl NeuralNetwork {
         NeuralNetwork {
             layers: vec![input_layer_init],
             rand_min_max: random_range_min_max,
+            optimizer: "None".to_string(),
+            loss: "None".to_string(),
         }
     }
 
@@ -208,8 +214,8 @@ impl NeuralNetwork {
                 * (1.0 - self.layers[last_id - 1].tensor.scaler_to_f32());
 
             // backprogation
-            for layer in 0..self.layers.len() {
-                //for layer in (1..last_id).rev() {
+            //for layer in 0..self.layers.len() {
+            for layer in (1..last_id).rev() {
                 // check to see if their really is something to backprogate
                 if layer != 0 && layer != last_id {
                     // gradent decent for each layer
@@ -250,6 +256,12 @@ impl NeuralNetwork {
             }
         }
         println!("Max epochs reached!")
+    }
+
+    //TODO metrics
+    pub fn compile(&mut self, optimizer: &str, loss: &str) {
+        self.optimizer = optimizer.to_string();
+        self.loss = loss.to_string();
     }
 }
 
