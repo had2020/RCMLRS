@@ -50,7 +50,7 @@ fn main() {
     model.dense(2, "Sigmoid");
     model.dense(1, "Sigmoid");
 
-    model.compile("adam", "sparse_categorical_crossentropy");
+    model.compile("adam", "sparse_categorical_crossentropy"); // right now (Mean Squared Error (MSE))
 
     model.train(70, RamTensor::from(1.0), 0.1, -0.01); // TODO adaptive learning rate. like Adam or Adagrad
                                                        // should not shrink to zero/ vanshing graidents unless issue with (gradient propagation) or (optimization)
