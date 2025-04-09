@@ -34,10 +34,21 @@ pub fn custom_adam_optimizer(
 ) {
 }
 
-/// Recommanded learning rate 0.001
-pub fn adam_optimizer(learning_rate: f32, timestep: usize) {
-    let alpha: f32 = learning_rate;
-    let beta_1: f32 = 0.9;
-    let beta_2: f32 = 0.999;
-    let epsilon: f32 = EPSILON;
+impl RamTensor {
+    /// Recommanded learning rate 0.001
+    /// passed in tensor whould be the backprogation deribvtive of the activiation(weights + bias)
+    pub fn adam_optimizer(&mut self, learning_rate: f32, timestep: usize) {
+        // hyperparameters
+        let alpha: f32 = learning_rate;
+        let beta_1: f32 = 0.9;
+        let beta_2: f32 = 0.999;
+        let epsilon: f32 = EPSILON;
+
+        // init
+        let mut theta = 0.0;
+        let mut m = 0.0;
+        let mut v = 0.0;
+
+        self =
+    }
 }
