@@ -50,9 +50,8 @@ impl RamTensor {
         let mut m = 0.0;
         let mut v = 0.0;
 
-
-
-        self =
+        //adam step
+        for i
     }
 }
 
