@@ -36,7 +36,8 @@ pub fn custom_adam_optimizer(
 
 impl RamTensor {
     /// Recommanded learning rate 0.001
-    /// passed in tensor whould be the backprogation deribvtive of the activiation(weights + bias)
+    /// passed in tensor which should be the backprogation deribvtive of the activiation(weights + bias)
+    /// Self is the gradient passed into adam
     pub fn adam_optimizer(&mut self, learning_rate: f32, timestep: usize) {
         // hyperparameters
         let alpha: f32 = learning_rate;
