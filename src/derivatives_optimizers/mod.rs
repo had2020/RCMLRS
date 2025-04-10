@@ -45,11 +45,25 @@ impl RamTensor {
         let beta_2: f32 = 0.999;
         let epsilon: f32 = EPSILON;
 
-        // init
+        // initialize
         let mut theta = 0.0;
         let mut m = 0.0;
         let mut v = 0.0;
 
+
+
         self =
     }
 }
+
+/*
+Initialize m_0 = 0, v_0 = 0, t = 0
+while not converged:
+    t = t + 1
+    g_t = ∇_θ L(θ_t)
+    m_t = β1 * m_{t-1} + (1 - β1) * g_t
+    v_t = β2 * v_{t-1} + (1 - β2) * (g_t)^2
+    m̂_t = m_t / (1 - β1^t)
+    v̂_t = v_t / (1 - β2^t)
+    θ_t+1 = θ_t - α * m̂_t / (sqrt(v̂_t) + ε)
+*/
