@@ -51,7 +51,12 @@ impl RamTensor {
         let mut v = 0.0;
 
         //adam step
-        for i
+        //for i
+        // set m and v next
+        // m is the for each i in matrix the difference or loss from last point
+        // for each parameter in matrix:
+        // m: a tensor the same shape as the parameter, holding the moving average of gradients (first moment).
+        // v: a tensor the same shape, holding moving average of squared gradients (second moment, like variance).
     }
 }
 
