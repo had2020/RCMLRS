@@ -262,6 +262,15 @@ impl NeuralNetwork {
         self.optimizer = optimizer.to_string();
         self.loss = loss.to_string();
     }
+
+    /// Applys normalize to the wights and bias of the previous layer
+    pub fn normalize(&mut self) {
+        let last_layer = self.layers.len().clone() - 1;
+
+        self.layers[last_layer].tensor = self.layers[last_layer].tensor.normalize();
+
+        self.layers[last_layer].bias = self.layers[last_layer].bias.normalize();
+    }
 }
 
 // Desired
