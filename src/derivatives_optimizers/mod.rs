@@ -38,36 +38,32 @@ impl RamTensor {
     /// Recommanded learning rate 0.001
     /// passed in tensor which should be the backprogation deribvtive of the activiation(weights + bias)
     /// Self is the gradient passed into adam
-    pub fn adam_optimizer(&mut self, learning_rate: f32, timestep: usize) {
-        // hyperparameters
-        let alpha: f32 = learning_rate;
-        let beta_1: f32 = 0.9;
-        let beta_2: f32 = 0.999;
-        let epsilon: f32 = EPSILON;
+    pub fn adam_optimizer(
+        &mut self,
+        m: &mut RamTensor,
+        v: &mut RamTensor,
+        learning_rate: f32,
+        timestep: usize,
+    ) {
+        let beta1: f32 = 0.9;
+        let beta2: f32 = 0.999;
+        let epsilon: f32 = 1e-8;
 
-        // initialize
-        let mut theta = 0.0;
-        let mut m = 0.0;
-        let mut v = 0.0;
+        for matrix in 0..self.layer_length {
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    let i: f32 = self.data[matrix][row][col];
 
-        //adam step
-        //for i
-        // set m and v next
-        // m is the for each i in matrix the difference or loss from last point
-        // for each parameter in matrix:
-        // m: a tensor the same shape as the parameter, holding the moving average of gradients (first moment).
-        // v: a tensor the same shape, holding moving average of squared gradients (second moment, like variance).
+                    m.data[i] = beta1 * m.data[i] + (1.0 - beta1) * self.data[i];
+
+                    v.data[i] = beta2 * v.data[i] + (1.0 - beta2) * self.data[i].powi(2);
+
+                    let m_hat = m.data[i] / (1.0 - beta1.powi(timestep as i32));
+                    let v_hat = v.data[i] / (1.0 - beta2.powi(timestep as i32));
+
+                    self.data[i] -= learning_rate * m_hat / (v_hat.sqrt() + epsilon);
+                }
+            }
+        }
     }
 }
-
-/*
-Initialize m_0 = 0, v_0 = 0, t = 0
-while not converged:
-    t = t + 1
-    g_t = ∇_θ L(θ_t)
-    m_t = β1 * m_{t-1} + (1 - β1) * g_t
-    v_t = β2 * v_{t-1} + (1 - β2) * (g_t)^2
-    m̂_t = m_t / (1 - β1^t)
-    v̂_t = v_t / (1 - β2^t)
-    θ_t+1 = θ_t - α * m̂_t / (sqrt(v̂_t) + ε)
-*/
