@@ -52,16 +52,22 @@ impl RamTensor {
         for matrix in 0..self.layer_length {
             for row in 0..self.shape.x {
                 for col in 0..self.shape.y {
+                    // gradient
                     let i: f32 = self.data[matrix][row][col];
 
-                    m.data[i] = beta1 * m.data[i] + (1.0 - beta1) * self.data[i];
+                    // update bias first moment estimate
+                    m.data[matrix][row][col] = beta1 * m.data[matrix][row][col] + (1.0 - beta1) * i;
 
-                    v.data[i] = beta2 * v.data[i] + (1.0 - beta2) * self.data[i].powi(2);
+                    // update bias second moment estimate
+                    v.data[matrix][row][col] =
+                        beta2 * v.data[matrix][row][col] + (1.0 - beta2) * i.powi(2);
 
-                    let m_hat = m.data[i] / (1.0 - beta1.powi(timestep as i32));
-                    let v_hat = v.data[i] / (1.0 - beta2.powi(timestep as i32));
+                    // compute bias fixed estimates
+                    let m_hat = m.data[matrix][row][col] / (1.0 - beta1.powi(timestep as i32));
+                    let v_hat = v.data[matrix][row][col] / (1.0 - beta2.powi(timestep as i32));
 
-                    self.data[i] -= learning_rate * m_hat / (v_hat.sqrt() + epsilon);
+                    // update parameter
+                    self.data[matrix][row][col] -= learning_rate * m_hat / (v_hat.sqrt() + epsilon);
                 }
             }
         }
