@@ -560,6 +560,10 @@ impl RamTensor {
     pub fn parameters(&self) -> f32 {
         (self.shape.x as f32 * self.shape.y as f32) * self.layer_length as f32
     }
+
+    pub fn mse_loss(self, target: RamTensor) -> f32 {
+        ((self.clone() - target.clone()) * (self - target)).mean()
+    }
 }
 
 pub fn f32_to_scaler(scaler: f32) -> RamTensor {

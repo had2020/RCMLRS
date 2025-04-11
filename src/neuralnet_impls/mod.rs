@@ -242,8 +242,9 @@ impl NeuralNetwork {
 
             if epoch % 10 == 0 {
                 println!(
-                    "🔁Epoch {:?}, ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, first layer: {:?}",
+                    "🔁Epoch {:?}, 🛸Loss: {:?} ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, first layer: {:?}",
                     epoch,
+                    loss
                     error,
                     output_mean,
                     target.scaler_to_f32(),
