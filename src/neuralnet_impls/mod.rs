@@ -2,6 +2,8 @@
 // By: Hadrian Lazic
 // Under MIT
 
+use std::intrinsics::logf32;
+
 use crate::*;
 
 #[derive(Clone, Debug)]
@@ -233,18 +235,23 @@ impl NeuralNetwork {
                 }
             }
 
-            // bias updates TODO
-
             if error.abs() < stopping_threshold {
                 println!("Training safely ending early!");
                 break;
             }
 
+            // TODO non scaler outputs
+            let loss: f32 = match self.loss.clone().as_str() {
+                //TODO "SCCE" => -logf32(output_mean), // Sparse Categorical Crossentropy
+                "MSE" => (target.scaler_to_f32() - output_mean).powi(2), // Mean Squared Error
+                _ => output_mean,
+            };
+
             if epoch % 10 == 0 {
                 println!(
                     "🔁Epoch {:?}, 🛸Loss: {:?} ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, first layer: {:?}",
                     epoch,
-                    loss
+                    loss,
                     error,
                     output_mean,
                     target.scaler_to_f32(),
