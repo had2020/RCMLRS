@@ -500,24 +500,40 @@ impl RamTensor {
         self.data[0][0][0]
     }
 
-    pub fn powi(&mut self, n: i32) {
+    pub fn powi(&self, n: i32) -> RamTensor {
+        let mut new_tenseor = RamTensor {
+            shape: self.shape,
+            layer_length: self.layer_length,
+            data: vec![],
+        };
         for matrix in 0..self.layer_length {
+            new_tenseor.data.push(vec![]);
             for row in 0..self.shape.x {
+                new_tenseor.data[matrix].push(vec![]);
                 for col in 0..self.shape.y {
-                    self.data[matrix][row][col] = self.data[matrix][row][col].powi(n);
+                    new_tenseor.data[matrix][row].push(self.data[matrix][row][col].powi(n));
                 }
             }
         }
+        new_tenseor
     }
 
-    pub fn powf(&mut self, n: f32) {
+    pub fn powf(&self, n: i32) -> RamTensor {
+        let mut new_tenseor = RamTensor {
+            shape: self.shape,
+            layer_length: self.layer_length,
+            data: vec![],
+        };
         for matrix in 0..self.layer_length {
+            new_tenseor.data.push(vec![]);
             for row in 0..self.shape.x {
+                new_tenseor.data[matrix].push(vec![]);
                 for col in 0..self.shape.y {
-                    self.data[matrix][row][col] = self.data[matrix][row][col].powf(n);
+                    new_tenseor.data[matrix][row].push(self.data[matrix][row][col].powf(n));
                 }
             }
         }
+        new_tenseor
     }
 
     /// population standard deviation or sample, and outputs variance

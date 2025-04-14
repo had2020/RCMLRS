@@ -84,5 +84,7 @@ pub fn mae_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
 }
 
 /// Mean Squared Error
-pub fn mse_loss(actual: RamTensor, predicted: RamTensor) -> f32 {}
-// power tensor by 2
+pub fn mse_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
+    let sqared_error: RamTensor = (actual - predicted).powi(2);
+    sqared_error.mean()
+}
