@@ -4,7 +4,10 @@
 
 use std::intrinsics::logf32;
 
-use crate::{derivatives_optimizers_loss::{mae_loss, mse_loss}, *};
+use crate::{
+    derivatives_optimizers_loss::{mae_loss, mse_loss},
+    *,
+};
 
 #[derive(Clone, Debug)]
 pub struct Layer {
@@ -200,8 +203,7 @@ impl NeuralNetwork {
 
             let output_mean = self.layers[last_id - 1].tensor.mean();
 
-            let error: f32 =
-                target.clone().scaler_to_f32() - self.layers[last_id - 1].tensor.scaler_to_f32();
+            let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor;
 
             // gradent decent
             /*
@@ -217,7 +219,7 @@ impl NeuralNetwork {
                 //TODO "SCCE" => -logf32(output_mean), // Sparse Categorical Crossentropy
                 "MAE" => mae_loss(target, self.layers[last_id].tensor), // Mean Absolute Error
                 "MSE" => mse_loss(target, self.layers[last_id].tensor), // Mean Squared Error
-                _ => mse_loss(target, self.layers[last_id].tensor), //fallback to MSE
+                _ => mse_loss(target, self.layers[last_id].tensor),     //fallback to MSE
             };
 
             // backprogation
@@ -240,9 +242,7 @@ impl NeuralNetwork {
                         * learning_rate;
                     //self.layers[layer].bias.clone() - learning_rate * error;
 
-
-                    let d_layer =
-                        //layer_2_delta = layer_2_error * sigmoid_deriv(layer_2)
+                    //layer_2_delta = layer_2_error * sigmoid_deriv(layer_2)
                 }
             }
 
