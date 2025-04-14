@@ -213,6 +213,13 @@ impl NeuralNetwork {
                 * self.layers[last_id - 1].tensor.scaler_to_f32()
                 * (1.0 - self.layers[last_id - 1].tensor.scaler_to_f32());
 
+            let loss: f32 = match self.loss.clone().as_str() {
+                //TODO "SCCE" => -logf32(output_mean), // Sparse Categorical Crossentropy
+                "MAE" => mae_loss(target, self.layers[last_id].tensor), // Mean Absolute Error
+                "MSE" => mse_loss(target, self.layers[last_id].tensor), // Mean Squared Error
+                _ => mse_loss(target, self.layers[last_id].tensor), //fallback to MSE
+            };
+
             // backprogation
             //for layer in 0..self.layers.len() {
             for layer in (1..last_id).rev() {
@@ -242,13 +249,6 @@ impl NeuralNetwork {
                 println!("Training safely ending early!");
                 break;
             }
-
-            let loss: f32 = match self.loss.clone().as_str() {
-                //TODO "SCCE" => -logf32(output_mean), // Sparse Categorical Crossentropy
-                "MAE" => mae_loss(target, self.layers[last_id].tensor), // Mean Absolute Error
-                "MSE" => mse_loss(target, self.layers[last_id].tensor), // Mean Squared Error
-                _ => mse_loss(target, self.layers[last_id].tensor), //fallback to MSE
-            };
 
             if epoch % 10 == 0 {
                 println!(
