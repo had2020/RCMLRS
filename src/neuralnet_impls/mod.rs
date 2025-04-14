@@ -242,6 +242,7 @@ impl NeuralNetwork {
 
 
                     let d_layer =
+                        //layer_2_delta = layer_2_error * sigmoid_deriv(layer_2)
                 }
             }
 

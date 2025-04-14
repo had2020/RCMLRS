@@ -73,6 +73,22 @@ impl RamTensor {
             }
         }
     }
+
+    //TODO other deriv
+
+    //pub fn relu_deriv(&self) -> RamTensor {}
+
+    pub fn sigmoid_deriv(&self) -> RamTensor {
+        self.clone() * (1.0 - self.clone())
+    }
+
+    //pub fn tanh_deriv(&self) -> RamTensor {}
+
+    //pub fn softmax_deriv(&self) -> RamTensor {}
+
+    //pub fn swish_deriv(&self) -> RamTensor {}
+
+    //pub fn gelu_deriv(&self) -> RamTensor {}
 }
 
 /// your error should be you actual - predicted values
