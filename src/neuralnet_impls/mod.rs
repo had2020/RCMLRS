@@ -4,7 +4,7 @@
 
 use std::intrinsics::logf32;
 
-use crate::{derivatives_optimizers_loss::mae_loss, *};
+use crate::{derivatives_optimizers_loss::{mae_loss, mse_loss}, *};
 
 #[derive(Clone, Debug)]
 pub struct Layer {
@@ -243,13 +243,11 @@ impl NeuralNetwork {
                 break;
             }
 
-            // TODO non scaler outputs
             let loss: f32 = match self.loss.clone().as_str() {
                 //TODO "SCCE" => -logf32(output_mean), // Sparse Categorical Crossentropy
-                // TODO "MAE" => Mean Absolute Error,
-                "MAE" => mae_loss(target, self.layers[last_id].tensor),
-                "MSE" => (target.scaler_to_f32() - output_mean).powi(2), // Mean Squared Error
-                _ => (target.scaler_to_f32() - output_mean).powi(2), //fallback to MSE
+                "MAE" => mae_loss(target, self.layers[last_id].tensor), // Mean Absolute Error
+                "MSE" => mse_loss(target, self.layers[last_id].tensor), // Mean Squared Error
+                _ => mse_loss(target, self.layers[last_id].tensor), //fallback to MSE
             };
 
             if epoch % 10 == 0 {
