@@ -414,6 +414,25 @@ impl RamTensor {
         returned_median
     }
 
+    /// find the abosulute value for each point in tensor
+    pub fn abs(&self) -> RamTensor {
+        let mut new_tensor = RamTensor {
+            shape: self.shape,
+            layer_length: self.layer_length,
+            data: vec![],
+        };
+        for matrix in 0..self.layer_length {
+            new_tensor.data.push(vec![]);
+            for row in 0..self.shape.x {
+                new_tensor.data[matrix].push(vec![]);
+                for col in 0..self.shape.y {
+                    new_tensor.data[matrix][row].push(self.data[matrix][row][col].abs());
+                }
+            }
+        }
+        new_tensor
+    }
+
     /// pads tensor based on shape, and layer_length shape
     /// will cut data useful for padding.
     /// It is prefered to use Dense in ML
