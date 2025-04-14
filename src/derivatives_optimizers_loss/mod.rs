@@ -74,3 +74,8 @@ impl RamTensor {
         }
     }
 }
+
+/// your error should be you actual - predicted values
+pub mae_loss(error: f32) -> f32 {
+
+}
