@@ -76,6 +76,9 @@ impl RamTensor {
 }
 
 /// your error should be you actual - predicted values
-pub mae_loss(error: f32) -> f32 {
-
+pub fn mae_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
+    let mut total_error: f32 = 0.0;
+    let diff = actual - predicted;
+    let abs_diff = diff.abs();
+    abs_diff.mean()
 }

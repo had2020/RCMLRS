@@ -433,6 +433,10 @@ impl RamTensor {
         new_tensor
     }
 
+    pub fn data_points(&self) -> usize {
+        self.layer_length * (self.shape.x * self.shape.y)
+    }
+
     /// pads tensor based on shape, and layer_length shape
     /// will cut data useful for padding.
     /// It is prefered to use Dense in ML
