@@ -232,6 +232,9 @@ impl NeuralNetwork {
                         + d_layer.clone().scaler_to_f32())
                         * learning_rate;
                     //self.layers[layer].bias.clone() - learning_rate * error;
+
+
+                    let d_layer =
                 }
             }
 
@@ -243,8 +246,9 @@ impl NeuralNetwork {
             // TODO non scaler outputs
             let loss: f32 = match self.loss.clone().as_str() {
                 //TODO "SCCE" => -logf32(output_mean), // Sparse Categorical Crossentropy
+                // TODO "MAE" => Mean Absolute Error,
                 "MSE" => (target.scaler_to_f32() - output_mean).powi(2), // Mean Squared Error
-                _ => output_mean,
+                _ => (target.scaler_to_f32() - output_mean).powi(2), //fallback to MSE
             };
 
             if epoch % 10 == 0 {
