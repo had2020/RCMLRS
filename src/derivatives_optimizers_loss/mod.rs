@@ -76,9 +76,13 @@ impl RamTensor {
 }
 
 /// your error should be you actual - predicted values
+/// Mean Absolute Error
 pub fn mae_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
-    let mut total_error: f32 = 0.0;
     let diff = actual - predicted;
     let abs_diff = diff.abs();
     abs_diff.mean()
 }
+
+/// Mean Squared Error
+pub fn mse_loss(actual: RamTensor, predicted: RamTensor) -> f32 {}
+// power tensor by 2

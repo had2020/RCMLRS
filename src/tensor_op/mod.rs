@@ -500,7 +500,25 @@ impl RamTensor {
         self.data[0][0][0]
     }
 
-    //TODO transpose aka rotate matrix
+    pub fn powi(&mut self, n: i32) {
+        for matrix in 0..self.layer_length {
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    self.data[matrix][row][col] = self.data[matrix][row][col].powi(n);
+                }
+            }
+        }
+    }
+
+    pub fn powf(&mut self, n: f32) {
+        for matrix in 0..self.layer_length {
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    self.data[matrix][row][col] = self.data[matrix][row][col].powf(n);
+                }
+            }
+        }
+    }
 
     /// population standard deviation or sample, and outputs variance
     pub fn std(&self, sample: bool) -> f32 {
