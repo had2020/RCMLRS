@@ -243,10 +243,12 @@ impl NeuralNetwork {
                     //self.layers[layer].bias.clone() - learning_rate * error;
 
                     //layer_2_delta = layer_2_error * sigmoid_deriv(layer_2)
+                    let layer_2_error = target - layer_2_output;
+                    let layer_2_delta = layer_2_error * layer_2_output.sigmoid_deriv();
                 }
             }
 
-            if error.abs() < stopping_threshold {
+            if error.mean().abs() < stopping_threshold {
                 println!("Training safely ending early!");
                 break;
             }
