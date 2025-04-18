@@ -222,7 +222,7 @@ impl NeuralNetwork {
                 _ => mse_loss(target, self.layers[last_id].tensor),     //fallback to MSE
             };
 
-            // backprogation
+            // backprogation //TODO correct for vanishing gradients and adams
             //for layer in 0..self.layers.len() {
             for layer in (1..last_id).rev() {
                 // check to see if their really is something to backprogate
