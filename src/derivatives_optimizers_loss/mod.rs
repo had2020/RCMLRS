@@ -128,3 +128,13 @@ For each layer l:
     f': derivative of activation
 
 */
+
+// each z = w·x + b and applies such sigmoid(z).
+
+// Steps
+/*
+Forward Pass
+Loss
+Backward Pass
+Gradient Descent
+*/
