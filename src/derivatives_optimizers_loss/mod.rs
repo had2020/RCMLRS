@@ -1,6 +1,6 @@
 use std::f32::EPSILON;
 
-use crate::*;
+use crate::{neuralnet_impls::NeuralNetwork, *};
 
 // derivatives
 
@@ -104,3 +104,27 @@ pub fn mse_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
     let sqared_error: RamTensor = (actual - predicted).powi(2);
     sqared_error.mean()
 }
+
+impl NeuralNetwork {
+    /// Backprogation TODO mannul impl without network
+    pub fn backprogation(&mut self, target: RamTensor) {
+        let layers: usize = self.layers.len();
+        let input_data = self.layers[0].clone();
+        for layer in 0..layers {}
+    }
+}
+
+// Draft
+/*
+L: number of layers
+a[0]: input data
+y: true labels aka target
+For each layer l:
+    W[l]: weight matrix
+    b[l]: bias vector
+    z[l]: weighted input
+    a[l]: activation
+    f: activation function
+    f': derivative of activation
+
+*/
