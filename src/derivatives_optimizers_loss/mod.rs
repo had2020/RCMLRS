@@ -138,3 +138,28 @@ Loss
 Backward Pass
 Gradient Descent
 */
+
+// Forward Pass
+// for each layer
+// added wights and bis
+// then apply activiation
+// DO not set yet
+/*
+def forward_pass(X, weights, biases):
+    z1 = X @ weights["W1"] + biases["b1"]
+    a1 = relu(z1)
+
+    z2 = a1 @ weights["W2"] + biases["b2"]
+    a2 = softmax(z2)
+
+    cache = {
+        "X": X, "z1": z1, "a1": a1, "z2": z2, "a2": a2
+    }
+    return a2, cache
+*/
+
+// backprop is what I need
+// Start at the loss and move backward
+// use the chain rule from calculus to compute gradients layer by layer
+// Each layer get fault/error
+// Adjust the weights a bit (opposite the gradient) using an optimizer like SGD or Adam
