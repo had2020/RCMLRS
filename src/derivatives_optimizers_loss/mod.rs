@@ -98,7 +98,7 @@ impl RamTensor {
                     let x: f32 = self.data[matrix][row][col];
                     //let product: f32 = 1 / (1 + expf32(-x));
 
-                    let product = 1.0 / (1.0 + (e.powf(-x.clone())));
+                    let product = 1.0 / (1.0 + (e.powf(-x.clone()))); //TODO
 
                     new_tensor.data[matrix][row].push(product);
                 }
