@@ -74,15 +74,35 @@ impl RamTensor {
         }
     }
 
-    //TODO other deriv
+    pub fn relu_deriv(&self) -> RamTensor {
+        let e = std::f32::consts::E;
+        let mut new_tensor = RamTensor::new_layer_zeros(self.shape, self.layer_length);
 
-    //pub fn relu_deriv(&self) -> RamTensor {}
+        for matrix in 0..self.layer_length {
+            new_tensor.data.push(vec![]);
+            for row in 0..self.shape.y {
+                for col in 0..self.shape.x {
+                    let x: f32 = self.data[matrix][row][col];
+
+                    if x > 0.0 {
+                        new_tensor.data[matrix][row].push(1.0);
+                    } else {
+                        new_tensor.data[matrix][row].push(0.0);
+                    }
+                }
+            }
+        }
+
+        new_tensor
+    }
+
+    pub fn lrelu_deriv(&self) -> RamTensor {}
 
     pub fn sigmoid_deriv(&self) -> RamTensor {
         self.clone() * (1.0 - self.clone())
     }
 
-    //pub fn tanh_deriv(&self) -> RamTensor {}
+    pub fn tanh_deriv(&self) -> RamTensor {}
 
     //pub fn softmax_deriv(&self) -> RamTensor {}
 
@@ -96,11 +116,10 @@ impl RamTensor {
             for row in 0..self.shape.y {
                 for col in 0..self.shape.x {
                     let x: f32 = self.data[matrix][row][col];
-                    //let product: f32 = 1 / (1 + expf32(-x));
 
                     let product = 1.0 / (1.0 + (e.powf(-x.clone()))); //TODO
 
-                    new_tensor.data[matrix][row].push(product);
+                    new_tensor.data[matrix][row].push(x * product);
                 }
             }
         }
