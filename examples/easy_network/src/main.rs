@@ -46,9 +46,9 @@ fn main() {
     model.input(input, 7500);
     model.normalize_input();
 
-    model.dense(3, "Sigmoid"); // replace "" with enum
+    model.dense(3, "Swish"); // replace "" with enum
     model.normalize();
-    model.dense(2, "Sigmoid");
+    model.dense(2, "Swish");
     model.normalize();
     model.dense(1, "Sigmoid");
 

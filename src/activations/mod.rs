@@ -57,7 +57,7 @@ impl RamTensor {
     ///Sigmoid
     pub fn sigmoid(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        let e = std::f32::consts::E; // Eular's number
+        let e = std::f32::consts::E; // Euler's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);
@@ -81,7 +81,7 @@ impl RamTensor {
     ///Tanh
     pub fn tanh(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        let e = std::f32::consts::E; // Eular's number
+        let e = std::f32::consts::E; // Euler's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);
@@ -107,7 +107,7 @@ impl RamTensor {
     pub fn softmax(&self) -> RamTensor {
         let mut probabilities: Vec<Vec<Vec<f32>>> = vec![];
         let mut exponentials: Vec<Vec<Vec<f32>>> = vec![];
-        let e = std::f32::consts::E; // Eular's number
+        let e = std::f32::consts::E; // Euler's number
         let mut sum_exp: f32 = 0.0;
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
@@ -147,7 +147,7 @@ impl RamTensor {
     ///Swish
     pub fn swish(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        let e = std::f32::consts::E; // Eular's number
+        let e = std::f32::consts::E; // Euler's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);
@@ -171,7 +171,7 @@ impl RamTensor {
     pub fn gelu(&self) -> RamTensor {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
         let frac_2_sqrt_pi = std::f32::consts::FRAC_2_SQRT_PI;
-        let e = std::f32::consts::E; // Eular's number
+        let e = std::f32::consts::E; // Euler's number
 
         for (matrix_index, matrix) in self.data.iter().enumerate() {
             new_data.push(vec![]);

@@ -1,4 +1,4 @@
-use std::f32::EPSILON;
+use std::{f32::EPSILON, intrinsics::expf32};
 
 use crate::{neuralnet_impls::NeuralNetwork, *};
 
@@ -86,7 +86,28 @@ impl RamTensor {
 
     //pub fn softmax_deriv(&self) -> RamTensor {}
 
-    //pub fn swish_deriv(&self) -> RamTensor {}
+    pub fn swish_deriv(&self) -> RamTensor {
+        let e = std::f32::consts::E; // Euler's number
+
+        let mut new_tensor = RamTensor::new_layer_zeros(self.shape, self.layer_length);
+
+        for matrix in 0..self.layer_length {
+            new_tensor.data.push(vec![]);
+            for row in 0..self.shape.y {
+                for col in 0..self.shape.x {
+                    let x: f32 = self.data[matrix][row][col];
+                    //let product: f32 = 1 / (1 + expf32(-x));
+
+                    let denominater = 1.0 + (e.powf(-x.clone))
+                    //TODO
+
+                    new_tensor.data[matrix][row].push(product);
+                }
+            }
+        }
+
+        new_tensor
+    }
 
     //pub fn gelu_deriv(&self) -> RamTensor {}
 }
