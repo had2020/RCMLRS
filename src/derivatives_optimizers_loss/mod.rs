@@ -148,7 +148,22 @@ impl RamTensor {
         new_tensor
     }
 
-    pub fn gelu_deriv(&self) -> RamTensor {}
+    pub fn gelu_deriv(&self) -> RamTensor {
+        let sqrt_pi_d2 = (2.0 / std::f32::consts::PI).sqrt();
+        let x_cubed = self.powi(3);
+        let inner = sqrt_pi_d2 * (self.clone() + 0.044715 * x_cubed);
+        let tanh_inner = inner.tanh();
+
+        let sech_squared = 1.0 - tanh_inner.powi(2); // derivative of tanh
+
+        let term1 = 0.5 * tanh_inner;
+        let term2 = (0.5 * self.clone())
+            * sech_squared
+            * sqrt_pi_d2
+            * (1.0 + 3.0 * 0.044715 * self.clone().powi(2));
+
+        return term1 + term2; // full derivative
+    }
 }
 
 // loss methods
