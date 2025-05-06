@@ -74,8 +74,9 @@ impl RamTensor {
         }
     }
 
+    //Activation Derivatives
+
     pub fn relu_deriv(&self) -> RamTensor {
-        let e = std::f32::consts::E;
         let mut new_tensor = RamTensor::new_layer_zeros(self.shape, self.layer_length);
 
         for matrix in 0..self.layer_length {
@@ -96,15 +97,34 @@ impl RamTensor {
         new_tensor
     }
 
-    pub fn lrelu_deriv(&self) -> RamTensor {}
+    pub fn lrelu_deriv(&self) -> RamTensor {
+        let mut new_tensor = RamTensor::new_layer_zeros(self.shape, self.layer_length);
+
+        for matrix in 0..self.layer_length {
+            new_tensor.data.push(vec![]);
+            for row in 0..self.shape.y {
+                for col in 0..self.shape.x {
+                    let x: f32 = self.data[matrix][row][col];
+
+                    if x > 0.0 {
+                        new_tensor.data[matrix][row].push(1.0);
+                    } else {
+                        new_tensor.data[matrix][row].push(0.01);
+                    }
+                }
+            }
+        }
+
+        new_tensor
+    }
 
     pub fn sigmoid_deriv(&self) -> RamTensor {
         self.clone() * (1.0 - self.clone())
     }
 
-    pub fn tanh_deriv(&self) -> RamTensor {}
-
-    //pub fn softmax_deriv(&self) -> RamTensor {}
+    pub fn tanh_deriv(&self) -> RamTensor {
+        1.0 - (self.clone().tanh().powi(2))
+    }
 
     pub fn swish_deriv(&self) -> RamTensor {
         let e = std::f32::consts::E; // Euler's number
@@ -117,9 +137,10 @@ impl RamTensor {
                 for col in 0..self.shape.x {
                     let x: f32 = self.data[matrix][row][col];
 
-                    let product = 1.0 / (1.0 + (e.powf(-x.clone()))); //TODO
+                    let product = 1.0 / (1.0 + (e.powf(-x.clone())));
 
-                    new_tensor.data[matrix][row].push(x * product);
+                    let derivative = product + x * product * (1.0 - product);
+                    new_tensor.data[matrix][row].push(derivative);
                 }
             }
         }
@@ -127,8 +148,10 @@ impl RamTensor {
         new_tensor
     }
 
-    //pub fn gelu_deriv(&self) -> RamTensor {}
+    pub fn gelu_deriv(&self) -> RamTensor {}
 }
+
+// loss methods
 
 /// your error should be you actual - predicted values
 /// Mean Absolute Error
