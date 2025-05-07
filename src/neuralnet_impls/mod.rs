@@ -205,6 +205,7 @@ impl NeuralNetwork {
 
             let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor;
 
+            // incorrect applied theory
             // gradent decent
             /*
             let d_output: f32 = error
@@ -222,6 +223,7 @@ impl NeuralNetwork {
                 _ => mse_loss(target, self.layers[last_id].tensor),     //fallback to MSE
             };
 
+            // Incorrect applied theory
             // backprogation //TODO correct for vanishing gradients and adams
             //for layer in 0..self.layers.len() {
             for layer in (1..last_id).rev() {
@@ -245,6 +247,12 @@ impl NeuralNetwork {
                     //layer_2_delta = layer_2_error * sigmoid_deriv(layer_2)
                     let layer_2_error = target - layer_2_output;
                     let layer_2_delta = layer_2_error * layer_2_output.sigmoid_deriv();
+                }
+            }
+
+            for layer in (1..last_id).rev() {
+                if layer != 0 && layer != last_id {
+                    // loss derivative
                 }
             }
 

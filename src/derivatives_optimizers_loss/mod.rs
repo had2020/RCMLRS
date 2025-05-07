@@ -1,4 +1,4 @@
-use std::{f32::EPSILON, intrinsics::expf32};
+//use std::{f32::EPSILON, intrinsics::expf32};
 
 use crate::{neuralnet_impls::NeuralNetwork, *};
 
@@ -163,6 +163,24 @@ impl RamTensor {
             * (1.0 + 3.0 * 0.044715 * self.clone().powi(2));
 
         return term1 + term2; // full derivative
+    }
+}
+
+// Loss Derivatives
+pub fn mse_deriv(actual: RamTensor, predicted: RamTensor) {
+    let mut gradient_data: Vec<Vec<Vec<f32>>> = vec![];
+
+    //TODO standardization for performance
+    for matrix in 0..actual.layer_length {
+        gradient_data.push(vec![]);
+        for row in 0..actual.shape.x {
+            gradient_data[matrix].push(vec![]);
+            for col in 0..actual.shape.y {
+                let difference = predicted.data[matrix][row][col] - actual.data[matrix][row][col];
+                let gradient = (2 / actual.shape.x) as f32 * difference;
+                gradient_data[matrix][row].push(gradient);
+            }
+        }
     }
 }
 
