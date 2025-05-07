@@ -200,7 +200,7 @@ pub fn mae_deriv(actual: RamTensor, predicted: RamTensor) -> RamTensor {
     for matrix in 0..actual.layer_length {
         for row in 0..actual.shape.x {
             for col in 0..actual.shape.y {
-                error += (predicted - actual).abs();
+                error += (predicted.clone() - actual.clone()).abs();
             }
         }
     }
@@ -211,6 +211,7 @@ pub fn mae_deriv(actual: RamTensor, predicted: RamTensor) -> RamTensor {
 
 /// your error should be you actual - predicted values
 /// Mean Absolute Error
+/// This is applied to calulcate error gradient in Backpropagation.
 pub fn mae_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
     let diff = actual - predicted;
     let abs_diff = diff.abs();
@@ -218,6 +219,7 @@ pub fn mae_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
 }
 
 /// Mean Squared Error
+/// This is applied to calulcate error gradient in Backpropagation.
 pub fn mse_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
     let sqared_error: RamTensor = (actual - predicted).powi(2);
     sqared_error.mean()

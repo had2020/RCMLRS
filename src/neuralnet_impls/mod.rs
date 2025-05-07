@@ -4,6 +4,8 @@
 
 //use std::intrinsics::logf32; TODO debug to find use
 
+use std::string;
+
 use crate::{
     derivatives_optimizers_loss::{mae_loss, mse_loss},
     *,
@@ -250,9 +252,26 @@ impl NeuralNetwork {
                 }
             }
 
+            // Backpropagation
             for layer in (1..last_id).rev() {
                 if layer != 0 && layer != last_id {
                     // loss derivative
+                    for matrix in 0..self.layers[layer].tensor.layer_length {
+                        for row in 0..self.layers[layer].tensor.shape.x {
+                            for col in 0..self.layers[layer].tensor.shape.y {
+                                let error_gradient = match "{self.loss}" {
+                                    "MSE" => mse_loss(target, self.layers[last_id - 1].tensor),
+                                    "MAE" => mae_loss(target, self.layers[last_id - 1].tensor),
+                                    _ => mse_loss(target, self.layers[last_id - 1].tensor),
+                                };
+
+                                let activation_gradient = match "{self.}" {
+
+                                }
+
+                            }
+                        }
+                    }
                 }
             }
 
