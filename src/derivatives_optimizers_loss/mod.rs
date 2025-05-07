@@ -1,6 +1,8 @@
 //use std::{f32::EPSILON, intrinsics::expf32};
 
-use crate::{neuralnet_impls::NeuralNetwork, *};
+use std::path::absolute;
+
+use crate::{neuralnet_impls::NeuralNetwork, storage_op::Matrix, *};
 
 // derivatives
 
@@ -167,7 +169,9 @@ impl RamTensor {
 }
 
 // Loss Derivatives
-pub fn mse_deriv(actual: RamTensor, predicted: RamTensor) {
+
+/// Mean Sqareed Error Derivatives
+pub fn mse_deriv(actual: RamTensor, predicted: RamTensor) -> RamTensor {
     let mut gradient_data: Vec<Vec<Vec<f32>>> = vec![];
 
     //TODO standardization for performance
@@ -182,6 +186,25 @@ pub fn mse_deriv(actual: RamTensor, predicted: RamTensor) {
             }
         }
     }
+
+    RamTensor {
+        shape: actual.shape,
+        layer_length: actual.layer_length,
+        data: gradient_data,
+    }
+}
+
+/// Mean Absolute Error Derivative
+pub fn mae_deriv(actual: RamTensor, predicted: RamTensor) -> RamTensor {
+    let mut error = RamTensor::new_layer_zeros(actual.shape, actual.layer_length);
+    for matrix in 0..actual.layer_length {
+        for row in 0..actual.shape.x {
+            for col in 0..actual.shape.y {
+                error += (predicted - actual).abs();
+            }
+        }
+    }
+    error
 }
 
 // loss methods
