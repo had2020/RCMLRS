@@ -255,29 +255,34 @@ impl NeuralNetwork {
             // Backpropagation
             for layer in (1..last_id).rev() {
                 if layer != 0 && layer != last_id {
+                    // calulating all the gradients
                     // loss derivative
+                    let error_gradient = match "{self.loss}" {
+                        "MSE" => mse_loss(target, self.layers[last_id - 1].tensor),
+                        "MAE" => mae_loss(target, self.layers[last_id - 1].tensor),
+                        _ => mse_loss(target, self.layers[last_id - 1].tensor),
+                    };
+
+                    let activation_gradient = match "{self.layers[layer].activation}" {
+                        "ReLU" => self.layers[layer].tensor.relu_deriv(),
+                        "Sigmoid" => self.layers[layer].tensor.sigmoid_deriv(),
+                        "Tanh" => self.layers[layer].tensor.tanh_deriv(),
+                        "Swish" => self.layers[layer].tensor.swish_deriv(),
+                        "GELU" => self.layers[layer].tensor.gelu_deriv(),
+                        _ => RamTensor::new_layer_zeros(
+                            self.layers[layer].tensor.shape,
+                            self.layers[layer].tensor.layer_length,
+                        ),
+                    };
+
+                    let total_gradient = error_gradient * activation_gradient;
+
                     for matrix in 0..self.layers[layer].tensor.layer_length {
                         for row in 0..self.layers[layer].tensor.shape.x {
                             for col in 0..self.layers[layer].tensor.shape.y {
-                                let error_gradient = match "{self.loss}" {
-                                    "MSE" => mse_loss(target, self.layers[last_id - 1].tensor),
-                                    "MAE" => mae_loss(target, self.layers[last_id - 1].tensor),
-                                    _ => mse_loss(target, self.layers[last_id - 1].tensor),
-                                };
-
-                                let activation_gradient = match "{self.layers[layer].activation}" {
-                                    "ReLU" => self.layers[layer].tensor.relu_deriv(),
-                                    "Sigmoid" => self.layers[layer].tensor.sigmoid_deriv(),
-                                    "Tanh" => self.layers[layer].tensor.tanh_deriv(),
-                                    "Swish" => self.layers[layer].tensor.swish_deriv(),
-                                    "GELU" => self.layers[layer].tensor.gelu_deriv(),
-                                    _ => RamTensor::new_layer_zeros(
-                                        self.layers[layer].tensor.shape,
-                                        self.layers[layer].tensor.layer_length,
-                                    ),
-                                };
-
-                                let total_gradient = error_gradient * activation_gradient;
+                                self.layers[layer].tensor.data[matrix][row][col] -= learning_rate
+                                    * total_gradient.data[matrix][row][col]
+                                    * self.layers[0].tensor.data[matrix][row][col]
                             }
                         }
                     }
