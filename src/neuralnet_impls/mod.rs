@@ -205,8 +205,9 @@ impl NeuralNetwork {
 
             let output_mean = self.layers[last_id - 1].tensor.mean();
 
-            let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor;
+            let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor.clone();
 
+            /*
             // incorrect applied theory
             // gradent decent
             /*
@@ -224,6 +225,7 @@ impl NeuralNetwork {
                 "MSE" => mse_loss(target, self.layers[last_id].tensor), // Mean Squared Error
                 _ => mse_loss(target, self.layers[last_id].tensor),     //fallback to MSE
             };
+
 
             // Incorrect applied theory
             // backprogation //TODO correct for vanishing gradients and adams
@@ -251,6 +253,7 @@ impl NeuralNetwork {
                     let layer_2_delta = layer_2_error * layer_2_output.sigmoid_deriv();
                 }
             }
+            */
 
             // Backpropagation
             for layer in (1..last_id).rev() {
@@ -258,9 +261,9 @@ impl NeuralNetwork {
                     // calulating all the gradients
                     // loss derivative
                     let error_gradient = match "{self.loss}" {
-                        "MSE" => mse_loss(target, self.layers[last_id - 1].tensor),
-                        "MAE" => mae_loss(target, self.layers[last_id - 1].tensor),
-                        _ => mse_loss(target, self.layers[last_id - 1].tensor),
+                        "MSE" => mse_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
+                        "MAE" => mae_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
+                        _ => mse_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
                     };
 
                     let activation_gradient = match "{self.layers[layer].activation}" {
@@ -282,10 +285,13 @@ impl NeuralNetwork {
                             for col in 0..self.layers[layer].tensor.shape.y {
                                 self.layers[layer].tensor.data[matrix][row][col] -= learning_rate
                                     * total_gradient.data[matrix][row][col]
-                                    * self.layers[0].tensor.data[matrix][row][col]
+                                    * self.layers[0].tensor.data[matrix][row][col];
                             }
                         }
                     }
+
+                    self.layers[layer].bias =
+                        self.layers[layer].bias.clone() - (learning_rate * total_gradient);
                 }
             }
 
@@ -296,9 +302,8 @@ impl NeuralNetwork {
 
             if epoch % 10 == 0 {
                 println!(
-                    "🔁Epoch {:?}, 🛸Loss: {:?} ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, first layer: {:?}",
+                    "🔁Epoch {:?}, ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, first layer: {:?}",
                     epoch,
-                    loss,
                     error,
                     output_mean,
                     target.scaler_to_f32(),

@@ -518,7 +518,7 @@ impl RamTensor {
         new_tenseor
     }
 
-    pub fn powf(&self, n: i32) -> RamTensor {
+    pub fn powf(&self, n: f32) -> RamTensor {
         let mut new_tenseor = RamTensor {
             shape: self.shape,
             layer_length: self.layer_length,
