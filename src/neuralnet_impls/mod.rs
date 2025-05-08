@@ -104,6 +104,7 @@ impl NeuralNetwork {
         self.layers[layer_index].bias.normalize();
     }
 
+    //TODO removal
     pub fn normalize_input(&mut self) {
         self.normalize_layer(0);
     }
@@ -125,7 +126,7 @@ impl NeuralNetwork {
         let mut fowardfeed_copy: Vec<RamTensor> = vec![];
         fowardfeed_copy.push(self.layers[0].tensor.clone()); // add input layer to stack
 
-        for epoch in 0..max_epochs {
+        for epoch in 0..max_epochs + 10 {
             for layer in 0..self.layers.len() {
                 next_id += 1;
 
@@ -295,14 +296,9 @@ impl NeuralNetwork {
                 }
             }
 
-            if error.mean().abs() < stopping_threshold {
-                println!("Training safely ending early!");
-                break;
-            }
-
             if epoch % 10 == 0 {
                 println!(
-                    "🔁Epoch {:?}, ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, first layer: {:?}",
+                    "🔁Epoch {:?}, ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, debuged layer: {:?}",
                     epoch,
                     error,
                     output_mean,
@@ -310,7 +306,11 @@ impl NeuralNetwork {
                     self.layers[last_id - 1].bias.mean(),
                     println!("Lay: {:?}", self.layers[1].tensor.data) // TODO remove in final
                 );
-                //println!("{:?}", self.layers[1]); // layer debug
+            }
+
+            if error.mean().abs() < stopping_threshold {
+                println!("Training safely ending early!");
+                break;
             }
         }
         println!("Max epochs reached!")
@@ -330,6 +330,17 @@ impl NeuralNetwork {
         self.layers[last_layer].tensor = self.layers[last_layer].tensor.normalize();
 
         self.layers[last_layer].bias = self.layers[last_layer].bias.normalize();
+    }
+}
+
+impl Layer {
+    pub fn min_max_normalization(&self) -> Layer {
+        Layer {}
+        self.tensor.min_max_norm()
+    }
+
+    pub fn z_score_normalization(&self) -> Layer {
+        self.tensor.z_score_norm()
     }
 }
 

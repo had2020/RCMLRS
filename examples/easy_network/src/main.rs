@@ -44,17 +44,17 @@ fn main() {
 
     let input: RamTensor = scan_image("white"); // any custom code
     model.input(input, 7500);
-    model.normalize_input();
+    //model.normalize_input(); //TODO apply correct therom names
 
-    model.dense(3, "Swish"); // replace "" with enum
+    model.dense(300, "Swish"); // replace "" with enum
     model.normalize();
-    model.dense(2, "Swish");
+    model.dense(200, "Swish");
     model.normalize();
     model.dense(1, "Sigmoid");
 
-    model.compile("adam", "sparse_categorical_crossentropy"); // right now (Mean Squared Error (MSE))
+    model.compile("adam", "MSE"); // right now (Mean Squared Error (MSE)) // sparse_categorical_crossentropy TODO
 
-    model.train(70, RamTensor::from(1.0), 0.01, -1.0); // TODO adaptive learning rate. like Adam or Adagrad
+    model.train(50, RamTensor::from(1.0), 0.01, -1.0); // TODO adaptive learning rate. like Adam or Adagrad
                                                        // should not shrink to zero/ vanshing graidents unless issue with (gradient propagation) or (optimization)
 }
 

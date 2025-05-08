@@ -4,6 +4,40 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 
 impl RamTensor {
+    pub fn find_min(&self) -> f32 {
+        let mut min: f32 = 0.0;
+
+        for matrix in 0..self.layer_length {
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    let point = self.data[matrix][row][col];
+                    if point < min {
+                        min = point;
+                    }
+                }
+            }
+        }
+
+        min
+    }
+
+    pub fn find_max(&self) -> f32 {
+        let mut max: f32 = 0.0;
+
+        for matrix in 0..self.layer_length {
+            for row in 0..self.shape.x {
+                for col in 0..self.shape.y {
+                    let point = self.data[matrix][row][col];
+                    if point > max {
+                        max = point;
+                    }
+                }
+            }
+        }
+
+        max
+    }
+
     pub fn scaler(self, num: f32) -> Self {
         let row_shape = self.shape.x;
         let col_shape = self.shape.y;

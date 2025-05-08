@@ -9,6 +9,7 @@ pub mod activations;
 pub mod cli;
 pub mod derivatives_optimizers_loss;
 pub mod neuralnet_impls;
+pub mod normalization;
 pub mod storage_op;
 pub mod tensor_op;
 pub mod tensor_std_op;
