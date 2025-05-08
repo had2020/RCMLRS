@@ -265,10 +265,16 @@ impl NeuralNetwork {
                                     _ => mse_loss(target, self.layers[last_id - 1].tensor),
                                 };
 
-                                let activation_gradient = match "{self.}" {
-
-                                }
-
+                                let activation_gradient = match "{self.layers[layer].activation}" {
+                                    "ReLU" => self.layers[layer].tensor.relu_deriv(),
+                                    "Sigmoid" => self.layers[layer].tensor.sigmoid_deriv(),
+                                    "Tanh" => self.layers[layer].tensor.tanh_deriv(),
+                                    "Softmax" =>
+                                    _ => RamTensor::new_layer_zeros(
+                                        self.layers[layer].tensor.shape,
+                                        self.layers[layer].tensor.layer_length,
+                                    ),
+                                };
                             }
                         }
                     }
