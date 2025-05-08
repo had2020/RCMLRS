@@ -171,7 +171,7 @@ impl NeuralNetwork {
                     "ReLU" => {
                         tensor_layer = tensor_layer.relu();
                     }
-                    //"Leaky ReLU" => (),  # requires negiative slope
+                    //"Leaky ReLU" => (),  TODO requires negiative slope
                     "Sigmoid" => {
                         tensor_layer = tensor_layer.sigmoid();
                     }
@@ -269,12 +269,15 @@ impl NeuralNetwork {
                                     "ReLU" => self.layers[layer].tensor.relu_deriv(),
                                     "Sigmoid" => self.layers[layer].tensor.sigmoid_deriv(),
                                     "Tanh" => self.layers[layer].tensor.tanh_deriv(),
-                                    "Softmax" =>
+                                    "Swish" => self.layers[layer].tensor.swish_deriv(),
+                                    "GELU" => self.layers[layer].tensor.gelu_deriv(),
                                     _ => RamTensor::new_layer_zeros(
                                         self.layers[layer].tensor.shape,
                                         self.layers[layer].tensor.layer_length,
                                     ),
                                 };
+
+                                let total_gradient = error_gradient * activation_gradient;
                             }
                         }
                     }
