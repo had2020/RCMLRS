@@ -22,8 +22,8 @@ pub struct Layer {
 /// Main class used for easy NeuralNetworks
 #[derive(Clone, Debug)]
 pub struct NeuralNetwork {
-    pub layers: Vec<Layer>, // Layer 0, is always input layer
-    pub rand_min_max: (f32, f32),
+    pub layers: Vec<Layer>,       // Layer 0, is always input layer
+    pub rand_min_max: (f32, f32), // Mistake
     pub optimizer: String,
     pub loss: String,
 }
@@ -98,6 +98,8 @@ impl NeuralNetwork {
             neural_units,
         });
     }
+
+    //TODO debug for NaN -inf error
 
     /// Applys min max normalization to tensor in said layer.
     pub fn min_max(&mut self, layer_index: usize) {
@@ -324,6 +326,7 @@ impl NeuralNetwork {
         self.loss = loss.to_string();
     }
 
+    //TODO removal
     /// Applys normalize to the wights and bias of the previous layer
     pub fn normalize(&mut self) {
         let last_layer = self.layers.len().clone() - 1;
