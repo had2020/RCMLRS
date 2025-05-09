@@ -99,14 +99,14 @@ impl NeuralNetwork {
         });
     }
 
-    pub fn normalize_layer(&mut self, layer_index: usize) {
-        self.layers[layer_index].tensor.normalize();
-        self.layers[layer_index].bias.normalize();
+    /// Applys min max normalization to tensor in said layer.
+    pub fn min_max(&mut self, layer_index: usize) {
+        self.layers[layer_index].tensor = self.layers[layer_index].tensor.min_max_norm();
     }
 
-    //TODO removal
-    pub fn normalize_input(&mut self) {
-        self.normalize_layer(0);
+    /// Applys z-score normalization to tensor in said layer.
+    pub fn z_score(&mut self, layer_index: usize) {
+        self.layers[layer_index].tensor = self.layers[layer_index].tensor.z_score_norm();
     }
 
     /// x_train, sets input shape.
@@ -287,6 +287,7 @@ impl NeuralNetwork {
                                 self.layers[layer].tensor.data[matrix][row][col] -= learning_rate
                                     * total_gradient.data[matrix][row][col]
                                     * self.layers[0].tensor.data[matrix][row][col];
+                                // problem TODO
                             }
                         }
                     }
@@ -330,17 +331,6 @@ impl NeuralNetwork {
         self.layers[last_layer].tensor = self.layers[last_layer].tensor.normalize();
 
         self.layers[last_layer].bias = self.layers[last_layer].bias.normalize();
-    }
-}
-
-impl Layer {
-    pub fn min_max_normalization(&self) -> Layer {
-        Layer {}
-        self.tensor.min_max_norm()
-    }
-
-    pub fn z_score_normalization(&self) -> Layer {
-        self.tensor.z_score_norm()
     }
 }
 

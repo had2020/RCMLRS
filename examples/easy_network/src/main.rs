@@ -45,6 +45,7 @@ fn main() {
     let input: RamTensor = scan_image("white"); // any custom code
     model.input(input, 7500);
     //model.normalize_input(); //TODO apply correct therom names
+    model.z_score(0);
 
     model.dense(300, "Swish"); // replace "" with enum
     model.normalize();
@@ -54,8 +55,9 @@ fn main() {
 
     model.compile("adam", "MSE"); // right now (Mean Squared Error (MSE)) // sparse_categorical_crossentropy TODO
 
-    model.train(50, RamTensor::from(1.0), 0.01, -1.0); // TODO adaptive learning rate. like Adam or Adagrad
-                                                       // should not shrink to zero/ vanshing graidents unless issue with (gradient propagation) or (optimization)
+    //model.train(50, RamTensor::from(1.0), 0.01, -1.0); // TODO adaptive learning rate. like Adam or Adagrad // Problem TODO
+    // should not shrink to zero/ vanshing graidents unless issue with (gradient propagation) or (optimization)
+    println!("{:?}", model.layers);
 }
 
 fn train(file_name: &str, output_target: f32) {
