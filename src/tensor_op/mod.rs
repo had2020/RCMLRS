@@ -134,7 +134,7 @@ impl RamTensor {
 
     pub fn new_layer_zeros(shape: Shape, layer_length: usize) -> Self {
         if shape.x == 0 || shape.y == 0 || layer_length == 0 {
-            eprintln!("Error, on RamTensor creation, shape and layer_length start at 1, not 0. Please select 1 or greator!");
+            eprintln!("Error on RamTensor creation, shape and layer_length start at 1 not 0. Please select 1 or greater!");
         }
 
         let zero_value: f32 = 0.0;

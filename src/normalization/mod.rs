@@ -26,6 +26,6 @@ impl RamTensor {
     pub fn z_score_norm(&self) -> RamTensor {
         let mean = self.mean();
         let std = self.std(true);
-        self.clone() - mean / std
+        (self.clone() - mean) / std
     }
 }

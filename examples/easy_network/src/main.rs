@@ -40,17 +40,17 @@ fn main() {
     // took roughly 18.78 secs last tests with zeroed tensors
 
     // defining model
-    let mut model = NeuralNetwork::new(Shape { x: 3, y: 2 }, 2, (0.0, 1.0)); //TODO possible error with random. Xavier or He initialization
+    let mut model = NeuralNetwork::new(Shape { x: 3, y: 2 }, 2); // Xavier or He initialization
 
     let input: RamTensor = scan_image("white"); // any custom code
     model.input(input, 7500);
     //model.normalize_input(); //TODO apply correct therom names
-    //model.z_score(0); bugs when applied
+    //model.z_score(0);
 
     model.dense(300, "Swish"); // replace "" with enum // issues with random init bugs inf and NaN
-    model.normalize();
+
     model.dense(200, "Swish");
-    model.normalize();
+
     model.dense(1, "Sigmoid");
 
     model.compile("adam", "MSE"); // right now (Mean Squared Error (MSE)) // sparse_categorical_crossentropy TODO

@@ -22,19 +22,14 @@ pub struct Layer {
 /// Main class used for easy NeuralNetworks
 #[derive(Clone, Debug)]
 pub struct NeuralNetwork {
-    pub layers: Vec<Layer>,       // Layer 0, is always input layer
-    pub rand_min_max: (f32, f32), // Mistake
+    pub layers: Vec<Layer>, // Layer 0, is always input layer
     pub optimizer: String,
     pub loss: String,
 }
 
 /// each dense will create a new layer on layers of NeuralNetwork
 impl NeuralNetwork {
-    pub fn new(
-        input_shape: Shape,
-        input_layer_length: usize,
-        random_range_min_max: (f32, f32),
-    ) -> Self {
+    pub fn new(input_shape: Shape, input_layer_length: usize) -> Self {
         let input_layer_init = Layer {
             activation: "None".to_string(),
             bias: RamTensor::new_layer_zeros(input_shape.clone(), input_layer_length),
@@ -48,7 +43,6 @@ impl NeuralNetwork {
 
         NeuralNetwork {
             layers: vec![input_layer_init],
-            rand_min_max: random_range_min_max,
             optimizer: "None".to_string(),
             loss: "None".to_string(),
         }
@@ -66,17 +60,10 @@ impl NeuralNetwork {
             y: neural_units,
         };
 
-        let layer_tensor = RamTensor::new_random(
-            new_shape,
-            1, // layer length
-            self.rand_min_max.0,
-            self.rand_min_max.1,
-        );
-
         self.layers.push(Layer {
             activation: activation.to_string(),
-            tensor: layer_tensor.clone(),
-            bias: RamTensor::new_layer_zeros(layer_tensor.shape, layer_tensor.layer_length),
+            tensor: RamTensor::new_layer_zeros(new_shape, 1),
+            bias: RamTensor::new_layer_zeros(new_shape, 1),
             neural_units,
         });
     }
@@ -93,8 +80,8 @@ impl NeuralNetwork {
         self.layers[0] = (Layer {
             activation: "None".to_string(),
             tensor: layer_tensor.clone(),
-            //bias: RamTensor::new_layer_zeros(new_shape, layer_tensor.layer_length),
-            bias: RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1),
+            bias: RamTensor::new_layer_zeros(new_shape, layer_tensor.layer_length),
+            //bias: RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1),
             neural_units,
         });
     }
