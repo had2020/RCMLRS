@@ -241,11 +241,15 @@ impl RamTensor {
         })
     }
 
-    pub fn pad_matmul_to_another(&self, another_tensor: RamTensor) -> RamTensor {
+    pub fn pad_matmul_to_another(&self, another_tensor: RamTensor, zero_value: f32) -> RamTensor {
         if self.shape != another_tensor.shape {
-            self.pad(another_tensor.shape, another_tensor.layer_length, 0.0)
-                .matmul(another_tensor)
-                .unwrap()
+            self.pad(
+                another_tensor.shape,
+                another_tensor.layer_length,
+                zero_value,
+            )
+            .matmul(another_tensor)
+            .unwrap()
         } else {
             self.matmul(another_tensor).unwrap()
         }

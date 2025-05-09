@@ -79,7 +79,12 @@ impl NeuralNetwork {
 
         self.layers[0] = (Layer {
             activation: "None".to_string(),
-            tensor: layer_tensor.clone(), // error with sizing here, as new_shape not applied
+            //tensor: layer_tensor.clone(), // error with sizing here, as new_shape not applied
+            tensor: RamTensor {
+                shape: new_shape,
+                layer_length: layer_tensor.layer_length,
+                data: layer_tensor.data,
+            },
             bias: RamTensor::new_layer_zeros(new_shape, layer_tensor.layer_length),
             //bias: RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1),
             neural_units,
@@ -137,7 +142,7 @@ impl NeuralNetwork {
                     tensor_layer.shape = self.layers[layer].tensor.shape.clone();
                     tensor_layer = self.layers[next_id]
                         .tensor
-                        .pad_matmul_to_another(self.layers[layer].tensor.clone());
+                        .pad_matmul_to_another(self.layers[layer].tensor.clone(), 0.0);
                     /*
                     .matmul(self.layers[next_id].tensor.clone().pad(
                         self.layers[layer].tensor.shape,
@@ -294,7 +299,7 @@ impl NeuralNetwork {
                     output_mean,
                     target.scaler_to_f32(),
                     self.layers[last_id - 1].bias.mean(),
-                    println!("Lay: {:?}", self.layers[1].tensor.data) // TODO remove in final
+                    println!("Lay: {:?}", self.layers[2].tensor.data) // TODO remove in final
                 );
             }
 

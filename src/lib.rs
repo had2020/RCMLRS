@@ -36,6 +36,7 @@ pub fn odd_median_usize(length: usize) -> usize {
 
 // Ram tensor, TODO UPDATE STORAGE BASED
 // TODO transfer to storage or some type of direct storage connection.
+/// Tensors which are stored in the Ram, but can be converted to storage tensors, and allows for tensors up to rank 3.
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct RamTensor {
     pub shape: Shape,
