@@ -593,7 +593,7 @@ impl RamTensor {
                 variance = squared_differnces.iter().copied().sum::<f32>() / n as f32;
             }
 
-            variance
+            variance.sqrt()
         }
     }
 

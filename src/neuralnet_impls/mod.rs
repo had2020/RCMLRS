@@ -79,7 +79,7 @@ impl NeuralNetwork {
 
         self.layers[0] = (Layer {
             activation: "None".to_string(),
-            tensor: layer_tensor.clone(),
+            tensor: layer_tensor.clone(), // error with sizing here, as new_shape not applied
             bias: RamTensor::new_layer_zeros(new_shape, layer_tensor.layer_length),
             //bias: RamTensor::new_layer_zeros(Shape { x: 1, y: 1 }, 1),
             neural_units,

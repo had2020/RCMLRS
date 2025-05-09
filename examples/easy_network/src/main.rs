@@ -45,7 +45,7 @@ fn main() {
     let input: RamTensor = scan_image("white"); // any custom code
     model.input(input, 7500);
     //model.normalize_input(); //TODO apply correct therom names
-    //model.z_score(0);
+    model.z_score(0); // fix using the layer index before the next
 
     model.dense(300, "Swish"); // replace "" with enum // issues with random init bugs inf and NaN
 
