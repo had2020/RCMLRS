@@ -255,22 +255,25 @@ impl NeuralNetwork {
                 if layer != 0 && layer != last_id {
                     // calulating all the gradients
                     // loss derivative
-                    let error_gradient = match "{self.loss}" {
+                    let error_gradient = match self.loss.as_str() {
                         "MSE" => mse_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
                         "MAE" => mae_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
                         _ => mse_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
                     };
 
-                    let activation_gradient = match "{self.layers[layer].activation}" {
+                    let activation_gradient = match self.layers[layer].activation.as_str() {
                         "ReLU" => self.layers[layer].tensor.relu_deriv(),
                         "Sigmoid" => self.layers[layer].tensor.sigmoid_deriv(),
                         "Tanh" => self.layers[layer].tensor.tanh_deriv(),
                         "Swish" => self.layers[layer].tensor.swish_deriv(),
                         "GELU" => self.layers[layer].tensor.gelu_deriv(),
-                        _ => RamTensor::new_layer_zeros(
-                            self.layers[layer].tensor.shape,
-                            self.layers[layer].tensor.layer_length,
-                        ),
+                        _ => {
+                            eprintln!("Layer without activation! Layer: {:?}", layer);
+                            RamTensor::new_layer_zeros(
+                                self.layers[layer].tensor.shape,
+                                self.layers[layer].tensor.layer_length,
+                            )
+                        }
                     };
 
                     let total_gradient = error_gradient * activation_gradient;
