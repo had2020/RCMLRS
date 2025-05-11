@@ -200,7 +200,9 @@ impl NeuralNetwork {
 
             let output_mean = self.layers[last_id - 1].tensor.mean();
 
-            let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor.clone();
+            println!("{:?}", self.layers[last_id - 1].tensor);
+
+            let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor.clone(); // causing error
 
             /*
             // incorrect applied theory

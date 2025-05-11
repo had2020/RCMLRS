@@ -539,21 +539,23 @@ impl RamTensor {
     }
 
     pub fn powi(&self, n: i32) -> RamTensor {
-        let mut new_tenseor = RamTensor {
-            shape: self.shape,
-            layer_length: self.layer_length,
-            data: vec![],
-        };
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
+
         for matrix in 0..self.layer_length {
-            new_tenseor.data.push(vec![]);
+            new_data.push(vec![]);
             for row in 0..self.shape.x {
-                new_tenseor.data[matrix].push(vec![]);
+                new_data[matrix].push(vec![]);
                 for col in 0..self.shape.y {
-                    new_tenseor.data[matrix][row].push(self.data[matrix][row][col].powi(n));
+                    new_data[matrix][row].push(self.data[matrix][row][col].powi(n));
                 }
             }
         }
-        new_tenseor
+
+        RamTensor {
+            shape: self.shape,
+            layer_length: self.layer_length,
+            data: new_data,
+        }
     }
 
     pub fn powf(&self, n: f32) -> RamTensor {

@@ -130,7 +130,7 @@ impl Sub<RamTensor> for RamTensor {
 
     fn sub(self, rhs: RamTensor) -> Self::Output {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        println!("1:{:?}, 2:{:?}", self.shape, rhs.shape);
+        //println!("1:{:?}, 2:{:?}", self.shape, rhs.shape);
 
         for matrix in 0..rhs.layer_length {
             new_data.push(vec![]);
