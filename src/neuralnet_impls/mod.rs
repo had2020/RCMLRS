@@ -202,7 +202,7 @@ impl NeuralNetwork {
 
             println!("{:?}", self.layers[last_id - 1].tensor);
 
-            let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor.clone(); // causing error
+            //let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor.clone(); // causing error
 
             /*
             // incorrect applied theory
@@ -299,9 +299,8 @@ impl NeuralNetwork {
 
             if epoch % 10 == 0 {
                 println!(
-                    "🔁Epoch {:?}, ❎Error: {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, debuged layer: {:?}",
+                    "🔁Epoch {:?}, 📤Output: {:?}, 🎯Target: {:?}, 📝bias: {:?}, debuged layer: {:?}",
                     epoch,
-                    error,
                     output_mean,
                     target.scaler_to_f32(),
                     self.layers[last_id - 1].bias.mean(),
@@ -309,10 +308,12 @@ impl NeuralNetwork {
                 );
             }
 
+            /*
             if error.mean().abs() < stopping_threshold {
                 println!("Training safely ending early!");
                 break;
             }
+            */
         }
         println!("Max epochs reached!")
     }
