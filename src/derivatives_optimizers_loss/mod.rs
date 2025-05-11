@@ -131,23 +131,28 @@ impl RamTensor {
     pub fn swish_deriv(&self) -> RamTensor {
         let e = std::f32::consts::E; // Euler's number
 
-        let mut new_tensor = RamTensor::new_layer_zeros(self.shape, self.layer_length);
+        let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         for matrix in 0..self.layer_length {
-            new_tensor.data.push(vec![]);
+            new_data.push(vec![]);
             for row in 0..self.shape.y {
+                new_data[matrix].push(vec![]);
                 for col in 0..self.shape.x {
                     let x: f32 = self.data[matrix][row][col];
 
                     let product = 1.0 / (1.0 + (e.powf(-x.clone())));
 
                     let derivative = product + x * product * (1.0 - product);
-                    new_tensor.data[matrix][row].push(derivative);
+                    new_data[matrix][row].push(derivative);
                 }
             }
         }
 
-        new_tensor
+        RamTensor {
+            shape: self.shape,
+            layer_length: self.layer_length,
+            data: new_data,
+        }
     }
 
     pub fn gelu_deriv(&self) -> RamTensor {

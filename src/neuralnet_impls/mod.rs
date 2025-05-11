@@ -256,17 +256,17 @@ impl NeuralNetwork {
                     // calulating all the gradients
                     // loss derivative
                     let error_gradient = match self.loss.as_str() {
-                        "MSE" => mse_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
-                        "MAE" => mae_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
-                        _ => mse_loss(target.clone(), self.layers[last_id - 1].tensor.clone()),
+                        "MSE" => mse_loss(target.clone(), fowardfeed_copy[last_id - 1].clone()),
+                        "MAE" => mae_loss(target.clone(), fowardfeed_copy[last_id - 1].clone()),
+                        _ => mse_loss(target.clone(), fowardfeed_copy[last_id - 1].clone()),
                     };
 
                     let activation_gradient = match self.layers[layer].activation.as_str() {
-                        "ReLU" => self.layers[layer].tensor.relu_deriv(),
-                        "Sigmoid" => self.layers[layer].tensor.sigmoid_deriv(),
-                        "Tanh" => self.layers[layer].tensor.tanh_deriv(),
-                        "Swish" => self.layers[layer].tensor.swish_deriv(),
-                        "GELU" => self.layers[layer].tensor.gelu_deriv(),
+                        "ReLU" => fowardfeed_copy[layer].relu_deriv(),
+                        "Sigmoid" => fowardfeed_copy[layer].sigmoid_deriv(),
+                        "Tanh" => fowardfeed_copy[layer].tanh_deriv(),
+                        "Swish" => fowardfeed_copy[layer].swish_deriv(),
+                        "GELU" => fowardfeed_copy[layer].gelu_deriv(),
                         _ => {
                             eprintln!("Layer without activation! Layer: {:?}", layer);
                             RamTensor::new_layer_zeros(
@@ -284,6 +284,7 @@ impl NeuralNetwork {
                                 self.layers[layer].tensor.data[matrix][row][col] -= learning_rate
                                     * total_gradient.data[matrix][row][col]
                                     * self.layers[0].tensor.data[matrix][row][col];
+                                //self.layers[0].tensor.data[matrix][row][col]; TODO double check formula
                                 // problem TODO
                             }
                         }
