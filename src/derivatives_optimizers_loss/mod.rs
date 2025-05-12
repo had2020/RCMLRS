@@ -131,6 +131,8 @@ impl RamTensor {
     pub fn swish_deriv(&self) -> RamTensor {
         let e = std::f32::consts::E; // Euler's number
 
+        println!("self swish_deriv {:?}", self.shape);
+
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
 
         for matrix in 0..self.layer_length {
@@ -138,6 +140,7 @@ impl RamTensor {
             for row in 0..self.shape.y {
                 new_data[matrix].push(vec![]);
                 for col in 0..self.shape.x {
+                    println!("swish deriv new data: {:?}", new_data);
                     let x: f32 = self.data[matrix][row][col];
 
                     let product = 1.0 / (1.0 + (e.powf(-x.clone())));
@@ -226,6 +229,7 @@ pub fn mae_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
 /// Mean Squared Error
 /// This is applied to calulcate error gradient in Backpropagation.
 pub fn mse_loss(actual: RamTensor, predicted: RamTensor) -> f32 {
+    println!("inner check: {:?}", predicted);
     let sqared_error: RamTensor = (actual - predicted).powi(2);
     sqared_error.mean()
 }

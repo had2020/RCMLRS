@@ -200,7 +200,7 @@ impl NeuralNetwork {
 
             let output_mean = self.layers[last_id - 1].tensor.mean();
 
-            println!("{:?}", self.layers[last_id - 1].tensor);
+            //println!("{:?}", self.layers[last_id - 1].tensor);
 
             //let error: RamTensor = target.clone() - self.layers[last_id - 1].tensor.clone(); // causing error
 
@@ -255,10 +255,11 @@ impl NeuralNetwork {
             // Backpropagation
             for layer in (1..last_id).rev() {
                 if layer != 0 && layer != last_id {
-                    println!("{:?}", fowardfeed_copy);
+                    //println!("{:?}", fowardfeed_copy);
                     // calulating all the gradients
                     // loss derivative
-                    let last_id_fowardfeed_copy = fowardfeed_copy.len();
+                    let last_id_fowardfeed_copy = fowardfeed_copy.len() - 1;
+                    println!("{:?}", fowardfeed_copy[last_id_fowardfeed_copy]);
                     let error_gradient = match self.loss.as_str() {
                         "MSE" => mse_loss(
                             target.clone(),
@@ -303,8 +304,10 @@ impl NeuralNetwork {
                         }
                     }
 
+                    /* MUST TODO error?
                     self.layers[layer].bias =
                         self.layers[layer].bias.clone() - (learning_rate * total_gradient);
+                    */
                 }
             }
 
