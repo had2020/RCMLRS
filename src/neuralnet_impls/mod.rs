@@ -255,12 +255,23 @@ impl NeuralNetwork {
             // Backpropagation
             for layer in (1..last_id).rev() {
                 if layer != 0 && layer != last_id {
+                    println!("{:?}", fowardfeed_copy);
                     // calulating all the gradients
                     // loss derivative
+                    let last_id_fowardfeed_copy = fowardfeed_copy.len();
                     let error_gradient = match self.loss.as_str() {
-                        "MSE" => mse_loss(target.clone(), fowardfeed_copy[last_id - 1].clone()),
-                        "MAE" => mae_loss(target.clone(), fowardfeed_copy[last_id - 1].clone()),
-                        _ => mse_loss(target.clone(), fowardfeed_copy[last_id - 1].clone()),
+                        "MSE" => mse_loss(
+                            target.clone(),
+                            fowardfeed_copy[last_id_fowardfeed_copy].clone(),
+                        ),
+                        "MAE" => mae_loss(
+                            target.clone(),
+                            fowardfeed_copy[last_id_fowardfeed_copy].clone(),
+                        ),
+                        _ => mse_loss(
+                            target.clone(),
+                            fowardfeed_copy[last_id_fowardfeed_copy].clone(),
+                        ),
                     };
 
                     let activation_gradient = match self.layers[layer].activation.as_str() {

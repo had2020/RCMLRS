@@ -95,3 +95,18 @@ impl From<RamTensor> for f32 {
             .unwrap_or(0.0)
     }
 }
+
+impl RamTensor {
+    pub fn debug_shape(&self) {
+        println!(
+            "shape: {:?}, layer_length: {}",
+            self.shape, self.layer_length
+        );
+        for (i, layer) in self.data.iter().enumerate() {
+            println!("Layer {}: {} rows", i, layer.len());
+            for (j, row) in layer.iter().enumerate() {
+                println!("  Row {}: {} columns", j, row.len());
+            }
+        }
+    }
+}

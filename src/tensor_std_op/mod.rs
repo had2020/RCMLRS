@@ -130,7 +130,13 @@ impl Sub<RamTensor> for RamTensor {
 
     fn sub(self, rhs: RamTensor) -> Self::Output {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        //println!("1:{:?}, 2:{:?}", self.shape, rhs.shape);
+        //println!("1:{:?}, 2:{:?}", self.data, rhs.data);
+
+        assert_eq!(self.shape, rhs.shape, "Tensors must have the same shape");
+        assert_eq!(
+            self.layer_length, rhs.layer_length,
+            "Layer lengths must match"
+        );
 
         for matrix in 0..rhs.layer_length {
             new_data.push(vec![]);
