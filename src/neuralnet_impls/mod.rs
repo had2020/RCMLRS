@@ -142,15 +142,15 @@ impl NeuralNetwork {
                     tensor_layer.shape = self.layers[layer].tensor.shape.clone();
                     tensor_layer = self.layers[next_id]
                         .tensor
-                        .pad_matmul_to_another(self.layers[layer].tensor.clone(), 0.0);
-                    /*
-                    .matmul(self.layers[next_id].tensor.clone().pad(
-                        self.layers[layer].tensor.shape,
-                        self.layers[layer].tensor.layer_length,
-                        0.0,
-                    ))
-                    .unwrap();
-                    */
+                        .pad_matmul_to_another(self.layers[layer].tensor.clone(), 0.0); // Issue here
+                                                                                        /*
+                                                                                        .matmul(self.layers[next_id].tensor.clone().pad(
+                                                                                            self.layers[layer].tensor.shape,
+                                                                                            self.layers[layer].tensor.layer_length,
+                                                                                            0.0,
+                                                                                        ))
+                                                                                        .unwrap();
+                                                                                        */
                     // add bias
                     /*
                     println!(

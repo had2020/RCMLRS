@@ -140,7 +140,12 @@ impl RamTensor {
             for row in 0..self.shape.y {
                 new_data[matrix].push(vec![]);
                 for col in 0..self.shape.x {
+                    println!("*");
                     println!("swish deriv new data: {:?}", new_data);
+                    println!("Matrix: {:?}, Shape: {:?}", self.layer_length, self.shape);
+                    println!("Matrix_len: {:?}", self.data.len());
+                    println!("Row_len: {:?}", self.data[matrix].len());
+                    println!("Col_len: {:?}", self.data[matrix][row].len());
                     let x: f32 = self.data[matrix][row][col];
 
                     let product = 1.0 / (1.0 + (e.powf(-x.clone())));
