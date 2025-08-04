@@ -1,5 +1,7 @@
 # RCMLRS
-- Ramless - Cluster - Machine - Learning - Rust - Syntax
+- Ram - Compute - Machine - Learning - Rust - Syntax
+
+This was my first custom ML framework in Rust using my own tensor structure and basic gradient descent — at the time I hadn’t implemented full safety or indexing guards yet, but it marked the beginning of my exploration into safe, low-level ML in Rust.
 
 The code is divided into modules to make it easier to optimize and maintain, for readability.
 
@@ -12,12 +14,6 @@ Very early trials of creations...
  Notes
  - Must delete txt file not text inside
  - creation does not use buf so TODO use buf
-
-Main idea Split ML models's into many smaller matrices unlike most that make one giant matrix.
-Keep Tensor's in Storage when not applying operations, to apply operation load into Ram and store back.
-Ie use your're storage similar to Ram and your're Ram like a CPU reister.
-Using only storage would cause too much slowdowns, so to limit IO we can store only when not apply any operations.
-To cluster compute matrices split are into chunks and share in a cluster.
 
 This Machine Learning libary has the following activation functions, as implimations on RamTensor struct:
 
