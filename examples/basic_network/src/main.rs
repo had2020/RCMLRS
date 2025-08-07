@@ -37,12 +37,18 @@ fn main() {
     train("white", 0.0);
     train("black", 1.0);
     // took roughly 18.78 seconds last test
+    run("white")
 }
 
-fn train(file_name: &str, output_target: f32, output_file_name: &str) {
-    println!("Training on ->, {}", file_name);
+enum SourceModel {
+    Filename { name: &str },
+    None,
+}
 
-    let input: RamTensor = scan_image(file_name);
+fn train(input_file_name: &str, output_target: f32, output_file_name: &str) {
+    println!("Training on ->, {}", input_file_name);
+
+    let input: RamTensor = scan_image(input_file_name);
 
     let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
     let mut hidden_layer: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
@@ -91,6 +97,11 @@ fn train(file_name: &str, output_target: f32, output_file_name: &str) {
         }
 
         if error.abs() < stopping_threshold {
+            save_tensors_binary(
+                output_file_name,
+                vec![weights, hidden_layer, bias1],
+                vec![a2],
+            );
             break;
         }
     }

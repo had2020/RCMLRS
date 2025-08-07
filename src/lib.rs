@@ -39,7 +39,6 @@ pub fn odd_median_usize(length: usize) -> usize {
 // Ram tensor, TODO UPDATE STORAGE BASED
 // TODO transfer to storage or some type of direct storage connection.
 /// Tensors which are stored in the Ram, but can be converted to storage tensors, and allows for tensors up to rank 3.
-#[derive(Clone, Debug, PartialEq, PartialOrd)]
 #[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct RamTensor {
     pub shape: Shape,
@@ -114,15 +113,25 @@ impl RamTensor {
     }
 }
 
-pub fn save_tensors_json(filename: &str, tensors: Vec<RamTensor>) {
-    let data = tensors;
+pub fn save_tensors_json(filename: &str, tensors: Vec<RamTensor>, scalers: Vec<f32>) {
+    let data = (tensors, scalers);
     let filepath = format!("{}.json", filename);
     let json = serde_json::to_string(&data).unwrap();
     std::fs::write(filepath, json).unwrap();
 }
 
-pub fn save_tensors_binary(filename: &str, tensors: Vec<RamTensor>) {
-    let encoded = bincode::serialize(&tensors).unwrap();
+pub fn save_tensors_binary(filename: &str, tensors: Vec<RamTensor>, scalers: Vec<f32>) {
+    let encoded = bincode::serialize(&(tensors, scalers)).unwrap();
     let filepath = format!("{}.io", filename);
     std::fs::write(filepath, encoded).unwrap();
+}
+
+pub fn load_state_json(filename: &str) -> (Vec<RamTensor>, Vec<f32>) {
+    let content = std::fs::read_to_string(filename).unwrap();
+    serde_json::from_str(&content).unwrap()
+}
+
+pub fn load_state_binary(filename: &str) -> (Vec<RamTensor>, Vec<f32>) {
+    let bytes = std::fs::read(filename).unwrap();
+    bincode::deserialize(&bytes).unwrap()
 }
