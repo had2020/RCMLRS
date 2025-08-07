@@ -4,6 +4,8 @@
 // Folders under src are each a feature
 // Under: MIT
 
+use serde::{Deserialize, Serialize};
+
 // module imports
 pub mod activations;
 pub mod cli;
@@ -15,7 +17,7 @@ pub mod tensor_op;
 pub mod tensor_std_op;
 pub mod wasm_features;
 
-#[derive(Clone, Debug, PartialEq, PartialOrd, Copy)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Copy, Serialize, Deserialize)]
 pub struct Shape {
     pub x: usize, // Rows →
     pub y: usize, // Columns ↓
@@ -38,6 +40,7 @@ pub fn odd_median_usize(length: usize) -> usize {
 // TODO transfer to storage or some type of direct storage connection.
 /// Tensors which are stored in the Ram, but can be converted to storage tensors, and allows for tensors up to rank 3.
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct RamTensor {
     pub shape: Shape,
     pub layer_length: usize,
@@ -109,4 +112,17 @@ impl RamTensor {
             }
         }
     }
+}
+
+pub fn save_tensors_json(filename: &str, tensors: Vec<RamTensor>) {
+    let data = tensors;
+    let filepath = format!("{}.json", filename);
+    let json = serde_json::to_string(&data).unwrap();
+    std::fs::write(filepath, json).unwrap();
+}
+
+pub fn save_tensors_binary(filename: &str, tensors: Vec<RamTensor>) {
+    let encoded = bincode::serialize(&tensors).unwrap();
+    let filepath = format!("{}.io", filename);
+    std::fs::write(filepath, encoded).unwrap();
 }

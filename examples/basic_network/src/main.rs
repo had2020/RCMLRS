@@ -36,10 +36,10 @@ fn scan_image(image_name: &str) -> RamTensor {
 fn main() {
     train("white", 0.0);
     train("black", 1.0);
-    // took roughly 18.78 secs last tests
+    // took roughly 18.78 seconds last test
 }
 
-fn train(file_name: &str, output_target: f32) {
+fn train(file_name: &str, output_target: f32, output_file_name: &str) {
     println!("Training on ->, {}", file_name);
 
     let input: RamTensor = scan_image(file_name);
