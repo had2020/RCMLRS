@@ -36,15 +36,15 @@ fn scan_image(image_name: &str) -> RamTensor {
 fn main() {
     // training
     let filename: &str = "grayscale_model";
-    let reruns = 1;
+    let reruns = 5;
     for run in 0..reruns {
         println!("rerun: {}", run);
-        train("white", 0.0, false, filename);
-        train("black", 1.0, true, filename);
+        train("white", 0.95, false, filename);
+        train("black", 0.05, true, filename);
     }
 
     // usage
-    let response0 = run("black", filename);
+    let response0 = run("white", filename);
     let response1 = run("black", filename);
     println!(
         "ran model with white:{}, and black:{}",
@@ -77,9 +77,9 @@ fn train(input_file_name: &str, output_target: f32, read_first: bool, filename: 
     }
 
     let target: f32 = output_target; //
-    let max_epochs = 1000;
+    let max_epochs = 10000;
     let stopping_threshold: f32 = 0.08; //1e-10 for most precise training
-    let learning_rate: f32 = -0.01; // needs to be neagative
+    let learning_rate: f32 = -0.05; // needs to be negative
 
     let start = std::time::Instant::now();
 

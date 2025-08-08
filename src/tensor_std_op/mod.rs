@@ -130,7 +130,7 @@ impl Sub<RamTensor> for RamTensor {
 
     fn sub(self, rhs: RamTensor) -> Self::Output {
         let mut new_data: Vec<Vec<Vec<f32>>> = vec![];
-        println!("inner sub check: 1:{:?}, 2:{:?}", self.shape, rhs.shape);
+        //println!("inner sub check: 1:{:?}, 2:{:?}", self.shape, rhs.shape);
 
         assert_eq!(self.shape, rhs.shape, "Tensors must have the same shape");
         assert_eq!(
