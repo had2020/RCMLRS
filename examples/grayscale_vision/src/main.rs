@@ -1,4 +1,4 @@
-use image::{DynamicImage, ImageFormat, ImageReader, Pixel, Rgb};
+use image::ImageReader;
 use rcmlrs::*;
 
 fn scan_image(image_name: &str) -> RamTensor {
@@ -34,31 +34,54 @@ fn scan_image(image_name: &str) -> RamTensor {
 }
 
 fn main() {
-    train("white", 0.0);
-    train("black", 1.0);
-    // took roughly 18.78 seconds last test
-    run("white")
+    // training
+    let filename: &str = "grayscale_model";
+    let reruns = 1;
+    for run in 0..reruns {
+        println!("rerun: {}", run);
+        train("white", 0.0, false, filename);
+        train("black", 1.0, true, filename);
+    }
+
+    // usage
+    let response0 = run("black", filename);
+    let response1 = run("black", filename);
+    println!(
+        "ran model with white:{}, and black:{}",
+        response0, response1
+    );
 }
 
-enum SourceModel {
-    Filename { name: &str },
-    None,
-}
-
-fn train(input_file_name: &str, output_target: f32, output_file_name: &str) {
+fn train(input_file_name: &str, output_target: f32, read_first: bool, filename: &str) {
     println!("Training on ->, {}", input_file_name);
 
     let input: RamTensor = scan_image(input_file_name);
 
-    let mut weights: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
-    let mut hidden_layer: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
-    let mut bias1: RamTensor = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+    let mut weights: RamTensor;
+    let mut hidden_layer: RamTensor;
+    let mut bias1: RamTensor;
     let mut bias2: f32 = 0.0;
+
+    if !read_first {
+        weights = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+        hidden_layer = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+        bias1 = RamTensor::new_layer_zeros(Shape { x: 50, y: 150 }, 1);
+        bias2 = 0.0;
+    } else {
+        let model = load_state_binary(filename);
+
+        weights = model[0].clone();
+        hidden_layer = model[1].clone();
+        bias1 = model[2].clone();
+        bias2 = model[3].data[0][0][0].clone();
+    }
 
     let target: f32 = output_target; //
     let max_epochs = 1000;
     let stopping_threshold: f32 = 0.08; //1e-10 for most precise training
     let learning_rate: f32 = -0.01; // needs to be neagative
+
+    let start = std::time::Instant::now();
 
     for epoch in 0..max_epochs {
         // fowardfeed
@@ -91,18 +114,50 @@ fn train(input_file_name: &str, output_target: f32, output_file_name: &str) {
 
         if epoch % 10 == 0 {
             println!(
-                "Epoch {}: Bias2: {}, Error: {}, Output: {}",
-                epoch, bias2, error, output_mean,
+                "Epoch {}: Bias2: {}, Error: {}, Output: {}, Elapsed: {:?}",
+                epoch,
+                bias2,
+                error,
+                output_mean,
+                start.elapsed()
             );
         }
 
         if error.abs() < stopping_threshold {
             save_tensors_binary(
-                output_file_name,
-                vec![weights, hidden_layer, bias1],
-                vec![a2],
+                filename,
+                vec![
+                    weights,
+                    hidden_layer,
+                    bias1,
+                    RamTensor {
+                        shape: Shape { x: 1, y: 1 },
+                        layer_length: 1,
+                        data: vec![vec![vec![bias2]]],
+                    },
+                ],
             );
             break;
         }
     }
+}
+
+fn run(input_file_name: &str, filename: &str) -> f32 {
+    let input: RamTensor = scan_image(input_file_name);
+
+    let model = load_state_binary(filename);
+
+    let mut weights = model[0].clone();
+    let mut hidden_layer = model[1].clone();
+    let mut bias1 = model[2].clone();
+    let mut bias2 = model[3].data[0][0][0].clone();
+
+    // fowardfeed
+    let z1 = weights.matmul(input.clone()).unwrap() + bias1.clone(); // bias1 tensor broadcasted
+    let a1 = z1.sigmoid();
+    let z2 = hidden_layer.matmul(a1.clone()).unwrap() + bias2;
+    let a2 = z2.sigmoid();
+
+    // output mean
+    a2.mean()
 }

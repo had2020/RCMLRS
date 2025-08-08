@@ -113,25 +113,27 @@ impl RamTensor {
     }
 }
 
-pub fn save_tensors_json(filename: &str, tensors: Vec<RamTensor>, scalers: Vec<f32>) {
-    let data = (tensors, scalers);
+pub fn save_tensors_json(filename: &str, tensors: Vec<RamTensor>) {
+    let data = tensors;
     let filepath = format!("{}.json", filename);
     let json = serde_json::to_string(&data).unwrap();
     std::fs::write(filepath, json).unwrap();
 }
 
-pub fn save_tensors_binary(filename: &str, tensors: Vec<RamTensor>, scalers: Vec<f32>) {
-    let encoded = bincode::serialize(&(tensors, scalers)).unwrap();
+pub fn save_tensors_binary(filename: &str, tensors: Vec<RamTensor>) {
+    let encoded = bincode::serialize(&tensors).unwrap();
     let filepath = format!("{}.io", filename);
     std::fs::write(filepath, encoded).unwrap();
 }
 
-pub fn load_state_json(filename: &str) -> (Vec<RamTensor>, Vec<f32>) {
-    let content = std::fs::read_to_string(filename).unwrap();
+pub fn load_state_json(filename: &str) -> Vec<RamTensor> {
+    let filepath = format!("{}.json", filename);
+    let content = std::fs::read_to_string(filepath).unwrap();
     serde_json::from_str(&content).unwrap()
 }
 
-pub fn load_state_binary(filename: &str) -> (Vec<RamTensor>, Vec<f32>) {
-    let bytes = std::fs::read(filename).unwrap();
+pub fn load_state_binary(filename: &str) -> Vec<RamTensor> {
+    let filepath = format!("{}.io", filename);
+    let bytes = std::fs::read(filepath).unwrap();
     bincode::deserialize(&bytes).unwrap()
 }
