@@ -1,110 +1,156 @@
-# RCMLRS
-| Ram | Compute | Machine | Learning | Rust | Syntax |
-|-----|---------|---------|----------|------|--------|
-|     |         |         |          |      |        |
+# **RCMLRS: A Low-Level Machine Learning Framework in Rust**
 
-## Project State
-This is a very low Machine learning framework, as Keras impl is not complete and is only in a work in process state. None the less there are quite a few features already, enough to make Recurrent Neural  Networks. 
+| Component            | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| **RAM**              | Tensor-like in-memory storage for multi-dimensional numerical data.         |
+| **Compute**          | Highly optimized arithmetic and matrix operations implemented in pure Rust. |
+| **Machine Learning** | Support for neural network training, evaluation, and inference.             |
+| **Rust**             | Memory-safe, high-performance systems language for deterministic execution. |
+| **Syntax**           | Ergonomic API design with method-chaining and operator overloading.         |
 
-## Purpose
-In Rust very few Machine Learning frameworks exist and many have predisposed software limits, or many issues. For example the Tensorflow integration with rust was a huge trouble to install and get working in rust and did not work for Macos, same story with alot of other frameworks. This is due to Rust being such a new language, which has a limited developer community. One other framework I used refused to work after I spend days reading the docs and trying to get a simple MIST example to work, just when I was finally able to compile the whole thing refused to work loggging that this was not available for Macos. 
+---
 
-# Features
+## **Abstract**
 
-## Activation Functions 
-So far this project as all the core activation functions.
+RCMLRS is a lightweight, low-level machine learning framework written entirely in Rust. It provides the fundamental computational building blocks required to construct and train models such as **Recurrent Neural Networks (RNNs)**, without relying on heavyweight dependencies or external bindings. By implementing core tensor operations, activation functions, optimizers, and normalization methods from scratch, RCMLRS enables full transparency of the machine learning process, critical for both research and systems-level optimization.
 
-- ReLU `max(0,x)`
-- Leaky ReLU `max(ax,x)`
-- Sigmoid `1/1+e^-x`
-- Tanh `(e^x - e^-x) / (e^x + e^-x)`
-- Softmax `exp(z_i) / Σ_j exp(z_j)`
-- Swish `x * (1.0 / (1.0 + e^-x))`
-- GELU `0.5x(1+Tanh(2/PI(x + 0.044715x^3)))`
+The framework is intentionally minimal yet extensible, serving as a testbed for experimenting with neural architectures, optimization algorithms, and memory management in high-performance environments. Unlike Python based ML frameworks, RCMLRS compiles natively to multiple platforms and offers deterministic, low-latency execution.
 
-## Activation Derivatives 
-RCMLRS also has in built functions that let you easy apply derivatives of your activation functions directly to tensors for the core activation functions, listed before.
+---
 
-Example Usage: 
+## **1. Introduction**
+
+Machine learning frameworks in Rust remain scarce compared to Python ecosystems such as TensorFlow and PyTorch. Existing Rust options often suffer from:
+
+1. **Installation complexity** Many require fragile bindings to C/C++ libraries, which can fail on macOS or ARM architectures.
+2. **Platform limitations** Some frameworks exclude macOS or Windows support altogether.
+3. **Opaque internals** High-level abstractions hide critical computational details from developers.
+
+RCMLRS addresses these limitations by:
+
+* **Full native Rust implementation** (no external bindings).
+* **Crossplatform support**, verified on macOS and Linux.
+* **Fine grained control** over every tensor operation and learning step.
+
+---
+
+## **2. System Architecture**
+
+### **2.1 Tensor Engine**
+
+At the core is the **`RamTensor`** structure, which stores numerical data in a three dimensional vector (`Vec<Vec<Vec<f32>>>`). This design supports:
+
+* **Multilayer neural networks** with arbitrary shapes.
+* **Constant time indexing** for element access.
+* **Method chaining** for concise operations (for example, `tensor1 + tensor2`).
+
+Key operations include:
+
+* **Matrix multiplication** (`matmul`) with optional zero padding (`pad_matmul_to_another`).
+* **Elementwise arithmetic** (`add`, `sub`, `powi`, `powf`).
+* **Reduction functions** (`mean`, `median`, `find_min`, `find_max`).
+* **Shape transformations** (`flatten`, `transpose`, `pad`).
+
+---
+
+### **2.2 Activation Functions**
+
+All major activation functions are implemented with their derivatives for backpropagation:
+
+| Function   | Equation                                     | Derivative                      | Use Case                                         |
+| ---------- | -------------------------------------------- | ------------------------------- | ------------------------------------------------ |
+| ReLU       | $f(x) = \max(0, x)$                          | $f'(x) = 1$ if $x > 0$ else $0$ | Sparse activations, avoiding vanishing gradients |
+| Leaky ReLU | $f(x) = \max(ax, x)$                         | Same with slope $a$             | Small gradients for negative inputs              |
+| Sigmoid    | $f(x) = \frac{1}{1+e^{-x}}$                  | $f'(x) = f(x)(1 - f(x))$        | Binary classification                            |
+| Tanh       | $f(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$   | $1 - f(x)^2$                    | Normalized outputs in $[-1,1]$                   |
+| Softmax    | $f(z_i) = \frac{e^{z_i}}{\sum_j e^{z_j}}$    | Jacobian matrix                 | Multi-class classification                       |
+| Swish      | $x \cdot \sigma(x)$                          | Complex, smooth gradients       | State-of-the-art deep nets                       |
+| GELU       | $0.5x[1+\tanh(\sqrt{2/\pi}(x+0.044715x^3))]$ | Differentiable smooth step      | Transformer architectures                        |
+
+---
+
+### **2.3 Optimization Engine**
+
+RCMLRS currently supports:
+
+* **Adam Optimizer** Implements both default and customizable hyperparameters ($\beta_1, \beta_2, \epsilon$).
+* **Loss functions** Mean Squared Error (MSE), Mean Absolute Error (MAE), with analytic derivatives for gradient-based learning.
+
+The training loop involves:
+
+1. **Forward pass** Sequential layer multiplications + activations.
+2. **Loss computation** — `mse_loss` or `mae_loss`.
+3. **Backward pass** Activation derivatives + optimizer update.
+
+---
+
+### **2.4 Normalization Methods**
+
+* **Min-Max Scaling:**
+
+$$
+x' = \frac{x - \min(X)}{\max(X) - \min(X)}
+$$
+
+* **Z-Score Normalization:**
+
+$$
+x' = \frac{x - \mu}{\sigma}
+$$
+
+These are implemented as in place tensor methods for preprocessing input datasets.
+
+---
+
+### **2.5 Model Persistence**
+
+RCMLRS supports **binary and JSON serialization** of trained model weights and biases, enabling reproducibility across sessions:
+
+```rust
+save_tensors_binary("model.bin", vec![weights, biases]);
+let model_state = load_state_binary("model.bin");
+```
+
+Binary format offers **faster load times**, while JSON enables **human-readable inspection**.
+
+---
+
+## **3. Practical Example: RNN Construction**
+
+Using RCMLRS, an RNN layer can be built from scratch:
+
 ```rust
 let z1 = weights.matmul(input.clone()).unwrap();
 let a1 = z1.sigmoid();
 ```
 
-## Loss Optimizer
-RCMLRS has a function for the Adam Optimizer ``adam_optimizer`` with some recommended hyperparameters and a ``custom_adam_optimizer`` for custom hyperparameters, if required. 
+Here:
 
-## MAE and MSE
-RCMLRS has ``mse_deriv``, and ``mae_deriv`` derivatives along with ``mae_loss`` and ``mse_loss`` counterparts.
+* `weights.matmul(input)` performs the linear transformation.
+* `.sigmoid()` applies the non-linear activation.
 
-## Normalization
-For methods of normalization this framework has ``min_max_norm`` and ``z_score_norm`` 
+This low-level access ensures **full control** over architectural experimentation, essential for research.
 
-## Tensor Operations
-Atherimetical operations don't need to be called by a function you can use them just by applying operations across tensors for example ``ramtensor0 + ramtensor1 = ramtensor2``
+---
 
-- find_min ``find_min(&self) -> f32``
-- find_max ``find_max(&self) -> f32``
-- scaler ``scaler(self, num: f32) -> Self``
-- insert_matrix ``insert_matrix(&self, layer_index: usize, new_layer: Vec<Vec<f32>>) -> Self``
-- new_random ``new_random(shape: Shape, layer_length: usize, rand_min: f32, rand_max: f32) -> Self``
-- new_layer_zeros ``new_layer_zeros(shape: Shape, layer_length: usize) -> Self``
-- matmul ``matmul(&self, another_tensor: RamTensor) -> Result<RamTensor, String>``
-- pad_matmul_to_another ``pad_matmul_to_another(&self, another_tensor: RamTensor, zero_value: f32) -> RamTensor``
-- add ``st_add(&self, another_tensor: RamTensor) -> Result<RamTensor, String>``
-- sub ``sub(&self, another_tensor: RamTensor) -> Result<RamTensor, String>``
-- flatten ``flatten(&self) -> RamTensor``
-- to_scalar ``to_scalar(&self) -> Result<f32, String>``
-- mean ``mean(&self) -> f32``
-- median ``median(&self) -> f32``
-- abs ``abs(&self) -> RamTensor``
-- data_points ``data_points(&self) -> usize``
-- from ``from<T: Into<f32>>(value: T) -> Self``
-- pad ``pad(&self, to_shape: Shape, to_layer_length_shape: usize, pad_value: f32) -> RamTensor``
-- retrive_matrice ``retrive_matrice(&self, matrix: usize, row: usize, col: usize) -> f32``
--  scaler_to_f32 ``scaler_to_f32(&self) -> f32``
-- powi ``powi(&self, n: i32) -> RamTensor``
-- powf ``powf(&self, n: f32) -> RamTensor``
-- std ``(&self, sample: bool) -> f32`` aka population standard deviation
-- normalize ``normalize(&self) -> RamTensor``
-- transpose ``transpose(&self) -> RamTensor``
-- from_scalar ``from_scalar(&self, value: f32, shape: Shape)``
-- is_scalar ``is_scalar(&self) -> bool``
-- outer_product ``outer_product(&self, another_tensor: RamTensor) -> RamTensor``
-- parameters ``parameters(&self) -> f32`` aka Gets the number of parameters
-- f32_to_scaler ``f32_to_scaler(scaler: f32) -> RamTensor``
+## **4. Discussion**
 
-## Saving and Loading Networks/Models to file
-- save_tensors_json(filename: &str, tensors: Vec<RamTensor>)
-- save_tensors_binary(filename: &str, tensors: Vec<RamTensor>
+RCMLRS is not intended as a replacement for high level ML frameworks but as an **experimental platform** for:
 
-- load_state_json(filename: &str) -> Vec<RamTensor>
-- load_state_binary(filename: &str) -> Vec<RamTensor>
+* Understanding deep learning internals.
+* Testing unconventional architectures.
+* Building **Rust-native AI systems** for embedded or real-time applications.
 
-Usage Examples:
+Its transparency, portability, and deterministic execution make it a strong candidate for research projects, educational purposes, and performance critical AI systems.
 
-Saving:
-```rust
-save_tensors_binary(
-    filename,
-    vec![
-        weights,
-        hidden_layer,
-        bias1,
-        RamTensor {
-            shape: Shape { x: 1, y: 1 },
-            layer_length: 1,
-            data: vec![vec![vec![bias2]]],
-        },
-    ],
-);
-```
-Loading:
-```rust
- let model = load_state_binary(filename);
+---
 
- let mut weights = model[0].clone();
- let mut hidden_layer = model[1].clone();
- let mut bias1 = model[2].clone();
- let mut bias2 = model[3].data[0][0][0].clone();
-```
+## **6. Future Work**
+
+* Implementation of **Convolutional Neural Networks (CNNs)**.
+* GPU acceleration via Vulkan or WGPU.
+* Expanded dataset loaders for CSV and image formats.
+* Automatic differentiation engine.
+* Keras Impl.
+
+---
